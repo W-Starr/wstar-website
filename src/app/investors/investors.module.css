@@ -1,0 +1,136 @@
+.marketGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.marketCard {
+    background: var(--dark-card);
+    border: 1px solid rgba(37, 166, 221, 0.1);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+}
+
+.marketLabel {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--bright-blue);
+    margin-bottom: 12px;
+}
+
+.marketCard h3 {
+    font-size: 1.2rem;
+    color: var(--white);
+    margin-bottom: 12px;
+}
+
+.marketCard p {
+    font-size: 0.92rem;
+    color: var(--gray-400);
+    line-height: 1.7;
+}
+
+.marketStat {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--bright-blue);
+    margin-bottom: 4px;
+    display: block;
+}
+
+.marketStatLabel {
+    font-size: 0.85rem;
+    color: var(--gray-400);
+    margin-bottom: 16px;
+    display: block;
+}
+
+/* Financial Overview */
+.financeGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.financeCard {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    text-align: center;
+    transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.financeCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.financeIcon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+}
+
+.financeCard h3 {
+    font-size: 1rem;
+    color: var(--deep-navy);
+    margin-bottom: 8px;
+}
+
+.financeCard p {
+    font-size: 0.88rem;
+    color: var(--gray-500);
+    line-height: 1.6;
+}
+
+.financeHighlight {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--medium-blue);
+    display: block;
+    margin-top: 12px;
+}
+
+/* ESG Section */
+.esgGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* Bottom Form Section */
+.investorForm {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.investorForm h2 {
+    margin-bottom: 16px;
+}
+
+.investorForm>p {
+    margin-bottom: 32px;
+    font-size: 1.05rem;
+}
+
+@media (max-width: 768px) {
+    .marketGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .financeGrid,
+    .esgGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .financeGrid,
+    .esgGrid {
+        grid-template-columns: 1fr;
+    }
+}

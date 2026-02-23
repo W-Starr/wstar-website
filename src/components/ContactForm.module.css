@@ -1,0 +1,136 @@
+.formSection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.formGroup label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-300);
+    letter-spacing: 0.02em;
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select {
+    padding: 14px 18px;
+    background: var(--dark-card);
+    border: 1px solid rgba(37, 166, 221, 0.15);
+    border-radius: var(--radius-md);
+    color: var(--white);
+    font-size: 0.95rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    outline: none;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+    border-color: var(--bright-blue);
+    box-shadow: 0 0 0 3px rgba(37, 166, 221, 0.1);
+}
+
+.formGroup textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+.formGroup select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238891a8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+.formGroup select option {
+    background: var(--deep-navy);
+    color: var(--white);
+}
+
+.submitBtn {
+    align-self: flex-start;
+}
+
+/* Light variant */
+.formLight input,
+.formLight textarea,
+.formLight select {
+    background: var(--white);
+    border-color: var(--gray-200);
+    color: var(--deep-navy);
+}
+
+.formLight label {
+    color: var(--gray-600);
+}
+
+.formContextBox {
+    padding: 0;
+}
+
+.contextTitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 20px;
+}
+
+.contextList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.contextItem {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.contextIcon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: rgba(37, 166, 221, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.contextItemTitle {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 2px;
+}
+
+.contextItemDesc {
+    font-size: 0.85rem;
+    color: var(--gray-400);
+}
+
+@media (max-width: 768px) {
+    .formSection {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}

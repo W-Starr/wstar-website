@@ -1,0 +1,171 @@
+import HeroSection from "@/components/HeroSection";
+import CTAButton from "@/components/CTAButton";
+import FeatureCard from "@/components/FeatureCard";
+import ContactForm from "@/components/ContactForm";
+import styles from "./investors.module.css";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Investors & Partners — WSTAR",
+    description:
+        "Back the future of African innovation. Explore WSTAR's market opportunity, financial projections, and partnership opportunities in EdTech and AgriTech.",
+};
+
+export default function InvestorsPage() {
+    return (
+        <>
+            {/* ===== Hero ===== */}
+            <HeroSection
+                label="Investment Opportunity"
+                title={
+                    <>
+                        Back the Future of{" "}
+                        <span>African Innovation.</span>
+                    </>
+                }
+                description="WSTAR is actively seeking partners, collaborators, and investors to join us in transforming Africa's challenges into global opportunities. We build scalable, high-impact ventures that solve critical problems in education, agriculture, and sustainability."
+                compact
+            >
+                <CTAButton href="#contact-form" variant="primary" size="large">
+                    Request Full Pitch Deck
+                </CTAButton>
+                <CTAButton href="/contact" variant="secondary" size="large">
+                    Schedule a Meeting
+                </CTAButton>
+            </HeroSection>
+
+            {/* ===== Market Opportunity ===== */}
+            <section className="section">
+                <div className="container">
+                    <div className="section-header">
+                        <div className="glow-line glow-line--center" />
+                        <h2>Massive Markets. Untapped Potential.</h2>
+                        <p>
+                            Two high-growth sectors with enormous addressable markets across
+                            Africa.
+                        </p>
+                    </div>
+                    <div className={styles.marketGrid}>
+                        <div className={styles.marketCard}>
+                            <p className={styles.marketLabel}>EdTech — Ace-Acad</p>
+                            <span className={styles.marketStat}>2M+</span>
+                            <span className={styles.marketStatLabel}>
+                                Undergraduates in Nigeria alone
+                            </span>
+                            <h3>15M+ across Africa</h3>
+                            <p>
+                                A rapidly growing demand for personalized, offline-capable
+                                digital learning platforms tailored to the local curriculum. The
+                                market is largely untapped by quality, locally-built solutions.
+                            </p>
+                        </div>
+                        <div className={styles.marketCard}>
+                            <p className={styles.marketLabel}>AgriTech — PlantIQ</p>
+                            <span className={styles.marketStat}>$26.83M</span>
+                            <span className={styles.marketStatLabel}>
+                                Nigerian smart agriculture market by 2025
+                            </span>
+                            <h3>10.5% CAGR in a $14B+ global market</h3>
+                            <p>
+                                Capturing the rising interest in home-based gardening and urban
+                                food security. Our affordable IoT solution targets a massively
+                                underserved segment.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ===== Financial Overview ===== */}
+            <section className="section section--light">
+                <div className="container">
+                    <div className="section-header">
+                        <div className="glow-line glow-line--center" />
+                        <h2>Bootstrapped for MVP. Ready to Scale.</h2>
+                        <p>
+                            Transparent financials and diversified revenue streams.
+                        </p>
+                    </div>
+                    <div className={styles.financeGrid}>
+                        <div className={styles.financeCard}>
+                            <div className={styles.financeIcon}>🚀</div>
+                            <h3>Current Status</h3>
+                            <p>
+                                Both flagships in MVP development, self-funded through team
+                                contributions and strategic resource allocation.
+                            </p>
+                            <span className={styles.financeHighlight}>
+                                ₦820K total MVP budget
+                            </span>
+                        </div>
+                        <div className={styles.financeCard}>
+                            <div className={styles.financeIcon}>💰</div>
+                            <h3>Revenue Streams</h3>
+                            <p>
+                                Diversified models: freemium app subscriptions, institutional
+                                licensing, B2B school deals, and direct IoT device sales.
+                            </p>
+                            <span className={styles.financeHighlight}>4 revenue channels</span>
+                        </div>
+                        <div className={styles.financeCard}>
+                            <div className={styles.financeIcon}>📈</div>
+                            <h3>3-Year Projections</h3>
+                            <p>
+                                Ace-Acad: 50K users, ₦20M annual revenue. PlantIQ: 500-unit
+                                pilot, ₦37M early revenue.
+                            </p>
+                            <span className={styles.financeHighlight}>₦57M+ by Year 3</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ===== WSTAR Advantage / ESG ===== */}
+            <section className="section">
+                <div className="container">
+                    <div className="section-header">
+                        <div className="glow-line glow-line--center" />
+                        <h2>Yielding Returns. Driving Impact.</h2>
+                        <p>
+                            Aligned with ESG priorities — social impact that delivers
+                            measurable returns.
+                        </p>
+                    </div>
+                    <div className={styles.esgGrid}>
+                        <FeatureCard
+                            icon="🎓"
+                            title="Education Equity"
+                            description="Bridging the gap for under-resourced students with offline-first tools and locally-aligned curriculum."
+                        />
+                        <FeatureCard
+                            icon="🌾"
+                            title="Food Security"
+                            description="Empowering households to grow food locally in resource-constrained environments with affordable automation."
+                        />
+                        <FeatureCard
+                            icon="👥"
+                            title="Youth Empowerment"
+                            description="Built entirely by young Nigerian innovators, fostering local tech talent and a future-ready workforce."
+                        />
+                    </div>
+                </div>
+            </section>
+
+            {/* ===== Bottom Contact Form ===== */}
+            <section className="section section--dark" id="contact-form">
+                <div className="container">
+                    <div className={styles.investorForm}>
+                        <div className="glow-line glow-line--center" />
+                        <h2>Let&apos;s Build the Future Together.</h2>
+                        <p>
+                            Whether you are an investor, an institution wanting to adopt our
+                            solutions, or a professional looking to collaborate, we want to
+                            hear from you.
+                        </p>
+                    </div>
+                    <ContactForm />
+                </div>
+            </section>
+        </>
+    );
+}

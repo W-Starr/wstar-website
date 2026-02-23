@@ -1,0 +1,122 @@
+.problemSolution {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.problemSide {
+    padding: 48px 40px;
+    background: var(--dark-card);
+}
+
+.solutionSide {
+    padding: 48px 40px;
+    background: linear-gradient(135deg, rgba(37, 166, 221, 0.08), rgba(25, 108, 164, 0.08));
+    border-left: 2px solid var(--bright-blue);
+}
+
+.psLabel {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+}
+
+.psLabelProblem {
+    color: #e74c3c;
+}
+
+.psLabelSolution {
+    color: var(--bright-blue);
+}
+
+.problemSide h3,
+.solutionSide h3 {
+    font-size: 1.15rem;
+    color: var(--white);
+    margin-bottom: 12px;
+}
+
+.problemSide p,
+.solutionSide p {
+    font-size: 0.92rem;
+    color: var(--gray-400);
+    line-height: 1.7;
+}
+
+/* Features Grid */
+.featuresGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+/* Pricing section */
+.pricingContainer {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Early Access Section */
+.earlyAccess {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.earlyAccess h2 {
+    margin-bottom: 16px;
+    color: var(--white);
+}
+
+.earlyAccess p {
+    margin-bottom: 32px;
+    font-size: 1.05rem;
+}
+
+.emailForm {
+    display: flex;
+    gap: 12px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.emailInput {
+    flex: 1;
+    padding: 14px 20px;
+    background: var(--dark-card);
+    border: 1px solid rgba(37, 166, 221, 0.2);
+    border-radius: var(--radius-full);
+    color: var(--white);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.emailInput:focus {
+    border-color: var(--bright-blue);
+}
+
+@media (max-width: 768px) {
+    .problemSolution {
+        grid-template-columns: 1fr;
+    }
+
+    .solutionSide {
+        border-left: none;
+        border-top: 2px solid var(--bright-blue);
+    }
+
+    .featuresGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .emailForm {
+        flex-direction: column;
+    }
+}

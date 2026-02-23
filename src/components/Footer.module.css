@@ -1,0 +1,111 @@
+.footer {
+    background-color: #0a0e1a;
+    border-top: 1px solid rgba(37, 166, 221, 0.1);
+    padding: 60px 24px 30px;
+}
+
+.footerInner {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+}
+
+.footerBrand h3 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    color: var(--white);
+}
+
+.footerBrand p {
+    font-size: 0.9rem;
+    color: var(--gray-400);
+    line-height: 1.6;
+    max-width: 320px;
+}
+
+.footerCol h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray-400);
+    margin-bottom: 16px;
+}
+
+.footerLink {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--gray-300);
+    padding: 6px 0;
+    transition: color var(--transition-fast), padding-left var(--transition-fast);
+}
+
+.footerLink:hover {
+    color: var(--bright-blue);
+    padding-left: 4px;
+}
+
+.footerBottom {
+    max-width: var(--container-width);
+    margin: 40px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footerCopyright {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+}
+
+.footerSocials {
+    display: flex;
+    gap: 16px;
+}
+
+.socialLink {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--dark-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--gray-400);
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.socialLink:hover {
+    background: var(--gradient-blue);
+    color: var(--white);
+}
+
+@media (max-width: 768px) {
+    .footerInner {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+
+    .footerBrand {
+        grid-column: 1 / -1;
+    }
+
+    .footerBottom {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footerInner {
+        grid-template-columns: 1fr;
+    }
+}
