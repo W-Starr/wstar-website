@@ -27,7 +27,7 @@ export default function PlantIQPage() {
                 description="Meet PlantIQ, a modular IoT device that optimizes water use for home gardeners and small-scale farmers. Whether you are a busy urban household or a STEM educator, PlantIQ enables you to reliably grow plants and food without requiring any agricultural expertise."
                 visual={
                     <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <Image src="/images/plantiq-icon.png" alt="PlantIQ Device" width={280} height={280} style={{ objectFit: 'contain', dropShadow: '0 20px 40px rgba(0,0,0,0.4)' }} priority />
+                        <Image src="/images/plantiq-icon.png" alt="PlantIQ Device" width={280} height={280} style={{ objectFit: 'contain', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }} priority />
                     </div>
                 }
             >

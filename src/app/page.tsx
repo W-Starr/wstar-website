@@ -1,6 +1,5 @@
 import HeroSection from "@/components/HeroSection";
 import CTAButton from "@/components/CTAButton";
-import FeatureCard from "@/components/FeatureCard";
 import styles from "./page.module.css";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,7 +20,7 @@ export default function Home() {
         description="We are WSTAR—a youth-led technology company building impactful EdTech and AgriTech solutions. From smarter study tools to automated smart farms, we solve real-world problems to position Nigeria as a global leader in innovation."
         visual={
           <div className={styles.heroMockupContainer}>
-            <Image src="/images/ace-acad-mockup.png" alt="Ace-Acad App Preview" width={280} height={500} style={{ objectFit: 'contain', dropShadow: '0 20px 40px rgba(0,0,0,0.4)', borderRadius: 'var(--radius-lg)' }} priority />
+            <Image src="/images/ace-acad-mockup.png" alt="Ace-Acad App Preview" width={280} height={500} style={{ objectFit: 'contain', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', borderRadius: 'var(--radius-lg)' }} priority />
           </div>
         }
       >
