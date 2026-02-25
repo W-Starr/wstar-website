@@ -2,6 +2,7 @@ import HeroSection from "@/components/HeroSection";
 import CTAButton from "@/components/CTAButton";
 import FeatureCard from "@/components/FeatureCard";
 import ContactForm from "@/components/ContactForm";
+import { Rocket, Banknote, TrendingUp, GraduationCap, Sprout, Users } from "lucide-react";
 import styles from "./investors.module.css";
 import type { Metadata } from "next";
 
@@ -88,7 +89,9 @@ export default function InvestorsPage() {
                     </div>
                     <div className={styles.financeGrid}>
                         <div className={styles.financeCard}>
-                            <div className={styles.financeIcon}>🚀</div>
+                            <div className={styles.financeIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Rocket size={40} color="var(--deep-navy)" />
+                            </div>
                             <h3>Current Status</h3>
                             <p>
                                 Both flagships in MVP development, self-funded through team
@@ -99,7 +102,9 @@ export default function InvestorsPage() {
                             </span>
                         </div>
                         <div className={styles.financeCard}>
-                            <div className={styles.financeIcon}>💰</div>
+                            <div className={styles.financeIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Banknote size={40} color="var(--deep-navy)" />
+                            </div>
                             <h3>Revenue Streams</h3>
                             <p>
                                 Diversified models: freemium app subscriptions, institutional
@@ -108,7 +113,9 @@ export default function InvestorsPage() {
                             <span className={styles.financeHighlight}>4 revenue channels</span>
                         </div>
                         <div className={styles.financeCard}>
-                            <div className={styles.financeIcon}>📈</div>
+                            <div className={styles.financeIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <TrendingUp size={40} color="var(--deep-navy)" />
+                            </div>
                             <h3>3-Year Projections</h3>
                             <p>
                                 Ace-Acad: 50K users, ₦20M annual revenue. PlantIQ: 500-unit
@@ -133,17 +140,17 @@ export default function InvestorsPage() {
                     </div>
                     <div className={styles.esgGrid}>
                         <FeatureCard
-                            icon="🎓"
+                            icon={<GraduationCap size={32} />}
                             title="Education Equity"
                             description="Bridging the gap for under-resourced students with offline-first tools and locally-aligned curriculum."
                         />
                         <FeatureCard
-                            icon="🌾"
+                            icon={<Sprout size={32} />}
                             title="Food Security"
                             description="Empowering households to grow food locally in resource-constrained environments with affordable automation."
                         />
                         <FeatureCard
-                            icon="👥"
+                            icon={<Users size={32} />}
                             title="Youth Empowerment"
                             description="Built entirely by young Nigerian innovators, fostering local tech talent and a future-ready workforce."
                         />

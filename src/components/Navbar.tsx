@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {
@@ -22,8 +24,7 @@ const Navbar = () => {
         <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
             <div className={styles.navbarInner}>
                 <Link href="/" className={styles.logo} onClick={closeMenu}>
-                    <span className={styles.logoIcon}>W★</span>
-                    WSTAR
+                    <Image src="/images/wstar-logo-light.png" alt="WSTAR Logo" width={110} height={32} style={{ objectFit: 'contain' }} />
                 </Link>
 
                 <div
@@ -44,7 +45,7 @@ const Navbar = () => {
                     </Link>
                     <div className={styles.navDropdown}>
                         <span className={`${styles.navLink} ${styles.dropdownTrigger}`}>
-                            Products <span className={styles.dropdownArrow}>▼</span>
+                            Products <ChevronDown size={14} className={styles.dropdownArrow} />
                         </span>
                         <div className={styles.dropdownMenu}>
                             <Link

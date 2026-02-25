@@ -1,7 +1,7 @@
 import styles from "./FeatureCard.module.css";
 
 interface FeatureCardProps {
-    icon: string;
+    icon: React.ReactNode;
     title: string;
     description: string;
     light?: boolean;

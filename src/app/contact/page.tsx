@@ -1,6 +1,7 @@
 import HeroSection from "@/components/HeroSection";
 import ContactForm from "@/components/ContactForm";
 import CTAButton from "@/components/CTAButton";
+import { MapPin, Mail, Globe } from "lucide-react";
 import styles from "./contact.module.css";
 import type { Metadata } from "next";
 
@@ -34,19 +35,25 @@ export default function ContactPage() {
                     </div>
                     <div className={styles.contactInfoGrid}>
                         <div className={styles.contactCard}>
-                            <div className={styles.contactIcon}>📍</div>
+                            <div className={styles.contactIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <MapPin size={40} color="var(--bright-blue)" />
+                            </div>
                             <h3>Head Office</h3>
                             <p>Ahmadu Bello University, Zaria, Nigeria</p>
                         </div>
                         <div className={styles.contactCard}>
-                            <div className={styles.contactIcon}>✉️</div>
+                            <div className={styles.contactIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Mail size={40} color="var(--bright-blue)" />
+                            </div>
                             <h3>Email</h3>
                             <p>
                                 <a href="mailto:wstar5552@gmail.com">wstar5552@gmail.com</a>
                             </p>
                         </div>
                         <div className={styles.contactCard}>
-                            <div className={styles.contactIcon}>🌐</div>
+                            <div className={styles.contactIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Globe size={40} color="var(--bright-blue)" />
+                            </div>
                             <h3>Website</h3>
                             <p>
                                 <a href="https://www.wstartech.ng" target="_blank" rel="noopener noreferrer">

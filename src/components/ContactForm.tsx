@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Briefcase, Building2, GraduationCap } from "lucide-react";
 import CTAButton from "./CTAButton";
 import styles from "./ContactForm.module.css";
 
@@ -102,7 +103,7 @@ const ContactForm = ({ showContext = true, light = false }: ContactFormProps) =>
                     </p>
                     <div className={styles.contextList}>
                         <div className={styles.contextItem}>
-                            <span className={styles.contextIcon}>💰</span>
+                            <span className={styles.contextIcon}><Briefcase size={18} /></span>
                             <div>
                                 <p className={styles.contextItemTitle}>An Investor</p>
                                 <p className={styles.contextItemDesc}>
@@ -111,7 +112,7 @@ const ContactForm = ({ showContext = true, light = false }: ContactFormProps) =>
                             </div>
                         </div>
                         <div className={styles.contextItem}>
-                            <span className={styles.contextIcon}>🏛️</span>
+                            <span className={styles.contextIcon}><Building2 size={18} /></span>
                             <div>
                                 <p className={styles.contextItemTitle}>An Institution or NGO</p>
                                 <p className={styles.contextItemDesc}>
@@ -120,7 +121,7 @@ const ContactForm = ({ showContext = true, light = false }: ContactFormProps) =>
                             </div>
                         </div>
                         <div className={styles.contextItem}>
-                            <span className={styles.contextIcon}>🎓</span>
+                            <span className={styles.contextIcon}><GraduationCap size={18} /></span>
                             <div>
                                 <p className={styles.contextItemTitle}>
                                     A Student or Professional

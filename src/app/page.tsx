@@ -3,6 +3,8 @@ import CTAButton from "@/components/CTAButton";
 import FeatureCard from "@/components/FeatureCard";
 import styles from "./page.module.css";
 import Link from "next/link";
+import Image from "next/image";
+import { Rocket, Lightbulb, Target, Globe, BookOpen, Leaf, GraduationCap, Sprout, Users, Recycle } from "lucide-react";
 
 export default function Home() {
   return (
@@ -19,9 +21,7 @@ export default function Home() {
         description="We are WSTAR—a youth-led technology company building impactful EdTech and AgriTech solutions. From smarter study tools to automated smart farms, we solve real-world problems to position Nigeria as a global leader in innovation."
         visual={
           <div className={styles.heroMockupContainer}>
-            <div className={styles.productVisual + " " + styles.productVisualEdtech} style={{ width: "100%", maxWidth: 480, aspectRatio: "4/3", borderRadius: "var(--radius-lg)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3rem", border: "1px solid rgba(37,166,221,0.15)" }}>
-              📱
-            </div>
+            <Image src="/images/ace-acad-mockup.png" alt="Ace-Acad App Preview" width={280} height={500} style={{ objectFit: 'contain', dropShadow: '0 20px 40px rgba(0,0,0,0.4)', borderRadius: 'var(--radius-lg)' }} priority />
           </div>
         }
       >
@@ -37,7 +37,9 @@ export default function Home() {
       <section className="section section--light">
         <div className="container">
           <div className={styles.missionSection}>
-            <div className={styles.missionImage}>🚀</div>
+            <div className={styles.missionImage} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Rocket size={48} color="var(--bright-blue)" />
+            </div>
             <div className={styles.missionContent}>
               <div className="glow-line" />
               <h2>Innovation Driven by Impact.</h2>
@@ -52,15 +54,15 @@ export default function Home() {
               </CTAButton>
               <div className={styles.values}>
                 <div className={styles.valueItem}>
-                  <span className={styles.valueIcon}>💡</span>
+                  <span className={styles.valueIcon}><Lightbulb size={24} /></span>
                   <span className={styles.valueLabel}>Innovation</span>
                 </div>
                 <div className={styles.valueItem}>
-                  <span className={styles.valueIcon}>🎯</span>
+                  <span className={styles.valueIcon}><Target size={24} /></span>
                   <span className={styles.valueLabel}>Excellence</span>
                 </div>
                 <div className={styles.valueItem}>
-                  <span className={styles.valueIcon}>🌍</span>
+                  <span className={styles.valueIcon}><Globe size={24} /></span>
                   <span className={styles.valueLabel}>Impact</span>
                 </div>
               </div>
@@ -86,8 +88,9 @@ export default function Home() {
             <div className={styles.productCard}>
               <div
                 className={`${styles.productVisual} ${styles.productVisualEdtech}`}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                📚
+                <BookOpen size={48} />
               </div>
               <div className={styles.productContent}>
                 <p className={styles.productTag}>EdTech</p>
@@ -107,8 +110,9 @@ export default function Home() {
             <div className={styles.productCard}>
               <div
                 className={`${styles.productVisual} ${styles.productVisualAgritech}`}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                🌱
+                <Leaf size={48} />
               </div>
               <div className={styles.productContent}>
                 <p className={styles.productTag}>AgriTech</p>
@@ -141,22 +145,22 @@ export default function Home() {
 
           <div className={styles.impactGrid}>
             <div className={styles.impactItem}>
-              <div className={styles.impactIcon}>🎓</div>
+              <div className={styles.impactIcon}><GraduationCap size={32} /></div>
               <h3>Education Equity</h3>
               <p>Bridging the gap for under-resourced students with offline-first tools.</p>
             </div>
             <div className={styles.impactItem}>
-              <div className={styles.impactIcon}>🌾</div>
+              <div className={styles.impactIcon}><Sprout size={32} /></div>
               <h3>Food Security</h3>
               <p>Empowering households to grow food locally in resource-constrained environments.</p>
             </div>
             <div className={styles.impactItem}>
-              <div className={styles.impactIcon}>👥</div>
+              <div className={styles.impactIcon}><Users size={32} /></div>
               <h3>Youth Empowerment</h3>
               <p>Built entirely by young Nigerian innovators, fostering local tech talent.</p>
             </div>
             <div className={styles.impactItem}>
-              <div className={styles.impactIcon}>♻️</div>
+              <div className={styles.impactIcon}><Recycle size={32} /></div>
               <h3>Sustainability</h3>
               <p>Solar-powered IoT and locally sourced materials for a greener future.</p>
             </div>

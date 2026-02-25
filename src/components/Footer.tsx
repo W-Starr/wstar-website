@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { Twitter, Linkedin, Instagram } from "lucide-react";
 import styles from "./Footer.module.css";
 
 const Footer = () => {
@@ -6,7 +8,7 @@ const Footer = () => {
         <footer className={styles.footer}>
             <div className={styles.footerInner}>
                 <div className={styles.footerBrand}>
-                    <h3>W★STAR</h3>
+                    <Image src="/images/wstar-logo-light.png" alt="WSTAR Logo" width={110} height={32} style={{ objectFit: 'contain' }} className={styles.footerLogo} />
                     <p>
                         A youth-led technology company building impactful EdTech and
                         AgriTech solutions for Africa. Global innovation, deeply rooted in
@@ -41,9 +43,9 @@ const Footer = () => {
                     © {new Date().getFullYear()} WSTAR. All rights reserved.
                 </span>
                 <div className={styles.footerSocials}>
-                    <a href="#" className={styles.socialLink} aria-label="Twitter">𝕏</a>
-                    <a href="#" className={styles.socialLink} aria-label="LinkedIn">in</a>
-                    <a href="#" className={styles.socialLink} aria-label="Instagram">📷</a>
+                    <a href="#" className={styles.socialLink} aria-label="Twitter"><Twitter size={18} /></a>
+                    <a href="#" className={styles.socialLink} aria-label="LinkedIn"><Linkedin size={18} /></a>
+                    <a href="#" className={styles.socialLink} aria-label="Instagram"><Instagram size={18} /></a>
                 </div>
             </div>
         </footer>

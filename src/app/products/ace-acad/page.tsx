@@ -2,6 +2,8 @@ import HeroSection from "@/components/HeroSection";
 import CTAButton from "@/components/CTAButton";
 import FeatureCard from "@/components/FeatureCard";
 import PricingCard from "@/components/PricingCard";
+import Image from "next/image";
+import { BookOpen, Target, Layers, BarChart } from "lucide-react";
 import styles from "./aceacad.module.css";
 import type { Metadata } from "next";
 
@@ -25,8 +27,8 @@ export default function AceAcadPage() {
                 }
                 description="Ace-Acad is an intelligent learning app that personalizes your reading, quizzes, and study reminders. Designed specifically for the Nigerian university curriculum, it empowers you to achieve higher retention with minimal effort."
                 visual={
-                    <div style={{ width: "100%", maxWidth: 400, aspectRatio: "9/16", maxHeight: 500, background: "linear-gradient(135deg, #1a2a4a, #152040)", borderRadius: "var(--radius-lg)", border: "1px solid rgba(37,166,221,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "4rem" }}>
-                        📱
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <Image src="/images/ace-acad-mockup.png" alt="Ace-Acad App Preview" width={280} height={500} style={{ objectFit: 'contain', dropShadow: '0 20px 40px rgba(0,0,0,0.4)', borderRadius: 'var(--radius-lg)' }} priority />
                     </div>
                 }
             >
@@ -81,25 +83,25 @@ export default function AceAcadPage() {
                     </div>
                     <div className={styles.featuresGrid}>
                         <FeatureCard
-                            icon="📚"
+                            icon={<BookOpen size={32} />}
                             title="Offline-First E-Library"
                             description="Access recommended textbooks and course materials anytime, anywhere — no data required."
                             light
                         />
                         <FeatureCard
-                            icon="🎯"
+                            icon={<Target size={32} />}
                             title="Smart Study Guides"
                             description="Section-targeted reading and study plans directly aligned with your local curriculum."
                             light
                         />
                         <FeatureCard
-                            icon="🃏"
+                            icon={<Layers size={32} />}
                             title="Flashcard Quizzes & Mock Tests"
                             description="Quick self-assessment tools to fast-track your exam revision using Active Recall."
                             light
                         />
                         <FeatureCard
-                            icon="📊"
+                            icon={<BarChart size={32} />}
                             title="Dashboard Analytics & GPA Calculator"
                             description="Track your performance, calculate your grades, and get automated study reminders."
                             light

@@ -1,6 +1,8 @@
 import HeroSection from "@/components/HeroSection";
 import CTAButton from "@/components/CTAButton";
 import FeatureCard from "@/components/FeatureCard";
+import Image from "next/image";
+import { Droplet, RefreshCw, Sun, Smartphone } from "lucide-react";
 import styles from "./plantiq.module.css";
 import type { Metadata } from "next";
 
@@ -24,8 +26,8 @@ export default function PlantIQPage() {
                 }
                 description="Meet PlantIQ, a modular IoT device that optimizes water use for home gardeners and small-scale farmers. Whether you are a busy urban household or a STEM educator, PlantIQ enables you to reliably grow plants and food without requiring any agricultural expertise."
                 visual={
-                    <div style={{ width: "100%", maxWidth: 420, aspectRatio: "4/3", background: "linear-gradient(135deg, #1a3a2a, #132820)", borderRadius: "var(--radius-lg)", border: "1px solid rgba(46,204,113,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "4rem" }}>
-                        🌱
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <Image src="/images/plantiq-icon.png" alt="PlantIQ Device" width={280} height={280} style={{ objectFit: 'contain', dropShadow: '0 20px 40px rgba(0,0,0,0.4)' }} priority />
                     </div>
                 }
             >
@@ -83,25 +85,25 @@ export default function PlantIQPage() {
                     </div>
                     <div className={styles.featuresGrid}>
                         <FeatureCard
-                            icon="💧"
+                            icon={<Droplet size={32} />}
                             title="Automated Watering"
                             description="Smart soil moisture sensors ensure your plants get exactly the water they need, exactly when they need it."
                             light
                         />
                         <FeatureCard
-                            icon="🔄"
+                            icon={<RefreshCw size={32} />}
                             title="Self-Refilling System"
                             description="Never worry about an empty tank. PlantIQ uses water level sensors linked directly to your main water source."
                             light
                         />
                         <FeatureCard
-                            icon="☀️"
+                            icon={<Sun size={32} />}
                             title="Solar & Battery Powered"
                             description="Fully rechargeable with solar integration and a massive 24,000 mAh battery capacity for uninterrupted, off-grid functionality."
                             light
                         />
                         <FeatureCard
-                            icon="📱"
+                            icon={<Smartphone size={32} />}
                             title="IoT Mobile App"
                             description="Control your garden from anywhere. Get step-by-step planting guides and tailored care instructions right on your phone."
                             light
