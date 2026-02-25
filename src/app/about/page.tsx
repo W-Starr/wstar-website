@@ -114,7 +114,7 @@ export default function AboutPage() {
                                 <h3>Ibrahim Abdulwahab</h3>
                                 <p className={styles.teamRole}>CEO & Founder</p>
                                 <p>
-                                    Mechatronics Engineering student at ABU Zaria, leading WSTAR's
+                                    Mechatronics Engineering student at ABU Zaria, leading WSTAR&apos;s
                                     vision for African tech innovation.
                                 </p>
                             </div>

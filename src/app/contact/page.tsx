@@ -1,6 +1,5 @@
 import HeroSection from "@/components/HeroSection";
 import ContactForm from "@/components/ContactForm";
-import CTAButton from "@/components/CTAButton";
 import { MapPin, Mail, Globe } from "lucide-react";
 import styles from "./contact.module.css";
 import type { Metadata } from "next";
