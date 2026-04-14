@@ -30,6 +30,11 @@ const Footer = () => {
                 </div>
 
                 <div className={styles.footerCol}>
+                    <h4>Legal</h4>
+                    <Link href="/products/ace-acad/privacy" className={styles.footerLink}>Ace-Acad Privacy Policy</Link>
+                </div>
+
+                <div className={styles.footerCol}>
                     <h4>Connect</h4>
                     <a href="mailto:wstar5552@gmail.com" className={styles.footerLink}>
                         wstar5552@gmail.com

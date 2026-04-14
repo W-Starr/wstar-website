@@ -1,0 +1,57 @@
+.privacyPage {
+  padding-top: 120px;
+  padding-bottom: 80px;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.contentContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contentContainer h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-high);
+}
+
+.contentContainer h2 {
+  font-size: 1.75rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-high);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.5rem;
+}
+
+.contentContainer h3 {
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-text-high);
+}
+
+.contentContainer p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: var(--color-text-muted);
+}
+
+.contentContainer ul {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.contentContainer li {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-muted);
+}
+
+.contentContainer strong {
+  color: var(--color-text-high);
+  font-weight: 600;
+}

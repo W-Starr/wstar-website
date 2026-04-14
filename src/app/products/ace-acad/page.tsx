@@ -179,6 +179,11 @@ export default function AceAcadPage() {
                                 Claim Early Access
                             </CTAButton>
                         </div>
+                        <div style={{ marginTop: "2rem", textAlign: "center" }}>
+                            <a href="/products/ace-acad/privacy" style={{ color: "var(--color-primary-light)", textDecoration: "underline", fontSize: "0.9rem" }}>
+                                Read our Privacy Policy
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>
