@@ -199,7 +199,6 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
             decisionNumber: dec.decisionNumber,
             title: dec.title,
             decision: dec.decision,
-            reason: dec.reason,
             status: dec.status || 'accepted',
             participants: dec.participants || ['Abdulaziz Abdulwahab', 'Ibrahim Abdulwahab'],
             date: dec.date || new Date().toISOString().split('T')[0],
@@ -564,12 +563,12 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
       lower.includes('wrong')
     ) {
       return {
-        suggestedType: 'bug',
+        type: 'bug',
+        productId: 'ace-acad',
         confidence: 0.9,
-        reason: 'Text contains error or failure keywords indicating a defect.',
-        suggestedPriority: lower.includes('crash') || lower.includes('exception') ? 'critical' : 'high',
-        suggestedArea: lower.includes('auth') ? 'area-auth' : lower.includes('pdf') ? 'area-library' : 'area-study-path',
-        suggestedAssignee: 'abdulaziz',
+        priority: lower.includes('crash') || lower.includes('exception') ? 'critical' : 'high',
+        productAreaId: lower.includes('auth') ? 'area-auth' : lower.includes('pdf') ? 'area-library' : 'area-study-path',
+        assignee: 'abdulaziz',
       }
     }
 
@@ -582,21 +581,21 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
       lower.includes('strategy')
     ) {
       return {
-        suggestedType: 'decision',
+        type: 'research',
+        productId: 'wstar-core',
         confidence: 0.85,
-        reason: 'Text suggests an architectural decision or policy direction.',
-        suggestedPriority: 'high',
-        suggestedAssignee: 'ibrahim',
+        priority: 'high',
+        assignee: 'ibrahim',
       }
     }
 
     return {
-      suggestedType: 'task',
+      type: 'task',
+      productId: 'ace-acad',
       confidence: 0.7,
-      reason: 'General task or feature item.',
-      suggestedPriority: 'medium',
-      suggestedAssignee: lower.includes('pitch') || lower.includes('investor') || lower.includes('legal') ? 'ibrahim' : 'abdulaziz',
-      suggestedArea: 'area-library',
+      priority: 'medium',
+      assignee: lower.includes('pitch') || lower.includes('investor') || lower.includes('legal') ? 'ibrahim' : 'abdulaziz',
+      productAreaId: 'area-library',
     }
   }
 
