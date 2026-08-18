@@ -31,7 +31,10 @@ const Footer = () => {
 
                 <div className={styles.footerCol}>
                     <h4>Legal</h4>
-                    <Link href="/products/ace-acad/privacy" className={styles.footerLink}>Ace-Acad Privacy Policy</Link>
+                    <Link href="/products/ace-acad/terms" className={styles.footerLink}>Terms of Service</Link>
+                    <Link href="/products/ace-acad/privacy" className={styles.footerLink}>Privacy Policy (NDPA)</Link>
+                    <Link href="/products/ace-acad/acceptable-use" className={styles.footerLink}>Academic & AI Policy</Link>
+                    <Link href="/products/ace-acad/account-deletion" className={styles.footerLink}>Account Deletion</Link>
                 </div>
 
                 <div className={styles.footerCol}>

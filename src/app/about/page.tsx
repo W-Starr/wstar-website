@@ -24,7 +24,7 @@ export default function AboutPage() {
                         <span>Advancement & Research</span>
                     </>
                 }
-                description="A youth-led, innovation-driven technology startup in Nigeria focused on solving real-world challenges through impactful EdTech and AgriTech solutions."
+                description="A youth-led, innovation-driven technology company in Nigeria focused on solving real-world challenges through impactful EdTech and AgriTech solutions."
                 compact
             >
                 <CTAButton href="/contact" variant="primary">
@@ -36,7 +36,6 @@ export default function AboutPage() {
             <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Our Purpose</h2>
                     </div>
                     <div className={styles.visionMission}>
@@ -64,10 +63,9 @@ export default function AboutPage() {
             <section className="section section--light">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Our Core Values</h2>
                         <p>
-                            The principles that drive every decision, every product, and every
+                            The principles that drive every engineering decision, every product, and every
                             partnership at WSTAR.
                         </p>
                     </div>
@@ -75,7 +73,7 @@ export default function AboutPage() {
                         <FeatureCard
                             icon={<Lightbulb size={32} />}
                             title="Innovation"
-                            description="We push the boundaries of what's possible, combining emerging technologies with local insights to create groundbreaking solutions."
+                            description="We push the boundaries of what's possible, combining emerging technologies with local insights to create grounded solutions."
                             light
                         />
                         <FeatureCard
@@ -94,54 +92,39 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* ===== The Team ===== */}
+            {/* ===== The Leadership Team ===== */}
             <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
-                        <h2>Meet the Team</h2>
+                        <h2>Leadership Team</h2>
                         <p>
                             Young Nigerian innovators united by a shared vision to transform
-                            Africa through technology.
+                            Africa through world-class software engineering and hardware design.
                         </p>
                     </div>
-                    <div className={styles.teamGrid}>
+                    <div className={styles.teamGrid} style={{ maxWidth: '800px', margin: '0 auto' }}>
                         <div className={styles.teamCard}>
                             <div className={styles.teamPhoto} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Image src="/images/wstar-icon.png" alt="Team Member" width={80} height={80} style={{ objectFit: 'contain' }} />
+                                <Image src="/images/wstar-icon.png" alt="Ibrahim Abdulwahab" width={80} height={80} style={{ objectFit: 'contain' }} />
                             </div>
                             <div className={styles.teamInfo}>
                                 <h3>Ibrahim Abdulwahab</h3>
-                                <p className={styles.teamRole}>CEO & Founder</p>
+                                <p className={styles.teamRole}>Founder & CEO</p>
                                 <p>
-                                    Mechatronics Engineering student at ABU Zaria, leading WSTAR&apos;s
-                                    vision for African tech innovation.
+                                    Leading WSTAR&apos;s product vision, institutional partnerships, and commercial strategy for African technology innovation.
                                 </p>
                             </div>
                         </div>
+
                         <div className={styles.teamCard}>
                             <div className={styles.teamPhoto} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Image src="/images/wstar-icon.png" alt="Team Member" width={80} height={80} style={{ objectFit: 'contain' }} />
+                                <Image src="/images/wstar-icon.png" alt="Abdulaziz Abdulwahab" width={80} height={80} style={{ objectFit: 'contain' }} />
                             </div>
                             <div className={styles.teamInfo}>
-                                <h3>Team Member</h3>
-                                <p className={styles.teamRole}>CTO</p>
+                                <h3>Abdulaziz Abdulwahab</h3>
+                                <p className={styles.teamRole}>Lead Technical Architect</p>
                                 <p>
-                                    Driving the technical architecture and development of our
-                                    flagship products.
-                                </p>
-                            </div>
-                        </div>
-                        <div className={styles.teamCard}>
-                            <div className={styles.teamPhoto} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Image src="/images/wstar-icon.png" alt="Team Member" width={80} height={80} style={{ objectFit: 'contain' }} />
-                            </div>
-                            <div className={styles.teamInfo}>
-                                <h3>Team Member</h3>
-                                <p className={styles.teamRole}>Head of Product</p>
-                                <p>
-                                    Shaping user experiences and product strategy for Ace-Acad and
-                                    PlantIQ.
+                                    Architecting the Ace Acad mobile engine, syllabus ingestion pipelines, offline SQLite synchronization, and Cloud Firestore infrastructure.
                                 </p>
                             </div>
                         </div>
@@ -153,7 +136,6 @@ export default function AboutPage() {
             <section className="section section--dark">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Our Social Impact</h2>
                         <p>
                             Global innovation, deeply rooted in local realities. We build for
@@ -164,7 +146,7 @@ export default function AboutPage() {
                         <FeatureCard
                             icon={<GraduationCap size={32} />}
                             title="Education Access"
-                            description="Providing offline-first study tools to undergraduates who lack reliable internet access."
+                            description="Providing offline-first study tools to undergraduates who lack reliable internet access in university hostels."
                         />
                         <FeatureCard
                             icon={<Sprout size={32} />}

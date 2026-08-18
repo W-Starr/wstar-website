@@ -39,7 +39,6 @@ export default function InvestorsPage() {
             <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Massive Markets. Untapped Potential.</h2>
                         <p>
                             Two high-growth sectors with enormous addressable markets across
@@ -81,7 +80,6 @@ export default function InvestorsPage() {
             <section className="section section--light">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Bootstrapped for MVP. Ready to Scale.</h2>
                         <p>
                             Transparent financials and diversified revenue streams.
@@ -131,7 +129,6 @@ export default function InvestorsPage() {
             <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Yielding Returns. Driving Impact.</h2>
                         <p>
                             Aligned with ESG priorities — social impact that delivers
@@ -162,7 +159,6 @@ export default function InvestorsPage() {
             <section className="section section--dark" id="contact-form">
                 <div className="container">
                     <div className={styles.investorForm}>
-                        <div className="glow-line glow-line--center" />
                         <h2>Let&apos;s Build the Future Together.</h2>
                         <p>
                             Whether you are an investor, an institution wanting to adopt our

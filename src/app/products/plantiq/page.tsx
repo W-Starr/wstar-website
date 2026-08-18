@@ -43,7 +43,6 @@ export default function PlantIQPage() {
             <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Stop Guessing. Start Growing.</h2>
                     </div>
                     <div className={styles.problemSolution}>
@@ -77,7 +76,6 @@ export default function PlantIQPage() {
             <section className="section section--light" id="features">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Built for Sustainability and Convenience.</h2>
                         <p>
                             Advanced IoT technology meets practical, everyday gardening.
@@ -116,7 +114,6 @@ export default function PlantIQPage() {
             <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Beyond Watering: The Smart Mini Farm Ecosystem.</h2>
                         <p>
                             PlantIQ is just the beginning. Here&apos;s what&apos;s coming next.
@@ -163,7 +160,6 @@ export default function PlantIQPage() {
             <section className="section section--dark" id="reserve">
                 <div className="container">
                     <div className={styles.pricingBottom}>
-                        <div className="glow-line glow-line--center" />
                         <h2>Ready to Transform Your Space?</h2>
                         <p>
                             We are currently finalizing our MVP and preparing for a 500-unit

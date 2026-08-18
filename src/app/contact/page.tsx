@@ -29,8 +29,7 @@ export default function ContactPage() {
             <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
-                        <h2>Reach Out Directly.</h2>
+                        <h2>Reach Out Directly</h2>
                     </div>
                     <div className={styles.contactInfoGrid}>
                         <div className={styles.contactCard}>
@@ -68,8 +67,7 @@ export default function ContactPage() {
             <section className="section section--dark">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
-                        <h2>Send Us a Message.</h2>
+                        <h2>Send Us a Message</h2>
                     </div>
                     <ContactForm />
                 </div>

@@ -41,7 +41,6 @@ export default function AceAcadPage() {
             <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Ditch the Scattered Notes and Exam Stress.</h2>
                     </div>
                     <div className={styles.problemSolution}>
@@ -75,7 +74,6 @@ export default function AceAcadPage() {
             <section className="section section--light">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Everything You Need to Ace Your Academics.</h2>
                         <p>
                             Powerful features designed around how students actually learn.
@@ -114,7 +112,6 @@ export default function AceAcadPage() {
             <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <div className="glow-line glow-line--center" />
                         <h2>Start Free. Upgrade for Ultimate Power.</h2>
                         <p>
                             Choose the plan that fits your study goals.
@@ -161,7 +158,6 @@ export default function AceAcadPage() {
             <section className="section section--dark" id="early-access">
                 <div className="container">
                     <div className={styles.earlyAccess}>
-                        <div className="glow-line glow-line--center" />
                         <h2>Are you an ABU Zaria Student? You&#39;re First in Line.</h2>
                         <p>
                             We are currently rolling out our Beta version for undergraduates,

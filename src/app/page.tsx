@@ -3,7 +3,19 @@ import CTAButton from "@/components/CTAButton";
 import styles from "./page.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import { Rocket, Lightbulb, Target, Globe, BookOpen, Leaf, GraduationCap, Sprout, Users, Recycle } from "lucide-react";
+import {
+  BookOpen,
+  Leaf,
+  GraduationCap,
+  Sprout,
+  Users,
+  ShieldCheck,
+  CheckCircle2,
+  ArrowRight,
+  Database,
+  Smartphone,
+  Cpu,
+} from "lucide-react";
 
 export default function Home() {
   return (
@@ -17,10 +29,21 @@ export default function Home() {
             <span>Engineering the Future.</span>
           </>
         }
-        description="We are WSTAR—a youth-led technology company building impactful EdTech and AgriTech solutions. From smarter study tools to automated smart farms, we solve real-world problems to position Nigeria as a global leader in innovation."
+        description="WSTAR is a youth-led technology company building impactful EdTech and AgriTech solutions. From offline-first study tools to automated smart farming, we solve real-world problems to position Africa as a global leader in innovation."
         visual={
           <div className={styles.heroMockupContainer}>
-            <Image src="/images/ace-acad-mockup.png" alt="Ace-Acad App Preview" width={280} height={500} style={{ objectFit: 'contain', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', borderRadius: 'var(--radius-lg)' }} priority />
+            <Image
+              src="/images/ace-acad-mockup.png"
+              alt="Ace-Acad App Preview"
+              width={280}
+              height={500}
+              style={{
+                objectFit: 'contain',
+                borderRadius: 'var(--radius-md)',
+                margin: '0 auto',
+              }}
+              priority
+            />
           </div>
         }
       >
@@ -32,37 +55,48 @@ export default function Home() {
         </CTAButton>
       </HeroSection>
 
-      {/* ===== Mission & Identity Section ===== */}
+      {/* ===== Mission & Impact Proof Section ===== */}
       <section className="section section--light">
         <div className="container">
           <div className={styles.missionSection}>
-            <div className={styles.missionImage} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Rocket size={48} color="var(--bright-blue)" />
+            {/* Left: Concrete Institutional Proof Points */}
+            <div className={styles.missionMetrics}>
+              <div className={styles.metricCard}>
+                <div className={styles.metricValue}>13</div>
+                <div className={styles.metricLabel}>Foundational Courses Ingested for 100L ABU Cohort</div>
+              </div>
+              <div className={styles.metricCard}>
+                <div className={styles.metricValue}>12</div>
+                <div className={styles.metricLabel}>ABU Faculties Supported Across Natural Sciences</div>
+              </div>
+              <div className={styles.metricCard}>
+                <div className={styles.metricValue}>100%</div>
+                <div className={styles.metricLabel}>Offline-First Local Sandboxed Study & Quiz Engine</div>
+              </div>
+              <div className={styles.metricCard}>
+                <div className={styles.metricValue}>2.0</div>
+                <div className={styles.metricLabel}>SRS Specification Milestone Achieved</div>
+              </div>
             </div>
+
+            {/* Right: Mission Statement */}
             <div className={styles.missionContent}>
-              <div className="glow-line" />
-              <h2>Innovation Driven by Impact.</h2>
+              <h2>Innovation Driven by Measurable Impact.</h2>
               <p>
-                We harness interdisciplinary expertise and bold creativity to
-                design, develop, and scale technology products. Our mission is to
-                deliver measurable impact in education, agriculture, and
-                sustainability while competing on the world stage.
+                We harness interdisciplinary engineering and bold creativity to design, develop, and scale software products tailored for African universities and agricultural ecosystems.
               </p>
               <CTAButton href="/about" variant="primary" size="small">
                 Meet the Team
               </CTAButton>
-              <div className={styles.values}>
+
+              <div className={styles.valuesRow}>
                 <div className={styles.valueItem}>
-                  <span className={styles.valueIcon}><Lightbulb size={24} /></span>
-                  <span className={styles.valueLabel}>Innovation</span>
+                  <div className={styles.valueTitle}>Pedagogical Depth</div>
+                  <div className={styles.valueDesc}>Page-bounded reading sessions and spaced quizzes.</div>
                 </div>
                 <div className={styles.valueItem}>
-                  <span className={styles.valueIcon}><Target size={24} /></span>
-                  <span className={styles.valueLabel}>Excellence</span>
-                </div>
-                <div className={styles.valueItem}>
-                  <span className={styles.valueIcon}><Globe size={24} /></span>
-                  <span className={styles.valueLabel}>Impact</span>
+                  <div className={styles.valueTitle}>Offline Resilience</div>
+                  <div className={styles.valueDesc}>Zero data required during active hostel study sessions.</div>
                 </div>
               </div>
             </div>
@@ -71,58 +105,80 @@ export default function Home() {
       </section>
 
       {/* ===== Flagship Products Section ===== */}
-      <section className="section" id="products">
+      <section className="section section--dark" id="products">
         <div className="container">
           <div className="section-header">
-            <div className="glow-line glow-line--center" />
-            <h2>Our Flagship Products</h2>
+            <h2>Flagship Products</h2>
             <p>
-              Transforming education and agriculture with technology built
-              specifically for the African ecosystem.
+              Engineered specifically to solve high-friction bottlenecks in African higher education and smart agriculture.
             </p>
           </div>
 
           <div className={styles.productsGrid}>
             {/* Ace-Acad Card */}
             <div className={styles.productCard}>
-              <div
-                className={`${styles.productVisual} ${styles.productVisualEdtech}`}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <BookOpen size={48} />
-              </div>
-              <div className={styles.productContent}>
-                <p className={styles.productTag}>EdTech</p>
+              <div className={styles.productHeader}>
+                <div className={styles.productTag}>EdTech • Mobile Platform</div>
                 <h3>Ace-Acad: Smarter Studying, Simplified.</h3>
                 <p>
                   A personal study assistant built for Nigerian undergraduates.
-                  Featuring an offline-first e-library, flashcard quizzes, and
-                  personalized study guides to help you ace your academics.
+                  Featuring an offline-first e-library, curated study paths, and
+                  assessments tailored to ABU Zaria 100-level syllabus.
                 </p>
+              </div>
+
+              <div className={styles.productFeatures}>
+                <div className={styles.featureItem}>
+                  <Smartphone className={styles.featureIcon} />
+                  <span>Flutter & Drift SQLite offline study engine</span>
+                </div>
+                <div className={styles.featureItem}>
+                  <BookOpen className={styles.featureIcon} />
+                  <span>Bounded PDF reading sessions with pass-mark checks</span>
+                </div>
+                <div className={styles.featureItem}>
+                  <ShieldCheck className={styles.featureIcon} />
+                  <span>NDPA 2023 compliant data governance architecture</span>
+                </div>
+              </div>
+
+              <div className={styles.productFooter}>
                 <CTAButton href="/products/ace-acad" variant="primary" size="small">
-                  Join the Beta Waitlist
+                  View Product Details
                 </CTAButton>
               </div>
             </div>
 
             {/* PlantIQ Card */}
             <div className={styles.productCard}>
-              <div
-                className={`${styles.productVisual} ${styles.productVisualAgritech}`}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <Leaf size={48} />
-              </div>
-              <div className={styles.productContent}>
-                <p className={styles.productTag}>AgriTech</p>
+              <div className={styles.productHeader}>
+                <div className={styles.productTag}>AgriTech • IoT Hardware</div>
                 <h3>PlantIQ: Automated Smart Gardening.</h3>
                 <p>
-                  Grow plants and food reliably without the guesswork. PlantIQ is
-                  an IoT-enabled, solar-ready device that automates watering and
-                  plant care for urban households.
+                  Grow crops and plants reliably without guesswork. PlantIQ is an
+                  IoT-enabled, solar-ready device that automates irrigation and
+                  monitors soil conditions for urban households and farms.
                 </p>
-                <CTAButton href="/products/plantiq" variant="primary" size="small">
-                  Discover PlantIQ
+              </div>
+
+              <div className={styles.productFeatures}>
+                <div className={styles.featureItem}>
+                  <Cpu className={styles.featureIcon} />
+                  <span>Microcontroller sensor telemetry and automated pump relay</span>
+                </div>
+                <div className={styles.featureItem}>
+                  <Leaf className={styles.featureIcon} />
+                  <span>Soil moisture, ambient humidity, and thermal monitoring</span>
+                </div>
+                <div className={styles.featureItem}>
+                  <Database className={styles.featureIcon} />
+                  <span>Cloud telemetry & automated scheduling engine</span>
+                </div>
+              </div>
+
+              <div className={styles.productFooter}>
+                <CTAButton href="/products/plantiq" variant="secondary" size="small">
+                  Explore PlantIQ
                 </CTAButton>
               </div>
             </div>
@@ -134,34 +190,43 @@ export default function Home() {
       <section className="section section--dark">
         <div className="container">
           <div className="section-header">
-            <div className="glow-line glow-line--center" />
-            <h2>Transforming Challenges into Global Opportunities.</h2>
+            <h2>Transforming Challenges into Opportunities.</h2>
             <p>
-              Technology is our tool; impact is our goal. We are bridging gaps
-              and empowering communities across Africa.
+              Technology is our tool; sustainable human development is our mission.
             </p>
           </div>
 
           <div className={styles.impactGrid}>
-            <div className={styles.impactItem}>
-              <div className={styles.impactIcon}><GraduationCap size={32} /></div>
+            <div className={styles.impactCard}>
+              <div className={styles.impactIconWrapper}>
+                <GraduationCap size={22} />
+              </div>
               <h3>Education Equity</h3>
-              <p>Bridging the gap for under-resourced students with offline-first tools.</p>
+              <p>Bridging the resource divide for Nigerian undergraduates through offline-first digital learning.</p>
             </div>
-            <div className={styles.impactItem}>
-              <div className={styles.impactIcon}><Sprout size={32} /></div>
+
+            <div className={styles.impactCard}>
+              <div className={styles.impactIconWrapper}>
+                <Sprout size={22} />
+              </div>
               <h3>Food Security</h3>
-              <p>Empowering households to grow food locally in resource-constrained environments.</p>
+              <p>Empowering local households to cultivate food reliably in water-scarce urban environments.</p>
             </div>
-            <div className={styles.impactItem}>
-              <div className={styles.impactIcon}><Users size={32} /></div>
-              <h3>Youth Empowerment</h3>
-              <p>Built entirely by young Nigerian innovators, fostering local tech talent.</p>
+
+            <div className={styles.impactCard}>
+              <div className={styles.impactIconWrapper}>
+                <Users size={22} />
+              </div>
+              <h3>Youth Tech Talent</h3>
+              <p>Founded and developed by young Nigerian innovators building world-class technology on home soil.</p>
             </div>
-            <div className={styles.impactItem}>
-              <div className={styles.impactIcon}><Recycle size={32} /></div>
-              <h3>Sustainability</h3>
-              <p>Solar-powered IoT and locally sourced materials for a greener future.</p>
+
+            <div className={styles.impactCard}>
+              <div className={styles.impactIconWrapper}>
+                <ShieldCheck size={22} />
+              </div>
+              <h3>Privacy by Design</h3>
+              <p>Strict NDPA compliance ensuring African student data is safeguarded and hosted ethically.</p>
             </div>
           </div>
         </div>
@@ -169,18 +234,16 @@ export default function Home() {
 
       {/* ===== Bottom Conversion / Investor CTA ===== */}
       <section className={styles.ctaSection}>
-        <div className="container">
-          <h2>Join Us in Building the Future.</h2>
+        <div className={styles.ctaInner}>
+          <h2>Join Us in Engineering the Future.</h2>
           <p>
-            WSTAR is actively seeking partners, collaborators, investors, and
-            institutions. Back a scalable, high-impact venture and help us bring
-            world-class technological solutions to millions across Africa.
+            WSTAR is actively partnering with academic institutions, angel investors, and enterprise collaborators to scale high-impact solutions across Nigeria and West Africa.
           </p>
-          <div className={styles.ctaBtns}>
-            <Link href="/investors" className={styles.ctaWhite}>
+          <div className={styles.ctaButtons}>
+            <Link href="/investors" className={styles.ctaPrimary}>
               Request Pitch Deck
             </Link>
-            <Link href="/contact" className={styles.ctaGhost}>
+            <Link href="/contact" className={styles.ctaSecondary}>
               Contact the Founders
             </Link>
           </div>
