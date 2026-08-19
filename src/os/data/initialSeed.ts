@@ -1568,3 +1568,214 @@ export const initialActivities: ActivityItem[] = [
     badgeColor: 'emerald',
   },
 ]
+
+export const initialSources: import('@/os/types').Source[] = [
+  {
+    id: 'src-1',
+    sourceNumber: 'SRC-001',
+    sourceType: 'gdrive',
+    provider: 'google_drive',
+    title: 'Proposal: Cohort-Based UGC & The "Class Rep" Model',
+    summary:
+      'Decentralized course material aggregation delegating folder curation to verified departmental Class Reps across Nigerian universities (ABU Zaria, UNILAG, UI).',
+    externalId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
+    externalUrl:
+      'https://docs.google.com/document/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit',
+    mimeType: 'application/vnd.google-apps.document',
+    author: 'Abdulaziz Abdulwahab',
+    relatedProductId: 'ace-acad',
+    relatedProposalIds: ['prop-1'],
+    relatedDecisionIds: ['dec-5'],
+    aiStatus: 'analyzed',
+    aiSummary:
+      'Comprehensive product strategy and technical architecture proposal pivoting Ace Acad from centralized manual document ingestion to a decentralized Class Rep cohort model. Outlines safe harbor legal shielding, Google Drive integration, and verified student contributor incentives.',
+    extractedEntities: {
+      summary:
+        'Pivots Ace Acad content scaling from internal bottlenecks to a self-sustaining student-led upload pipeline.',
+      proposedInitiative: {
+        title: 'Class Rep Ambassador & Cohort Material Hub',
+        description:
+          'Recruit 50 foundational Class Reps across Northern and South-Western Nigerian universities to pilot semester pack curation.',
+        targetQuarter: 'Q3-Q4 2026',
+        selected: true,
+      },
+      workstreams: [
+        {
+          id: 'ws-tech',
+          name: 'Technical Architecture & Google Drive API',
+          description:
+            'Class Rep Google Drive integration, automated virus scanning, and drift offline cache sync.',
+          suggestedLead: 'abdulaziz',
+          tasks: [
+            {
+              title: 'Build Google Drive Shared Folder webhooks and background metadata sync',
+              type: 'task',
+              priority: 'high',
+              productId: 'ace-acad',
+              assignee: 'abdulaziz',
+              selected: true,
+            },
+            {
+              title: 'Implement NDPA-compliant file virus scanning and PDF integrity validator',
+              type: 'task',
+              priority: 'high',
+              productId: 'ace-acad',
+              assignee: 'abdulaziz',
+              selected: true,
+            },
+          ],
+        },
+        {
+          id: 'ws-growth',
+          name: 'Growth & Campus Ambassador Operations',
+          description: 'Class Rep recruitment, compensation model, and campus rollouts.',
+          suggestedLead: 'ibrahim',
+          tasks: [
+            {
+              title: 'Draft Class Rep incentive structure (Free Premium Access + ₦15,000 semester stipend)',
+              type: 'task',
+              priority: 'high',
+              productId: 'ace-acad',
+              assignee: 'ibrahim',
+              selected: true,
+            },
+            {
+              title: 'Prepare Class Rep onboarding kit and Terms of Contribution agreement',
+              type: 'task',
+              priority: 'medium',
+              productId: 'ace-acad',
+              assignee: 'ibrahim',
+              selected: true,
+            },
+          ],
+        },
+      ],
+      decisions: [
+        {
+          title: 'Decentralized Cohort Folders vs Centralized Cloud Storage',
+          decision:
+            'Store large binary PDFs on Class Rep Google Drives and index references in Ace Acad rather than hosting unvetted files directly.',
+          reason:
+            'Provides immediate safe harbor copyright protection, zero hosting bandwidth cost, and high departmental relevance.',
+          selected: true,
+        },
+      ],
+      risks: [
+        {
+          risk: 'Class Rep inactivity or graduation abandoning cohort folders',
+          impact: 'High',
+          mitigation:
+            'Establish co-rep succession pairing and automated health checks on folder activity.',
+        },
+        {
+          risk: 'Low-quality or non-syllabus compliant past question uploads',
+          impact: 'Medium',
+          mitigation:
+            'Community upvoting and required peer verification before materials appear in Study Paths.',
+        },
+      ],
+      dependencies: [
+        'Google Picker API & Drive File OAuth client credentials',
+        'Ace Acad Flutter PDF viewer (pdfrx) remote streaming verification',
+      ],
+      openQuestions: [
+        'Should Class Reps receive direct bank transfers or in-app wallet credits?',
+        'How do we handle multi-campus variations of universal courses like MTH 101?',
+      ],
+      assumptions: [
+        'Most Nigerian university departments have an active WhatsApp group and designated Class Rep.',
+        'Students already share course PDFs via Google Drive links.',
+      ],
+      deadlines: ['2026-09-15: Finalize Class Rep pilot onboarding'],
+      peopleAndOwners: ['Abdulaziz (Tech)', 'Ibrahim (Operations & GTM)'],
+      referencedDocuments: [
+        'Software Requirements Specification: Ace-Acad 2.0',
+        'March 2026 UGC Staging System Architecture Spec',
+      ],
+      supersededProposalNotes:
+        'Supersedes March 2026 Centralized Ingestion proposal which relied on full internal manual scanning.',
+    },
+    tags: ['Strategy', 'UGC', 'Google Drive', 'Class Rep', 'Q3-2026'],
+    createdAt: '2026-08-18T10:00:00Z',
+    updatedAt: '2026-08-19T09:00:00Z',
+  },
+  {
+    id: 'src-2',
+    sourceNumber: 'SRC-002',
+    sourceType: 'gdrive',
+    provider: 'google_drive',
+    title: 'Proposal: AI Study & Study Paths Revamp (Tier 2 Hybrid Engine)',
+    summary:
+      'Hybrid AI tutoring architecture combining client-side deterministic study progress with Gemini Flash API for on-demand question explanations.',
+    externalId: '1Cy_8Nmk_AiStudyPathsRevamp2026',
+    externalUrl:
+      'https://docs.google.com/document/d/1Cy_8Nmk_AiStudyPathsRevamp2026/edit',
+    mimeType: 'application/vnd.google-apps.document',
+    author: 'Abdulaziz Abdulwahab',
+    relatedProductId: 'ace-acad',
+    relatedProposalIds: ['prop-2'],
+    aiStatus: 'analyzed',
+    aiSummary:
+      'Technical architecture for cost-optimized AI study guidance. Evaluates local on-device LLMs vs cloud API, recommending Tier 2 Gemini Flash with strict token budget limits.',
+    tags: ['AI', 'Architecture', 'Gemini Flash', 'Study Paths'],
+    createdAt: '2026-08-18T11:00:00Z',
+    updatedAt: '2026-08-18T16:10:00Z',
+  },
+  {
+    id: 'src-3',
+    sourceNumber: 'SRC-003',
+    sourceType: 'gdrive',
+    provider: 'google_drive',
+    title: 'Proposal: User-Generated Content (UGC) Upload & Staging System (Legacy)',
+    summary:
+      'Legacy March 2026 architecture specifying centralized file quarantine, manual admin review, and cloud storage bucket hosting.',
+    externalId: '1Mar2026_UGC_CentralizedStagingArch',
+    externalUrl:
+      'https://docs.google.com/document/d/1Mar2026_UGC_CentralizedStagingArch/edit',
+    mimeType: 'application/vnd.google-apps.document',
+    author: 'Abdulaziz Abdulwahab',
+    relatedProductId: 'ace-acad',
+    relatedProposalIds: ['prop-3'],
+    aiStatus: 'analyzed',
+    aiSummary:
+      'Historical proposal for content scaling prior to the decentralized Class Rep model. Specifies high server storage overhead and manual review bottlenecks.',
+    tags: ['Legacy', 'UGC', 'Architecture', 'March-2026'],
+    createdAt: '2026-03-12T09:00:00Z',
+    updatedAt: '2026-03-20T14:00:00Z',
+  },
+  {
+    id: 'src-4',
+    sourceNumber: 'SRC-004',
+    sourceType: 'document',
+    provider: 'upload',
+    title: 'Software Requirements Specification: Ace-Acad 2.0',
+    summary:
+      'Master product requirements document defining 13 core 100L university courses, offline Drift SQLite sync, authentication, and testing criteria.',
+    author: 'Abdulaziz Abdulwahab & Ibrahim Abdulwahab',
+    relatedProductId: 'ace-acad',
+    aiStatus: 'analyzed',
+    aiSummary:
+      'Baseline engineering and product requirements specification. Outlines core user flows, technical constraints, campus syllabus compliance, and performance metrics.',
+    tags: ['SRS', 'Requirements', 'Ace Acad 2.0', 'Specs'],
+    createdAt: '2026-08-01T10:00:00Z',
+    updatedAt: '2026-08-15T12:00:00Z',
+  },
+  {
+    id: 'src-5',
+    sourceNumber: 'SRC-005',
+    sourceType: 'manual_note',
+    provider: 'manual',
+    title: 'Legal & Privacy Readiness Report (NDPA 2023 & GDPR)',
+    summary:
+      'Corporate regulatory compliance checklist for Nigerian Data Protection Act (NDPA 2023) and global student privacy standards.',
+    author: 'Ibrahim Abdulwahab',
+    relatedProductId: 'ace-acad',
+    aiStatus: 'analyzed',
+    aiSummary:
+      'Legal readiness audit covering data processing agreements, student consent for under-18 users, and NDPC registration obligations.',
+    tags: ['Legal', 'NDPA 2023', 'Compliance', 'Privacy'],
+    createdAt: '2026-08-10T14:00:00Z',
+    updatedAt: '2026-08-16T18:00:00Z',
+  },
+]
+

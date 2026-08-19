@@ -4,6 +4,16 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
+### [2026-08-19 11:33] — TypeScript Mutation Dispatcher Signature Mismatch in SourceStore
+
+- **Date/Time:** 2026-08-19 11:33 (WAT / UTC+1)
+- **Context:** Implementing the Zustand domain store `src/os/store/sourceStore.ts` for WSTAR OS Source Intelligence.
+- **The Mistake/Error:** `dispatchMutation` was invoked with a single object parameter `{ type: 'create', document: { ... } }`, whereas `src/os/store/syncHelper.ts` defines the signature as positional parameters `dispatchMutation(action, docType, id, data)`. This triggered a TypeScript compilation error during `npm run build`: `Type error: Expected 3-4 arguments, but got 1.`
+- **The Fix:** Updated `sourceStore.ts` to call `dispatchMutation('create', 'source', id, { ... })`, `dispatchMutation('patch', 'source', id, updates)`, and `dispatchMutation('delete', 'source', id)`.
+- **Lesson Learned:** Always check the exact positional parameter signature of domain helpers like `dispatchMutation` before composing new Zustand stores.
+
+---
+
 ### [2026-08-19 10:04] — AI Endpoint Protection, Rate Limiting & Enterprise Readiness (Phase 5)
 
 - **Date/Time:** 2026-08-19 10:04 (WAT / UTC+1)

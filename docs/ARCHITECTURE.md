@@ -23,6 +23,7 @@ wstar-website/
 │   ├── os/                    # Internal Company Operating System
 │   │   ├── login/             # Founder JWT Authentication Portal
 │   │   ├── page.tsx           # Executive Dual-Perspective Dashboard + AI Briefing
+│   │   ├── sources/           # Source Intelligence & Google Drive Knowledge Hub
 │   │   ├── work/              # Unified Work Stream, Kanban & Subtask Tracker
 │   │   ├── proposals/         # Strategic Proposals Hub & AI Task Extraction
 │   │   ├── ace-acad/          # Ace Acad Product Command Center
@@ -33,6 +34,7 @@ wstar-website/
 │   │
 │   └── api/os/                # Secure Server-Side Gateways & AI Services
 │       ├── auth/              # JWT session creation, validation & logout
+│       ├── sources/           # Google Drive link detection & metadata parsing
 │       ├── ai/                # Gemini Flash NLP Classification & Task Extraction
 │       │   ├── classify/      # Real-time debounced entity & assignee extraction
 │       │   ├── decompose/     # Engineering subtask checklist generator

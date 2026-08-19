@@ -47,6 +47,8 @@ export interface WorkItem {
   dueDate?: string
   subtasks?: Subtask[]
   bugMetadata?: BugMetadata
+  sourceId?: string
+  sourceRef?: SourceRef
   createdAt: string
   updatedAt: string
 }
@@ -86,6 +88,8 @@ export interface Decision {
   productId?: ProductId
   consequences?: string
   alternativesConsidered?: string[]
+  sourceId?: string
+  sourceRef?: SourceRef
 }
 
 export interface FeedbackItem {
@@ -97,6 +101,7 @@ export interface FeedbackItem {
   timestamp: string
   status: 'new' | 'triaged' | 'converted' | 'dismissed'
   convertedWorkItemId?: string
+  sourceId?: string
 }
 
 export interface Project {
@@ -109,6 +114,8 @@ export interface Project {
   lead: string
   progress: number // 0-100
   milestones: Milestone[]
+  sourceId?: string
+  sourceRef?: SourceRef
 }
 
 export interface Milestone {
@@ -127,6 +134,7 @@ export interface RoadmapItem {
   description: string
   targetQuarter: string
   category: string
+  sourceId?: string
 }
 
 export interface ActivityItem {
@@ -134,7 +142,7 @@ export interface ActivityItem {
   actor: string
   action: string
   targetTitle: string
-  targetType: 'task' | 'bug' | 'decision' | 'feedback' | 'project' | 'product' | 'proposal'
+  targetType: 'task' | 'bug' | 'decision' | 'feedback' | 'project' | 'product' | 'proposal' | 'source'
   timestamp: string
   badgeColor?: string
 }
@@ -188,4 +196,103 @@ export interface Proposal {
   actionItems: string[]
   linkedWorkItemIds?: string[]
   linkedDecisionIds?: string[]
+  sourceId?: string
+  sourceRef?: SourceRef
+}
+
+export type SourceType =
+  | 'gdrive'
+  | 'url'
+  | 'document'
+  | 'manual_note'
+  | 'meeting_note'
+  | 'github_issue'
+  | 'github_pr'
+  | 'other'
+
+export type SourceProvider = 'google_drive' | 'github' | 'web' | 'manual' | 'upload'
+
+export interface ExtractedTask {
+  title: string
+  type: WorkItemType
+  priority: WorkItemPriority
+  productId: ProductId
+  assignee?: 'abdulaziz' | 'ibrahim'
+  selected?: boolean
+}
+
+export interface ExtractedWorkstream {
+  id: string
+  name: string
+  description?: string
+  suggestedLead?: 'abdulaziz' | 'ibrahim'
+  tasks: ExtractedTask[]
+}
+
+export interface ExtractedDecision {
+  title: string
+  decision: string
+  reason: string
+  selected?: boolean
+}
+
+export interface ExtractedRisk {
+  risk: string
+  impact: 'Low' | 'Medium' | 'High'
+  mitigation: string
+}
+
+export interface ExtractedEntities {
+  summary: string
+  proposedInitiative?: {
+    title: string
+    description: string
+    targetQuarter?: string
+    selected?: boolean
+  }
+  workstreams: ExtractedWorkstream[]
+  decisions: ExtractedDecision[]
+  risks: ExtractedRisk[]
+  dependencies: string[]
+  openQuestions: string[]
+  assumptions: string[]
+  deadlines: string[]
+  peopleAndOwners: string[]
+  referencedDocuments: string[]
+  supersededProposalNotes?: string
+}
+
+export interface SourceRef {
+  id: string
+  title: string
+  externalUrl?: string
+  provider: SourceProvider
+}
+
+export interface Source {
+  id: string
+  sourceNumber: string
+  sourceType: SourceType
+  provider: SourceProvider
+  title: string
+  summary?: string
+  content?: string
+  externalId?: string
+  externalUrl?: string
+  mimeType?: string
+  fileSize?: number
+  author?: string
+  createdAtExternal?: string
+  modifiedAtExternal?: string
+  relatedProductId?: ProductId
+  relatedProjectId?: string
+  relatedWorkItemIds?: string[]
+  relatedDecisionIds?: string[]
+  relatedProposalIds?: string[]
+  aiStatus: 'pending' | 'processing' | 'analyzed' | 'failed'
+  aiSummary?: string
+  extractedEntities?: ExtractedEntities
+  tags?: string[]
+  createdAt: string
+  updatedAt: string
 }

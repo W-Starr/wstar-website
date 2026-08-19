@@ -16,6 +16,7 @@ import {
   ExternalLink,
   Search,
   FileCode,
+  HardDrive,
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -30,7 +31,7 @@ export function Sidebar({
   onCloseMobile,
 }: SidebarProps) {
   const pathname = usePathname()
-  const { workItems, feedbackItems, proposals } = useOS()
+  const { workItems, feedbackItems, proposals, sources } = useOS()
 
   const openBugsCount = workItems.filter(
     (i) => i.type === 'bug' && i.status !== 'done'
@@ -38,6 +39,7 @@ export function Sidebar({
 
   const newFeedbackCount = feedbackItems.filter((f) => f.status === 'new').length
   const proposalsCount = proposals?.length || 3
+  const sourcesCount = sources?.length || 5
 
   const navItems = [
     {
@@ -45,6 +47,13 @@ export function Sidebar({
       href: '/os',
       icon: LayoutDashboard,
       badge: null,
+    },
+    {
+      name: 'Source Intelligence',
+      href: '/os/sources',
+      icon: HardDrive,
+      badge: `${sourcesCount} docs`,
+      badgeColor: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20',
     },
     {
       name: 'Work & Bugs',

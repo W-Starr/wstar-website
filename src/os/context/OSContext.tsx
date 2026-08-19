@@ -26,6 +26,7 @@ import {
   initialProjects,
   initialRoadmap,
   initialActivities,
+  initialSources,
 } from '../data/initialSeed'
 import { useWorkStore } from '../store/workStore'
 import { useProposalStore } from '../store/proposalStore'
@@ -34,7 +35,9 @@ import { useFeedbackStore } from '../store/feedbackStore'
 import { useRoadmapStore } from '../store/roadmapStore'
 import { useActivityStore } from '../store/activityStore'
 import { useMetaStore } from '../store/metaStore'
+import { useSourceStore } from '../store/sourceStore'
 import { initializeRealtimeListener } from '../sanity/realtime'
+import { Source, ExtractedEntities } from '../types'
 
 export interface OSContextType {
   role: Role
@@ -49,6 +52,7 @@ export interface OSContextType {
   projects: Project[]
   roadmapItems: RoadmapItem[]
   activities: ActivityItem[]
+  sources: Source[]
   sanitySyncStatus: SanitySyncState
   isLoaded: boolean
   lastError: string | null
@@ -90,6 +94,20 @@ export interface OSContextType {
   // Roadmap Actions
   addRoadmapItem: (item: Omit<RoadmapItem, 'id'>) => void
   updateRoadmapHorizon: (id: string, horizon: RoadmapItem['horizon']) => void
+
+  // Source Actions
+  addSource: (
+    source: Omit<Source, 'id' | 'createdAt' | 'updatedAt' | 'sourceNumber'>
+  ) => Source
+  updateSource: (id: string, updates: Partial<Source>) => void
+  deleteSource: (id: string) => void
+  setSourceAiStatus: (id: string, aiStatus: Source['aiStatus'], aiSummary?: string) => void
+  attachExtractedEntities: (id: string, entities: ExtractedEntities) => void
+  linkEntityToSource: (
+    sourceId: string,
+    entityType: 'work' | 'decision' | 'proposal' | 'project',
+    entityId: string
+  ) => void
 
   // Intelligence
   suggestClassification: (text: string) => ClassificationSuggestion
@@ -134,6 +152,15 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
   const setProjects = useRoadmapStore((state) => state.setProjects)
   const addRoadmapItem = useRoadmapStore((state) => state.addRoadmapItem)
   const updateRoadmapHorizon = useRoadmapStore((state) => state.updateRoadmapHorizon)
+
+  const sources = useSourceStore((state) => state.sources)
+  const setSources = useSourceStore((state) => state.setSources)
+  const addSource = useSourceStore((state) => state.addSource)
+  const updateSource = useSourceStore((state) => state.updateSource)
+  const deleteSource = useSourceStore((state) => state.deleteSource)
+  const setSourceAiStatus = useSourceStore((state) => state.setSourceAiStatus)
+  const attachExtractedEntities = useSourceStore((state) => state.attachExtractedEntities)
+  const linkEntityToSource = useSourceStore((state) => state.linkEntityToSource)
 
   const activities = useActivityStore((state) => state.activities)
   const setActivities = useActivityStore((state) => state.setActivities)
@@ -303,6 +330,34 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
           setActivities(mappedActivities)
         }
 
+        if (json.data.sources && json.data.sources.length > 0) {
+          const mappedSources: Source[] = json.data.sources.map((s: any) => ({
+            id: s._id.replace(/^src-/, ''),
+            sourceNumber: s.sourceNumber || `SRC-${s._id.slice(0, 3)}`,
+            sourceType: s.sourceType || 'other',
+            provider: s.provider || 'manual',
+            title: s.title,
+            summary: s.summary,
+            content: s.content,
+            externalId: s.externalId,
+            externalUrl: s.externalUrl,
+            mimeType: s.mimeType,
+            author: s.author,
+            relatedProductId: s.relatedProductId,
+            relatedProjectId: s.relatedProjectId,
+            relatedWorkItemIds: s.relatedWorkItemIds || [],
+            relatedDecisionIds: s.relatedDecisionIds || [],
+            relatedProposalIds: s.relatedProposalIds || [],
+            aiStatus: s.aiStatus || 'pending',
+            aiSummary: s.aiSummary,
+            extractedEntities: s.extractedEntities,
+            tags: s.tags || [],
+            createdAt: s._createdAt || new Date().toISOString(),
+            updatedAt: s._updatedAt || new Date().toISOString(),
+          }))
+          setSources(mappedSources)
+        }
+
         setSanitySyncStatus('synced')
       } else {
         setSanitySyncStatus('local_fallback')
@@ -319,6 +374,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
     setRoadmapItems,
     setProjects,
     setActivities,
+    setSources,
     setSanitySyncStatus,
   ])
 
@@ -423,6 +479,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         setProjects(initialProjects)
         setRoadmapItems(initialRoadmap)
         setActivities(initialActivities)
+        setSources(initialSources)
       }
     }
   }
@@ -442,6 +499,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         projects,
         roadmapItems,
         activities,
+        sources,
         sanitySyncStatus,
         isLoaded,
         lastError: workLastError,
@@ -462,6 +520,12 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         convertFeedbackToWorkItem,
         addRoadmapItem,
         updateRoadmapHorizon,
+        addSource,
+        updateSource,
+        deleteSource,
+        setSourceAiStatus,
+        attachExtractedEntities,
+        linkEntityToSource,
         suggestClassification,
         resetToInitialSeed,
       }}
