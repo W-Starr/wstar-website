@@ -20,46 +20,37 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'Missing fileId parameter.' }, { status: 400 })
     }
 
-    let authClient: any = null
-
-    // 1. If Client Access Token is passed from Google Picker (OAuth drive.file scope)
-    if (accessToken) {
-      const oauth2Client = new google.auth.OAuth2()
-      oauth2Client.setCredentials({ access_token: accessToken })
-      authClient = oauth2Client
-    }
-    // 2. Fallback to Service Account if configured in environment
-    else if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
-      try {
-        const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY)
-        authClient = new google.auth.JWT({
-          email: credentials.client_email,
-          key: credentials.private_key,
-          scopes: ['https://www.googleapis.com/auth/drive.readonly'],
-        })
-      } catch (e: any) {
-        logger.warn('Failed to parse GOOGLE_SERVICE_ACCOUNT_KEY', 'GDRIVE-API', { error: e?.message || String(e) })
-      }
-    }
-    // 3. Fallback to API key for public files
-    else if (process.env.NEXT_PUBLIC_GOOGLE_API_KEY) {
-      authClient = process.env.NEXT_PUBLIC_GOOGLE_API_KEY
-    }
-
-    if (!authClient) {
+    if (!process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            'Google Drive authentication required. Provide an OAuth access token, Service Account Key, or API Key.',
+          error: 'GOOGLE_SERVICE_ACCOUNT_KEY environment variable is not configured on the server.',
         },
-        { status: 401 }
+        { status: 500 }
       )
     }
 
-    const drive = typeof authClient === 'string'
-      ? google.drive({ version: 'v3', auth: authClient })
-      : google.drive({ version: 'v3', auth: authClient })
+    let authClient: any = null
+    try {
+      let rawKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY.trim()
+      if (rawKey.startsWith("'") && rawKey.endsWith("'")) {
+        rawKey = rawKey.slice(1, -1)
+      }
+      const credentials = JSON.parse(rawKey)
+      authClient = new google.auth.JWT({
+        email: credentials.client_email,
+        key: credentials.private_key,
+        scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+      })
+    } catch (e: any) {
+      logger.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_KEY', 'GDRIVE-API', { error: e?.message || String(e) })
+      return NextResponse.json(
+        { success: false, error: 'Invalid GOOGLE_SERVICE_ACCOUNT_KEY format on server.' },
+        { status: 500 }
+      )
+    }
+
+    const drive = google.drive({ version: 'v3', auth: authClient })
 
     // Step A: Fetch File Metadata
     logger.info(`Fetching metadata for Google Drive file: ${fileId}`, 'GDRIVE-API')

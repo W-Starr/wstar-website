@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useOS } from '@/os/context/OSContext'
 import { Source, SourceProvider, ProductId } from '@/os/types'
 import { AttachSourceModal } from '@/os/components/AttachSourceModal'
-import { GooglePickerButton } from '@/os/components/GooglePickerButton'
 import { SourceAnalysisModal } from '@/os/components/SourceAnalysisModal'
 import { ProposalComparisonModal } from '@/os/components/ProposalComparisonModal'
 import {
@@ -43,30 +42,6 @@ export default function SourcesPage() {
   const [selectedSourceForDetail, setSelectedSourceForDetail] = useState<Source | null>(null)
   const [isSyncingDrive, setIsSyncingDrive] = useState(false)
   const [syncMessage, setSyncMessage] = useState<string | null>(null)
-
-  // Direct Google Drive Picker Import Handler
-  const handleDirectDrivePicked = (file: {
-    id: string
-    name: string
-    mimeType: string
-    url: string
-    content?: string
-    author?: string
-  }) => {
-    addSource({
-      sourceType: 'gdrive',
-      provider: 'google_drive',
-      title: file.name,
-      content: file.content,
-      externalId: file.id,
-      externalUrl: file.url,
-      mimeType: file.mimeType,
-      author: file.author,
-      relatedProductId: 'ace-acad',
-      aiStatus: 'pending',
-      tags: ['Google Drive', 'Direct Import'],
-    })
-  }
 
   // Automatic Background Google Drive Sync
   const handleSyncCompanyDrive = async () => {
@@ -218,8 +193,6 @@ export default function SourcesPage() {
             <RefreshCw className={`w-3.5 h-3.5 ${isSyncingDrive ? 'animate-spin' : ''}`} />
             <span>{isSyncingDrive ? 'Scanning Company Drive...' : 'Sync Company Drive'}</span>
           </button>
-
-          <GooglePickerButton onFilePicked={handleDirectDrivePicked} />
 
           <button
             onClick={() => setIsAttachModalOpen(true)}

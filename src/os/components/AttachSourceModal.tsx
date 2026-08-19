@@ -27,8 +27,6 @@ interface AttachSourceModalProps {
   defaultProductId?: ProductId
 }
 
-import { GooglePickerButton } from './GooglePickerButton'
-
 export function AttachSourceModal({
   isOpen,
   onClose,
@@ -46,22 +44,6 @@ export function AttachSourceModal({
   const [parsedInfo, setParsedInfo] = useState<ParsedSourceUrl | null>(null)
   const [activeTab, setActiveTab] = useState<'link' | 'note'>('link')
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // Handle file picked from Google Drive Picker
-  const handleGoogleDrivePicked = (file: {
-    id: string
-    name: string
-    mimeType: string
-    url: string
-    content?: string
-    author?: string
-  }) => {
-    setRawUrl(file.url)
-    setTitle(file.name)
-    if (file.content) {
-      setContent(file.content)
-    }
-  }
 
   // Real-time URL Detection
   useEffect(() => {
@@ -180,11 +162,6 @@ export function AttachSourceModal({
               <span>Meeting Note / Text</span>
             </button>
           </div>
-
-          {/* Interactive Google Drive Picker trigger */}
-          <div className="pb-2">
-            <GooglePickerButton onFilePicked={handleGoogleDrivePicked} />
-          </div>
         </div>
 
         {/* Body Form */}
@@ -196,7 +173,7 @@ export function AttachSourceModal({
                   <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
                     Google Drive or External URL <span className="text-red-500">*</span>
                   </label>
-                  <span className="text-[11px] text-slate-400">Paste URL or use button above</span>
+                  <span className="text-[11px] text-slate-400">Paste any Google Doc or web link</span>
                 </div>
                 <div className="relative">
                   <input
