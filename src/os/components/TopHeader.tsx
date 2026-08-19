@@ -10,6 +10,7 @@ import {
   Bell,
   Cloud,
   Sparkles,
+  Zap,
   Menu,
   LogOut,
 } from 'lucide-react'
@@ -18,9 +19,15 @@ interface TopHeaderProps {
   title?: string
   onToggleMobileSidebar?: () => void
   onOpenQuickCapture?: () => void
+  onOpenUniversalCapture?: () => void
 }
 
-export function TopHeader({ title, onToggleMobileSidebar, onOpenQuickCapture }: TopHeaderProps) {
+export function TopHeader({
+  title,
+  onToggleMobileSidebar,
+  onOpenQuickCapture,
+  onOpenUniversalCapture,
+}: TopHeaderProps) {
   const {
     role,
     currentUser,
@@ -73,6 +80,21 @@ export function TopHeader({ title, onToggleMobileSidebar, onOpenQuickCapture }: 
 
       {/* Right: Role Switcher & Controls */}
       <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        {/* Universal AI Natural Language Capture Trigger */}
+        {onOpenUniversalCapture && (
+          <button
+            onClick={onOpenUniversalCapture}
+            title="Universal Natural Language Capture (Ctrl+K)"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-[11px] sm:text-xs font-semibold shadow-xs transition-all hover:scale-102 cursor-pointer"
+          >
+            <Zap className="w-3.5 h-3.5" />
+            <span className="hidden md:inline">Universal AI</span>
+            <span className="text-[10px] font-mono opacity-80 border border-white/20 px-1 rounded hidden lg:inline">
+              ⌘K
+            </span>
+          </button>
+        )}
+
         {/* Sanity Cloud Status / Seed Action */}
         <div className="relative">
           <button

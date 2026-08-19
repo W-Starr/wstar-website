@@ -4,6 +4,16 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
+### [2026-08-19 13:12] — Type Export Name Discrepancy in Source Command Route
+
+- **Date/Time:** 2026-08-19 13:12 (WAT / UTC+1)
+- **Context:** Implementing the Natural Language Universal Command API route `src/app/api/os/ai/source-command/route.ts`.
+- **The Mistake/Error:** Imported nonexistent types `Priority` and `FounderId` from `@/os/types`, causing TypeScript build error: `Module '"@/os/types"' has no exported member 'Priority'`.
+- **The Fix:** Replaced with the canonical exported types `WorkItemPriority` and literal `'abdulaziz' | 'ibrahim' | 'unassigned'`.
+- **Lesson Learned:** Always check `src/os/types/index.ts` to verify exact type identifiers before writing API schema wrappers.
+
+---
+
 ### [2026-08-19 13:01] — Missing Lucide Icon Imports in Sources Page
 
 - **Date/Time:** 2026-08-19 13:01 (WAT / UTC+1)

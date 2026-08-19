@@ -7,6 +7,7 @@ import { Source, SourceProvider, ProductId } from '@/os/types'
 import { AttachSourceModal } from '@/os/components/AttachSourceModal'
 import { GooglePickerButton } from '@/os/components/GooglePickerButton'
 import { SourceAnalysisModal } from '@/os/components/SourceAnalysisModal'
+import { ProposalComparisonModal } from '@/os/components/ProposalComparisonModal'
 import {
   HardDrive,
   FolderGit2,
@@ -27,6 +28,7 @@ import {
   Zap,
   RefreshCw,
   X,
+  Scale,
 } from 'lucide-react'
 
 export default function SourcesPage() {
@@ -37,6 +39,7 @@ export default function SourcesPage() {
   const [selectedProduct, setSelectedProduct] = useState<string>('all')
   const [selectedAiStatus, setSelectedAiStatus] = useState<string>('all')
   const [isAttachModalOpen, setIsAttachModalOpen] = useState(false)
+  const [isComparisonModalOpen, setIsComparisonModalOpen] = useState(false)
   const [selectedSourceForDetail, setSelectedSourceForDetail] = useState<Source | null>(null)
   const [isSyncingDrive, setIsSyncingDrive] = useState(false)
   const [syncMessage, setSyncMessage] = useState<string | null>(null)
@@ -197,6 +200,15 @@ export default function SourcesPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          <button
+            type="button"
+            onClick={() => setIsComparisonModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+          >
+            <Scale className="w-3.5 h-3.5" />
+            <span>Compare Specs</span>
+          </button>
+
           <button
             type="button"
             onClick={handleSyncCompanyDrive}
@@ -511,6 +523,12 @@ export default function SourcesPage() {
         isOpen={!!selectedSourceForDetail}
         source={selectedSourceForDetail}
         onClose={() => setSelectedSourceForDetail(null)}
+      />
+
+      {/* Historical Proposal Intelligence & Diff Modal */}
+      <ProposalComparisonModal
+        isOpen={isComparisonModalOpen}
+        onClose={() => setIsComparisonModalOpen(false)}
       />
     </div>
   )

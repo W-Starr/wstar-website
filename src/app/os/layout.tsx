@@ -6,6 +6,7 @@ import { OSProvider } from '@/os/context/OSContext'
 import { Sidebar } from '@/os/components/Sidebar'
 import { TopHeader } from '@/os/components/TopHeader'
 import { QuickCaptureModal } from '@/os/components/QuickCaptureModal'
+import { UniversalCaptureModal } from '@/os/components/UniversalCaptureModal'
 import { CommandPalette } from '@/os/components/CommandPalette'
 import { ShortcutsModal } from '@/os/components/ShortcutsModal'
 import { ToastContainer } from '@/os/components/Toast'
@@ -15,6 +16,7 @@ export default function OSLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false)
+  const [isUniversalCaptureOpen, setIsUniversalCaptureOpen] = useState(false)
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
@@ -22,7 +24,14 @@ export default function OSLayout({ children }: { children: React.ReactNode }) {
   // Global Keyboard Navigation Listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is actively typing in a form field
+      // Ctrl+K or Cmd+K triggers Universal AI Natural Language Capture
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault()
+        setIsUniversalCaptureOpen(true)
+        return
+      }
+
+      // Don't trigger single-key shortcuts if user is actively typing in a form field
       const target = e.target as HTMLElement
       const isInput =
         target.tagName === 'INPUT' ||
@@ -124,6 +133,7 @@ export default function OSLayout({ children }: { children: React.ReactNode }) {
           <TopHeader
             onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
             onOpenQuickCapture={() => setIsQuickCaptureOpen(true)}
+            onOpenUniversalCapture={() => setIsUniversalCaptureOpen(true)}
           />
           <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl w-full mx-auto">
             {children}
@@ -131,6 +141,11 @@ export default function OSLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Universal Modals & Overlays */}
+        <UniversalCaptureModal
+          isOpen={isUniversalCaptureOpen}
+          onClose={() => setIsUniversalCaptureOpen(false)}
+        />
+
         <QuickCaptureModal
           isOpen={isQuickCaptureOpen}
           onClose={() => setIsQuickCaptureOpen(false)}
