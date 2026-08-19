@@ -4,6 +4,16 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
+### [2026-08-19 08:15] — PowerShell Statement Separator Error (`&&`)
+
+- **Date/Time:** 2026-08-19 08:15 (WAT / UTC+1)
+- **Context:** Executing `git add . && git commit -m "..."` in Windows PowerShell.
+- **The Mistake/Error:** PowerShell returned ParserError: `The token '&&' is not a valid statement separator in this version.`
+- **The Fix:** Executed `git add .` and `git commit` as separate commands (or using `;`).
+- **Lesson Learned:** In Windows PowerShell 5.1/standard shell environments, `&&` is not supported as a statement separator; run commands sequentially or use `;`.
+
+---
+
 ### [2026-08-19 08:14] — Mobile Viewport Squishing & Responsive Drawer Navigation
 
 - **Date/Time:** 2026-08-19 08:14 (WAT / UTC+1)
@@ -61,4 +71,5 @@ This document records operational failures, failed command attempts, troubleshoo
   2. Created `MarketingShell.tsx` to isolate the marketing Navbar and Footer strictly to non-`/os` routes.
   3. Scoped marketing typography to `.marketing-shell` so it does not interfere with the OS design system.
   4. Verified in browser using Chrome DevTools MCP across `/os`, `/os/work`, `/os/ace-acad`, `/os/feedback`, `/os/roadmap`, and the Quick Capture modal.
+  5. Tested and verified mobile responsive drawer and layouts across marketing and OS routes.
 - **Lesson Learned:** Next.js projects utilizing Tailwind CSS v4 require an explicit `@tailwindcss/postcss` config and clean scoping of marketing layout styles away from internal application shells.
