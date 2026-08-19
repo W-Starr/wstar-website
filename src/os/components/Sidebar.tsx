@@ -21,9 +21,14 @@ import {
 interface SidebarProps {
   onOpenQuickCapture: () => void
   onOpenCommandPalette: () => void
+  onCloseMobile?: () => void
 }
 
-export function Sidebar({ onOpenQuickCapture, onOpenCommandPalette }: SidebarProps) {
+export function Sidebar({
+  onOpenQuickCapture,
+  onOpenCommandPalette,
+  onCloseMobile,
+}: SidebarProps) {
   const pathname = usePathname()
   const { workItems, feedbackItems, proposals } = useOS()
 
@@ -89,11 +94,17 @@ export function Sidebar({ onOpenQuickCapture, onOpenCommandPalette }: SidebarPro
     },
   ]
 
+  const handleNavClick = () => {
+    if (onCloseMobile) {
+      onCloseMobile()
+    }
+  }
+
   return (
-    <aside className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md flex flex-col h-screen sticky top-0 z-20">
+    <aside className="w-full lg:w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex flex-col h-full lg:h-screen lg:sticky lg:top-0 z-20 overflow-y-auto">
       {/* Brand Header */}
       <div className="p-5 border-b border-slate-100 dark:border-slate-900 flex items-center justify-between">
-        <Link href="/os" className="flex items-center gap-2.5 group">
+        <Link href="/os" onClick={handleNavClick} className="flex items-center gap-2.5 group">
           <div className="w-8 h-8 rounded-lg bg-[#196CA4] border border-[#25A6DD]/30 flex items-center justify-center text-white font-bold text-sm shadow-xs group-hover:scale-105 transition-transform font-heading">
             W
           </div>
@@ -133,7 +144,7 @@ export function Sidebar({ onOpenQuickCapture, onOpenCommandPalette }: SidebarPro
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-3 py-2 space-y-1">
         <div className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-600">
           Navigation
         </div>
@@ -144,7 +155,8 @@ export function Sidebar({ onOpenQuickCapture, onOpenCommandPalette }: SidebarPro
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+              onClick={handleNavClick}
+              className={`flex items-center justify-between px-3 py-2.5 lg:py-2 rounded-lg text-xs font-medium transition-colors ${
                 isActive
                   ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 font-semibold shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 hover:text-slate-900 dark:hover:text-slate-200'
@@ -167,7 +179,7 @@ export function Sidebar({ onOpenQuickCapture, onOpenCommandPalette }: SidebarPro
       </nav>
 
       {/* Footer / Sanity Studio Link */}
-      <div className="p-3 border-t border-slate-100 dark:border-slate-900 space-y-2">
+      <div className="p-3 border-t border-slate-100 dark:border-slate-900 space-y-2 mt-auto">
         <a
           href="http://localhost:3333"
           target="_blank"

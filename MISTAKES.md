@@ -4,6 +4,25 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
+### [2026-08-19 08:14] — Mobile Viewport Squishing & Responsive Drawer Navigation
+
+- **Date/Time:** 2026-08-19 08:14 (WAT / UTC+1)
+- **Context:** User reported that the site lacked a mobile-optimized view, with desktop sidebars squishing content into narrow columns on mobile screens (< 768px).
+- **The Mistake/Error:** 
+  1. `src/app/os/layout.tsx` rendered the fixed-width desktop sidebar (`w-64 flex`) side-by-side with the main content on all screen sizes, severely cramping mobile devices (375px–412px viewports).
+  2. `TopHeader.tsx` header controls (Sanity sync status, reset button, notification bell, and role toggle) were rigid and lacked a mobile menu toggle (`lg:hidden`).
+  3. Modals and the Kanban board lacked responsive mobile padding, touch target sizing, and horizontal swipe containers.
+- **The Fix:**
+  1. Updated `src/app/os/layout.tsx` to hide the desktop sidebar on `< lg` screens and added a slide-out drawer with a backdrop overlay.
+  2. Added mobile hamburger trigger (`Menu` icon) to `TopHeader.tsx` and condensed mobile controls.
+  3. Updated `src/os/components/Sidebar.tsx` with mobile drawer navigation click dismissal.
+  4. Updated `src/app/os/work/page.tsx` with mobile responsive filter wrapping and touch-swipeable Kanban columns (`snap-x snap-mandatory`).
+  5. Updated modal components (`WorkItemDetailModal.tsx`, `QuickCaptureModal.tsx`) with mobile touch padding and full-width actions.
+  6. Verified in Chrome DevTools MCP at 390px x 844px mobile viewport across all routes.
+- **Lesson Learned:** Application layouts with sidebars must always implement responsive hiding (`hidden lg:flex`) paired with slide-out mobile drawers and touch-optimized horizontal snap scrolling.
+
+---
+
 ### [2026-08-18 17:42] — TypeScript Union Mismatches in `OSContext.tsx` on Sanity Migration Actions
 
 - **Date/Time:** 2026-08-18 17:42 (WAT / UTC+1)
