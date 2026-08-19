@@ -25,6 +25,8 @@ import {
   ArrowRight,
   ShieldCheck,
   Zap,
+  RefreshCw,
+  X,
 } from 'lucide-react'
 
 export default function SourcesPage() {
@@ -36,6 +38,8 @@ export default function SourcesPage() {
   const [selectedAiStatus, setSelectedAiStatus] = useState<string>('all')
   const [isAttachModalOpen, setIsAttachModalOpen] = useState(false)
   const [selectedSourceForDetail, setSelectedSourceForDetail] = useState<Source | null>(null)
+  const [isSyncingDrive, setIsSyncingDrive] = useState(false)
+  const [syncMessage, setSyncMessage] = useState<string | null>(null)
 
   // Direct Google Drive Picker Import Handler
   const handleDirectDrivePicked = (file: {
@@ -59,6 +63,53 @@ export default function SourcesPage() {
       aiStatus: 'pending',
       tags: ['Google Drive', 'Direct Import'],
     })
+  }
+
+  // Automatic Background Google Drive Sync
+  const handleSyncCompanyDrive = async () => {
+    setIsSyncingDrive(true)
+    setSyncMessage(null)
+
+    try {
+      const res = await fetch('/api/os/sources/sync-drive', {
+        method: 'POST',
+      })
+
+      const data = await res.json()
+      if (data.success && data.syncedSources) {
+        let addedCount = 0
+        data.syncedSources.forEach((doc: any) => {
+          // Avoid duplicate imports if externalId already exists
+          const exists = sources.some((s) => s.externalId === doc.externalId)
+          if (!exists) {
+            addSource({
+              sourceType: 'gdrive',
+              provider: 'google_drive',
+              title: doc.title,
+              summary: doc.summary,
+              content: doc.content,
+              externalId: doc.externalId,
+              externalUrl: doc.externalUrl,
+              mimeType: doc.mimeType,
+              author: doc.author,
+              relatedProductId: doc.relatedProductId,
+              aiStatus: 'pending',
+              tags: doc.tags || ['Google Drive', 'Auto-Synced'],
+            })
+            addedCount++
+          }
+        })
+
+        setSyncMessage(`Successfully scanned Google Drive: found ${data.totalDriveItems} items, imported ${addedCount} new documents!`)
+      } else {
+        setSyncMessage(data.error || 'Failed to sync Google Drive.')
+      }
+    } catch (err: any) {
+      setSyncMessage(`Sync error: ${err.message}`)
+    } finally {
+      setIsSyncingDrive(false)
+      setTimeout(() => setSyncMessage(null), 6000)
+    }
   }
 
   // Stats calculation
@@ -145,17 +196,56 @@ export default function SourcesPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          <button
+            type="button"
+            onClick={handleSyncCompanyDrive}
+            disabled={isSyncingDrive}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isSyncingDrive ? 'animate-spin' : ''}`} />
+            <span>{isSyncingDrive ? 'Scanning Company Drive...' : 'Sync Company Drive'}</span>
+          </button>
+
           <GooglePickerButton onFilePicked={handleDirectDrivePicked} />
 
           <button
             onClick={() => setIsAttachModalOpen(true)}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-all hover:scale-102 cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-all hover:scale-102 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Attach Source Document</span>
           </button>
         </div>
+      </div>
+
+      {/* Sync Status Banner */}
+      {syncMessage && (
+        <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-semibold flex items-center justify-between animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
+            <span>{syncMessage}</span>
+          </div>
+          <button
+            onClick={() => setSyncMessage(null)}
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {/* Service Account Connected Banner */}
+      <div className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="font-semibold text-slate-800 dark:text-slate-200">Google Service Account:</span>
+          <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400">wstar-os@wstar-os.iam.gserviceaccount.com</span>
+          <span className="hidden sm:inline-block text-[11px] text-slate-400">• Permanent 24/7 background sync enabled</span>
+        </div>
+        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+          Editor Verified
+        </span>
       </div>
 
       {/* Metrics Row */}

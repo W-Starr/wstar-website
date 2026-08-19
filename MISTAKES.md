@@ -4,6 +4,16 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
+### [2026-08-19 13:01] — Missing Lucide Icon Imports in Sources Page
+
+- **Date/Time:** 2026-08-19 13:01 (WAT / UTC+1)
+- **Context:** Implementing the Google Drive background sync button and feedback banner in `src/app/os/sources/page.tsx`.
+- **The Mistake/Error:** Used `<RefreshCw />` and `<X />` in JSX without including them in the `import { ... } from 'lucide-react'` declaration, triggering TypeScript build error `Cannot find name 'RefreshCw'`.
+- **The Fix:** Added `RefreshCw` and `X` to the `lucide-react` import statement.
+- **Lesson Learned:** Always verify that every Lucide icon referenced in newly added JSX headers is imported.
+
+---
+
 ### [2026-08-19 12:09] — Structured Logger Metadata Argument Typing in Google Drive Route
 
 - **Date/Time:** 2026-08-19 12:09 (WAT / UTC+1)
