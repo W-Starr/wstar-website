@@ -44,7 +44,8 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'create') {
-      const created = await writeClient.create({
+      const created = await writeClient.createOrReplace({
+        _id: id,
         _type: docType,
         ...data,
       })
@@ -52,12 +53,36 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'patch') {
-      const patched = await writeClient.patch(id).set(data || {}).commit()
-      return NextResponse.json({ success: true, mode: 'sanity_live', doc: patched })
+      try {
+        const patched = await writeClient
+          .patch(id)
+          .set(data || {})
+          .commit({ autoGenerateArrayKeys: true })
+        return NextResponse.json({ success: true, mode: 'sanity_live', doc: patched })
+      } catch (patchErr: any) {
+        // If document doesn't exist yet in Sanity, upsert it with createIfNotExists
+        if (
+          patchErr.statusCode === 404 ||
+          patchErr.message?.includes('not found') ||
+          patchErr.message?.includes('does not exist')
+        ) {
+          const upserted = await writeClient.createIfNotExists({
+            _id: id,
+            _type: docType,
+            ...data,
+          })
+          return NextResponse.json({ success: true, mode: 'sanity_live', doc: upserted })
+        }
+        throw patchErr
+      }
     }
 
     if (action === 'delete') {
-      await writeClient.delete(id)
+      try {
+        await writeClient.delete(id)
+      } catch (delErr: any) {
+        if (delErr.statusCode !== 404) throw delErr
+      }
       return NextResponse.json({ success: true, mode: 'sanity_live' })
     }
 

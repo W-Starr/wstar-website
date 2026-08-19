@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { Source, ExtractedEntities, ProductId } from '@/os/types'
-import { initialSources } from '@/os/data/initialSeed'
 import { dispatchMutation } from './syncHelper'
 
 interface SourceStoreState {
@@ -40,7 +39,7 @@ function generateMonotonicSourceNumber(currentSources: Source[]): string {
 }
 
 export const useSourceStore = create<SourceStoreState>((set, get) => ({
-  sources: initialSources,
+  sources: [],
   lastError: null,
 
   setSources: (sources) => set({ sources }),
@@ -61,59 +60,57 @@ export const useSourceStore = create<SourceStoreState>((set, get) => ({
     }
 
     // Optimistic addition
-    set({ sources: [newSource, ...current], lastError: null })
+    set({ sources: [newSource, ...current] })
 
-    // Dispatch background remote mutation
-    dispatchMutation('create', 'source', id, {
-      sourceNumber: newSource.sourceNumber,
-      sourceType: newSource.sourceType,
-      provider: newSource.provider,
-      title: newSource.title,
-      summary: newSource.summary,
-      content: newSource.content,
-      externalId: newSource.externalId,
-      externalUrl: newSource.externalUrl,
-      mimeType: newSource.mimeType,
-      author: newSource.author,
-      relatedProductId: newSource.relatedProductId,
-      relatedProjectId: newSource.relatedProjectId,
-      aiStatus: newSource.aiStatus,
-      aiSummary: newSource.aiSummary,
-      extractedEntities: newSource.extractedEntities,
-      tags: newSource.tags,
-    }).catch((err) => {
-      console.error('[SourceStore] Remote mutation failed; rolling back:', err)
-      set({ sources: current, lastError: 'Failed to sync source to cloud storage' })
+    // Background sync to Sanity
+    dispatchMutation('create', 'source', id, newSource).then((res) => {
+      if (!res.success) {
+        console.warn('[SourceStore Sync Warning] addSource failed:', res.error)
+      }
     })
 
     return newSource
   },
 
   updateSource: (id, updates) => {
-    const previous = get().sources
-    const now = new Date().toISOString()
+    const current = get().sources
+    const original = current.find((s) => s.id === id)
+    if (!original) return
 
+    const updatedSource = {
+      ...original,
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    }
+
+    // Optimistic update
     set({
-      sources: previous.map((s) => (s.id === id ? { ...s, ...updates, updatedAt: now } : s)),
-      lastError: null,
+      sources: current.map((s) => (s.id === id ? updatedSource : s)),
     })
 
-    dispatchMutation('patch', 'source', id, updates).catch((err) => {
-      console.error('[SourceStore] Remote update failed; rolling back:', err)
-      set({ sources: previous, lastError: 'Failed to update source in cloud storage' })
+    // Background sync to Sanity
+    dispatchMutation('patch', 'source', id, updates).then((res) => {
+      if (!res.success) {
+        console.warn('[SourceStore Sync Warning] updateSource failed:', res.error)
+      }
     })
   },
 
   deleteSource: (id) => {
-    const previous = get().sources
+    const current = get().sources
+    const original = current.find((s) => s.id === id)
+    if (!original) return
+
+    // Optimistic delete
     set({
-      sources: previous.filter((s) => s.id !== id),
-      lastError: null,
+      sources: current.filter((s) => s.id !== id),
     })
 
-    dispatchMutation('delete', 'source', id).catch((err) => {
-      console.error('[SourceStore] Remote delete failed; rolling back:', err)
-      set({ sources: previous, lastError: 'Failed to delete source from cloud storage' })
+    // Background sync to Sanity
+    dispatchMutation('delete', 'source', id).then((res) => {
+      if (!res.success) {
+        console.warn('[SourceStore Sync Warning] deleteSource failed:', res.error)
+      }
     })
   },
 
@@ -128,7 +125,6 @@ export const useSourceStore = create<SourceStoreState>((set, get) => ({
     get().updateSource(id, {
       extractedEntities,
       aiStatus: 'analyzed',
-      aiSummary: extractedEntities.summary,
     })
   },
 
@@ -137,6 +133,7 @@ export const useSourceStore = create<SourceStoreState>((set, get) => ({
     if (!source) return
 
     const updates: Partial<Source> = {}
+
     if (entityType === 'work') {
       const existing = source.relatedWorkItemIds || []
       if (!existing.includes(entityId)) {
@@ -162,7 +159,7 @@ export const useSourceStore = create<SourceStoreState>((set, get) => ({
   },
 
   applyRemoteDoc: (doc) => {
-    const id = doc._id.replace(/^src-/, '')
+    const id = doc._id
     const mapped: Source = {
       id,
       sourceNumber: doc.sourceNumber || `SRC-${id.slice(0, 3)}`,
@@ -199,7 +196,6 @@ export const useSourceStore = create<SourceStoreState>((set, get) => ({
   },
 
   applyRemoteDelete: (id) => {
-    const cleanId = id.replace(/^src-/, '')
-    set({ sources: get().sources.filter((s) => s.id !== cleanId) })
+    set({ sources: get().sources.filter((s) => s.id !== id) })
   },
 }))

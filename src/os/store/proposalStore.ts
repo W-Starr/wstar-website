@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { Proposal, WorkItem } from '@/os/types'
-import { initialProposals } from '@/os/data/initialSeed'
 import { dispatchMutation } from './syncHelper'
 import { useWorkStore } from './workStore'
 
@@ -16,7 +15,7 @@ interface ProposalStoreState {
 }
 
 export const useProposalStore = create<ProposalStoreState>((set, get) => ({
-  proposals: initialProposals,
+  proposals: [],
   lastError: null,
 
   setProposals: (proposals) => set({ proposals }),
@@ -33,14 +32,10 @@ export const useProposalStore = create<ProposalStoreState>((set, get) => ({
       proposals: current.map((p) => (p.id === id ? updated : p)),
     })
 
-    // Background sync with rollback
-    dispatchMutation('patch', 'proposal', id.startsWith('proposal-') ? id : `proposal-${id}`, { status }).then((res) => {
+    // Background sync to Sanity
+    dispatchMutation('patch', 'proposal', id, { status }).then((res) => {
       if (!res.success) {
-        console.error('[ProposalStore Rollback] updateProposalStatus failed:', res.error)
-        set({
-          proposals: get().proposals.map((p) => (p.id === id ? original : p)),
-          lastError: res.error || 'Failed to update proposal status',
-        })
+        console.warn('[ProposalStore Sync Warning] updateProposalStatus failed:', res.error)
       }
     })
   },
@@ -69,7 +64,7 @@ export const useProposalStore = create<ProposalStoreState>((set, get) => ({
 
   applyRemoteDoc: (doc) => {
     const current = get().proposals
-    const rawId = doc._id.replace(/^proposal-/, '')
+    const rawId = doc._id
     const mapped: Proposal = {
       id: rawId,
       proposalNumber: doc.proposalNumber || rawId,
@@ -96,7 +91,7 @@ export const useProposalStore = create<ProposalStoreState>((set, get) => ({
       actionItems: doc.actionItems || [],
     }
 
-    const index = current.findIndex((p) => p.id === rawId || p.id === doc._id)
+    const index = current.findIndex((p) => p.id === rawId)
     if (index >= 0) {
       const next = [...current]
       next[index] = { ...next[index], ...mapped }
@@ -107,9 +102,8 @@ export const useProposalStore = create<ProposalStoreState>((set, get) => ({
   },
 
   applyRemoteDelete: (id) => {
-    const rawId = id.replace(/^proposal-/, '')
     set({
-      proposals: get().proposals.filter((p) => p.id !== rawId && p.id !== id),
+      proposals: get().proposals.filter((p) => p.id !== id),
     })
   },
 }))

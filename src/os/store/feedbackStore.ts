@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { FeedbackItem, WorkItem } from '@/os/types'
-import { initialFeedback } from '@/os/data/initialSeed'
 import { dispatchMutation } from './syncHelper'
 import { useWorkStore } from './workStore'
 
@@ -16,7 +15,7 @@ interface FeedbackStoreState {
 }
 
 export const useFeedbackStore = create<FeedbackStoreState>((set, get) => ({
-  feedbackItems: initialFeedback,
+  feedbackItems: [],
   lastError: null,
 
   setFeedbackItems: (feedbackItems) => set({ feedbackItems }),
@@ -33,14 +32,10 @@ export const useFeedbackStore = create<FeedbackStoreState>((set, get) => ({
       feedbackItems: current.map((f) => (f.id === id ? updated : f)),
     })
 
-    // Background sync with rollback
-    dispatchMutation('patch', 'feedback', id.startsWith('feedback-') ? id : `feedback-${id}`, { status }).then((res) => {
+    // Background sync to Sanity
+    dispatchMutation('patch', 'feedbackItem', id, { status }).then((res) => {
       if (!res.success) {
-        console.error('[FeedbackStore Rollback] updateFeedbackStatus failed:', res.error)
-        set({
-          feedbackItems: get().feedbackItems.map((f) => (f.id === id ? original : f)),
-          lastError: res.error || 'Failed to update feedback status',
-        })
+        console.warn('[FeedbackStore Sync Warning] updateFeedbackStatus failed:', res.error)
       }
     })
   },
@@ -60,7 +55,6 @@ export const useFeedbackStore = create<FeedbackStoreState>((set, get) => ({
       productAreaId: itemData.productAreaId || 'area-library',
     })
 
-    // Mark feedback as converted with reference
     get().updateFeedbackStatus(feedbackId, 'converted')
 
     return created
@@ -68,19 +62,18 @@ export const useFeedbackStore = create<FeedbackStoreState>((set, get) => ({
 
   applyRemoteDoc: (doc) => {
     const current = get().feedbackItems
-    const rawId = doc._id.replace(/^feedback-/, '')
+    const rawId = doc._id
     const mapped: FeedbackItem = {
       id: rawId,
+      type: doc.type || 'Feedback',
       subject: doc.subject,
-      type: doc.type || 'General',
       description: doc.description,
-      userId: doc.userId || 'Anonymous',
-      timestamp: doc.timestamp || doc._createdAt || new Date().toISOString(),
       status: doc.status || 'new',
-      convertedWorkItemId: doc.convertedWorkItemId,
+      timestamp: doc.timestamp || doc._createdAt || new Date().toISOString(),
+      userId: doc.userId || 'student@university.edu.ng',
     }
 
-    const index = current.findIndex((f) => f.id === rawId || f.id === doc._id)
+    const index = current.findIndex((f) => f.id === rawId)
     if (index >= 0) {
       const next = [...current]
       next[index] = { ...next[index], ...mapped }
@@ -91,9 +84,8 @@ export const useFeedbackStore = create<FeedbackStoreState>((set, get) => ({
   },
 
   applyRemoteDelete: (id) => {
-    const rawId = id.replace(/^feedback-/, '')
     set({
-      feedbackItems: get().feedbackItems.filter((f) => f.id !== rawId && f.id !== id),
+      feedbackItems: get().feedbackItems.filter((f) => f.id !== id),
     })
   },
 }))

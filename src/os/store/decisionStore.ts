@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { Decision } from '@/os/types'
-import { initialDecisions } from '@/os/data/initialSeed'
 import { dispatchMutation } from './syncHelper'
 
 interface DecisionStoreState {
@@ -25,7 +24,7 @@ function generateMonotonicDecisionNumber(currentDecisions: Decision[]): string {
 }
 
 export const useDecisionStore = create<DecisionStoreState>((set, get) => ({
-  decisions: initialDecisions,
+  decisions: [],
   lastError: null,
 
   setDecisions: (decisions) => set({ decisions }),
@@ -33,7 +32,7 @@ export const useDecisionStore = create<DecisionStoreState>((set, get) => ({
   addDecision: (decData) => {
     const current = get().decisions
     const decisionNumber = generateMonotonicDecisionNumber(current)
-    const id = `dec-${Date.now()}`
+    const id = `decision-${Date.now()}`
 
     const newDec: Decision = {
       ...decData,
@@ -44,14 +43,10 @@ export const useDecisionStore = create<DecisionStoreState>((set, get) => ({
     // Optimistic add
     set({ decisions: [newDec, ...current] })
 
-    // Background sync with rollback
+    // Background sync to Sanity
     dispatchMutation('create', 'decision', id, newDec).then((res) => {
       if (!res.success) {
-        console.error('[DecisionStore Rollback] addDecision failed:', res.error)
-        set({
-          decisions: get().decisions.filter((d) => d.id !== id),
-          lastError: res.error || 'Failed to save decision record',
-        })
+        console.warn('[DecisionStore Sync Warning] addDecision failed:', res.error)
       }
     })
 
@@ -70,36 +65,32 @@ export const useDecisionStore = create<DecisionStoreState>((set, get) => ({
       decisions: current.map((d) => (d.id === id ? updated : d)),
     })
 
-    // Background sync with rollback
-    dispatchMutation('patch', 'decision', id.startsWith('decision-') ? id : `decision-${id}`, updates).then((res) => {
+    // Background sync to Sanity
+    dispatchMutation('patch', 'decision', id, updates).then((res) => {
       if (!res.success) {
-        console.error('[DecisionStore Rollback] updateDecision failed:', res.error)
-        set({
-          decisions: get().decisions.map((d) => (d.id === id ? original : d)),
-          lastError: res.error || 'Failed to update decision',
-        })
+        console.warn('[DecisionStore Sync Warning] updateDecision failed:', res.error)
       }
     })
   },
 
   applyRemoteDoc: (doc) => {
     const current = get().decisions
-    const rawId = doc._id.replace(/^decision-/, '')
+    const rawId = doc._id
     const mapped: Decision = {
       id: rawId,
       decisionNumber: doc.decisionNumber || rawId,
       title: doc.title,
       decision: doc.decision,
       reason: doc.reason,
-      status: doc.status || 'accepted',
-      participants: doc.participants || ['Abdulaziz Abdulwahab', 'Ibrahim Abdulwahab'],
+      status: doc.status || 'proposed',
+      participants: doc.participants || ['Abdulaziz', 'Ibrahim'],
       date: doc.date || new Date().toISOString().split('T')[0],
-      productId: doc.productId,
+      productId: doc.productId || 'ace-acad',
       consequences: doc.consequences,
-      alternativesConsidered: doc.alternativesConsidered,
+      alternativesConsidered: doc.alternativesConsidered || [],
     }
 
-    const index = current.findIndex((d) => d.id === rawId || d.id === doc._id)
+    const index = current.findIndex((d) => d.id === rawId)
     if (index >= 0) {
       const next = [...current]
       next[index] = { ...next[index], ...mapped }
@@ -110,9 +101,8 @@ export const useDecisionStore = create<DecisionStoreState>((set, get) => ({
   },
 
   applyRemoteDelete: (id) => {
-    const rawId = id.replace(/^decision-/, '')
     set({
-      decisions: get().decisions.filter((d) => d.id !== rawId && d.id !== id),
+      decisions: get().decisions.filter((d) => d.id !== id),
     })
   },
 }))

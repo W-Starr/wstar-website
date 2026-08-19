@@ -16,18 +16,6 @@ import {
   WorkItemStatus,
   ClassificationSuggestion,
 } from '../types'
-import {
-  initialProducts,
-  initialProductAreas,
-  initialProposals,
-  initialWorkItems,
-  initialDecisions,
-  initialFeedback,
-  initialProjects,
-  initialRoadmap,
-  initialActivities,
-  initialSources,
-} from '../data/initialSeed'
 import { useWorkStore } from '../store/workStore'
 import { useProposalStore } from '../store/proposalStore'
 import { useDecisionStore } from '../store/decisionStore'
@@ -37,7 +25,7 @@ import { useActivityStore } from '../store/activityStore'
 import { useMetaStore } from '../store/metaStore'
 import { useSourceStore } from '../store/sourceStore'
 import { initializeRealtimeListener } from '../sanity/realtime'
-import { Source, ExtractedEntities } from '../types'
+import { Source, ExtractedEntities, ProductId } from '../types'
 
 export interface OSContextType {
   role: Role
@@ -111,9 +99,6 @@ export interface OSContextType {
 
   // Intelligence
   suggestClassification: (text: string) => ClassificationSuggestion
-
-  // Reset data to initial discovery seed
-  resetToInitialSeed: () => void
 }
 
 const OSContext = createContext<OSContextType | null>(null)
@@ -204,17 +189,17 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
 
       const json = await res.json()
       if (json.success && json.data) {
-        if (json.data.workItems && json.data.workItems.length > 0) {
+        if (json.data.workItems && Array.isArray(json.data.workItems)) {
           const mappedWork: WorkItem[] = json.data.workItems.map((w: any) => ({
-            id: w._id.replace(/^work-/, '').replace(/^item-/, ''),
-            itemNumber: w.itemNumber || `TASK-${w._id.slice(0, 4)}`,
+            id: w._id,
+            itemNumber: w.itemNumber || `TASK-${w._id.replace(/^work-/, '').slice(-4)}`,
             title: w.title,
             description: w.description,
             type: w.type || 'task',
             status: w.status || 'todo',
             priority: w.priority || 'medium',
-            productId: w.productId || 'ace-acad',
-            productAreaId: w.productAreaId,
+            productId: (w.productId || (w.product?._ref ? w.product._ref.replace('product-', '') : 'ace-acad')) as ProductId,
+            productAreaId: w.productAreaId || (w.productArea?._ref ? w.productArea._ref.replace('area-', '') : undefined),
             assignee: w.assignee || 'unassigned',
             reporter: w.reporter,
             blockerReason: w.blockerReason,
@@ -228,16 +213,16 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
           setWorkItems(mappedWork)
         }
 
-        if (json.data.proposals && json.data.proposals.length > 0) {
+        if (json.data.proposals && Array.isArray(json.data.proposals)) {
           const mappedProposals: Proposal[] = json.data.proposals.map((p: any) => ({
-            id: p._id.replace(/^prop-/, '').replace(/^proposal-/, ''),
-            proposalNumber: p.proposalNumber || `PROP-${p._id.slice(0, 3)}`,
+            id: p._id,
+            proposalNumber: p.proposalNumber || `PROP-${p._id.replace(/^proposal-/, '').slice(-3)}`,
             slug: p.slug || p.filename?.replace('.md', '') || 'proposal',
             title: p.title,
             subtitle: p.subtitle || '',
-            category: p.category || 'Content Scaling & UGC',
-            status: p.status || 'approved_for_scoping',
-            date: p.date || new Date().toISOString(),
+            category: p.category || 'Architecture & Planning',
+            status: p.status || 'under_review',
+            date: p.date || p._createdAt || new Date().toISOString(),
             authors: p.authors || ['Abdulaziz Abdulwahab'],
             relatedDocuments: p.relatedDocuments || [],
             filename: p.filename || `${p.title}.md`,
@@ -258,26 +243,26 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
           setProposals(mappedProposals)
         }
 
-        if (json.data.decisions && json.data.decisions.length > 0) {
+        if (json.data.decisions && Array.isArray(json.data.decisions)) {
           const mappedDecisions: Decision[] = json.data.decisions.map((d: any) => ({
-            id: d._id.replace(/^decision-/, '').replace(/^dec-/, ''),
-            decisionNumber: d.decisionNumber || `DEC-${d._id.slice(0, 3)}`,
+            id: d._id,
+            decisionNumber: d.decisionNumber || `DEC-${d._id.replace(/^decision-/, '').slice(-3)}`,
             title: d.title,
             decision: d.decision,
             reason: d.reason,
             status: d.status || 'accepted',
             participants: d.participants || ['Abdulaziz Abdulwahab', 'Ibrahim Abdulwahab'],
-            date: d.date || new Date().toISOString().split('T')[0],
-            productId: d.productId || 'ace-acad',
+            date: d.date || (d._createdAt ? d._createdAt.split('T')[0] : new Date().toISOString().split('T')[0]),
+            productId: (d.productId || 'ace-acad') as ProductId,
             consequences: d.consequences,
             alternativesConsidered: d.alternativesConsidered || [],
           }))
           setDecisions(mappedDecisions)
         }
 
-        if (json.data.feedbackItems && json.data.feedbackItems.length > 0) {
+        if (json.data.feedbackItems && Array.isArray(json.data.feedbackItems)) {
           const mappedFeedback: FeedbackItem[] = json.data.feedbackItems.map((f: any) => ({
-            id: f._id.replace(/^feedback-/, ''),
+            id: f._id,
             subject: f.subject,
             type: f.type || 'General',
             description: f.description,
@@ -289,25 +274,25 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
           setFeedbackItems(mappedFeedback)
         }
 
-        if (json.data.roadmapItems && json.data.roadmapItems.length > 0) {
+        if (json.data.roadmapItems && Array.isArray(json.data.roadmapItems)) {
           const mappedRoadmap: RoadmapItem[] = json.data.roadmapItems.map((r: any) => ({
-            id: r._id.replace(/^roadmap-/, '').replace(/^road-/, ''),
+            id: r._id,
             title: r.title,
             description: r.description,
             horizon: r.horizon || 'now',
-            productId: r.productId || 'ace-acad',
-            targetQuarter: r.targetQuarter || r.targetDate || 'Q3 2026',
+            productId: (r.productId || 'ace-acad') as ProductId,
+            targetQuarter: r.targetQuarter || 'Q3 2026',
             category: r.category || 'Feature',
           }))
           setRoadmapItems(mappedRoadmap)
         }
 
-        if (json.data.projects && json.data.projects.length > 0) {
+        if (json.data.projects && Array.isArray(json.data.projects)) {
           const mappedProjects: Project[] = json.data.projects.map((p: any) => ({
-            id: p._id.replace(/^project-/, ''),
+            id: p._id,
             name: p.name,
             summary: p.summary,
-            productId: p.productId || 'ace-acad',
+            productId: (p.productId || 'ace-acad') as ProductId,
             status: p.status || 'active',
             targetDate: p.targetDate || '2026-10-01',
             lead: p.lead || 'Abdulaziz Abdulwahab',
@@ -317,9 +302,9 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
           setProjects(mappedProjects)
         }
 
-        if (json.data.activities && json.data.activities.length > 0) {
+        if (json.data.activities && Array.isArray(json.data.activities)) {
           const mappedActivities: ActivityItem[] = json.data.activities.map((a: any) => ({
-            id: a._id.replace(/^act-/, ''),
+            id: a._id,
             actor: a.actor || 'System',
             action: a.action || 'updated',
             targetTitle: a.targetTitle || '',
@@ -330,10 +315,10 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
           setActivities(mappedActivities)
         }
 
-        if (json.data.sources && json.data.sources.length > 0) {
+        if (json.data.sources && Array.isArray(json.data.sources)) {
           const mappedSources: Source[] = json.data.sources.map((s: any) => ({
-            id: s._id.replace(/^src-/, ''),
-            sourceNumber: s.sourceNumber || `SRC-${s._id.slice(0, 3)}`,
+            id: s._id,
+            sourceNumber: s.sourceNumber || `SRC-${s._id.replace(/^src-/, '').slice(-3)}`,
             sourceType: s.sourceType || 'other',
             provider: s.provider || 'manual',
             title: s.title,
@@ -384,7 +369,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe()
   }, [])
 
-  // Initial Load (Fetch Session + Local Storage + Remote Sanity query)
+  // Initial Load (Fetch Session + Remote Sanity query)
   useEffect(() => {
     fetchSession().finally(() => {
       setIsLoaded(true)
@@ -465,25 +450,6 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const resetToInitialSeed = () => {
-    if (typeof window !== 'undefined') {
-      const confirmReset = window.confirm(
-        'Are you sure you want to reset all OS data back to the Ace Acad Discovery Seed? Local changes will be reinitialized.'
-      )
-      if (confirmReset) {
-        setProducts(initialProducts)
-        setProposals(initialProposals)
-        setWorkItems(initialWorkItems)
-        setDecisions(initialDecisions)
-        setFeedbackItems(initialFeedback)
-        setProjects(initialProjects)
-        setRoadmapItems(initialRoadmap)
-        setActivities(initialActivities)
-        setSources(initialSources)
-      }
-    }
-  }
-
   return (
     <OSContext.Provider
       value={{
@@ -527,7 +493,6 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         attachExtractedEntities,
         linkEntityToSource,
         suggestClassification,
-        resetToInitialSeed,
       }}
     >
       {children}

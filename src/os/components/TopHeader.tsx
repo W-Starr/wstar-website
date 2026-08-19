@@ -32,26 +32,25 @@ export function TopHeader({
     role,
     currentUser,
     setRole,
-    resetToInitialSeed,
     workItems,
     sanitySyncStatus,
-    seedSanityCloud,
+    refreshFromSanity,
   } = useOS()
 
-  const [isSeeding, setIsSeeding] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [syncMessage, setSyncMessage] = useState<string | null>(null)
 
   const openCriticalBugs = workItems.filter(
     (i) => i.priority === 'critical' && i.status !== 'done'
   ).length
 
-  const handleSeedOrSync = async () => {
-    setIsSeeding(true)
-    setSyncMessage('Connecting to Sanity dataset...')
-    const result = await seedSanityCloud()
-    setSyncMessage(result.message)
-    setIsSeeding(false)
-    setTimeout(() => setSyncMessage(null), 5000)
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    setSyncMessage('Fetching live data from Sanity...')
+    await refreshFromSanity()
+    setIsRefreshing(false)
+    setSyncMessage('Sanity data updated')
+    setTimeout(() => setSyncMessage(null), 3000)
   }
 
   return (
@@ -95,20 +94,20 @@ export function TopHeader({
           </button>
         )}
 
-        {/* Sanity Cloud Status / Seed Action */}
+        {/* Sanity Cloud Refresh Action */}
         <div className="relative">
           <button
-            onClick={handleSeedOrSync}
-            disabled={isSeeding}
+            onClick={handleRefresh}
+            disabled={isRefreshing}
             title={
               sanitySyncStatus === 'synced'
-                ? 'Sanity Live: Connected to cloud dataset'
-                : 'Click to Seed / Sync with Sanity Cloud'
+                ? 'Sanity Live: Connected to cloud dataset (Click to refresh)'
+                : 'Click to fetch latest from Sanity'
             }
             className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg border text-[11px] sm:text-xs font-medium transition-all ${
               sanitySyncStatus === 'synced'
                 ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20'
-                : sanitySyncStatus === 'syncing' || isSeeding
+                : sanitySyncStatus === 'syncing' || isRefreshing
                 ? 'border-blue-500/30 bg-blue-500/10 text-blue-600 dark:text-blue-400 animate-pulse'
                 : 'border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20'
             }`}
@@ -118,15 +117,15 @@ export function TopHeader({
                 <Cloud className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                 <span className="hidden md:inline">Sanity Live</span>
               </>
-            ) : isSeeding || sanitySyncStatus === 'syncing' ? (
+            ) : isRefreshing || sanitySyncStatus === 'syncing' ? (
               <>
                 <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-500 shrink-0" />
-                <span className="hidden md:inline">Syncing...</span>
+                <span className="hidden md:inline">Refreshing...</span>
               </>
             ) : (
               <>
-                <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                <span className="hidden md:inline">Seed Cloud</span>
+                <RefreshCw className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                <span className="hidden md:inline">Fetch Sanity</span>
               </>
             )}
           </button>
@@ -137,20 +136,6 @@ export function TopHeader({
             </div>
           )}
         </div>
-
-        {/* Reset / Sync button (Desktop & Tablet) */}
-        <button
-          onClick={() => {
-            if (confirm('Reset workspace to the freshly discovered Ace Acad codebase seed data?')) {
-              resetToInitialSeed()
-            }
-          }}
-          title="Reset to Ace Acad Discovery Seed"
-          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-500 dark:text-slate-400 text-xs transition-colors"
-        >
-          <RefreshCw className="w-3.5 h-3.5" />
-          <span className="hidden lg:inline">Sync Code Seed</span>
-        </button>
 
         {/* Quick Capture Action Trigger */}
         {onOpenQuickCapture && (
@@ -180,34 +165,50 @@ export function TopHeader({
           </button>
         </div>
 
-        {/* Authenticated Founder Identity Badge */}
-        <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-          {role === 'engineer' ? (
-            <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-blue-600 dark:text-blue-400">
-              <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-blue-500" />
-              <span className="hidden sm:inline">{currentUser?.name || 'Abdulaziz'} (Architect)</span>
-              <span className="sm:hidden">AA</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-              <UserCheck className="w-3.5 h-3.5 shrink-0 text-indigo-500" />
-              <span className="hidden sm:inline">{currentUser?.name || 'Ibrahim'} (CEO)</span>
-              <span className="sm:hidden">IB</span>
-            </div>
-          )}
+        {/* Role Toggle Switch */}
+        <div className="flex items-center p-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+          <button
+            onClick={() => setRole('engineer')}
+            className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-all ${
+              role === 'engineer'
+                ? 'bg-blue-600 text-white shadow-xs font-semibold'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden sm:inline">Engineer</span>
+          </button>
+          <button
+            onClick={() => setRole('ceo')}
+            className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-all ${
+              role === 'ceo'
+                ? 'bg-purple-600 text-white shadow-xs font-semibold'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <UserCheck className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden sm:inline">CEO</span>
+          </button>
         </div>
 
-        {/* Logout Button */}
-        <button
-          onClick={async () => {
-            await fetch('/api/os/auth/logout', { method: 'POST' })
-            window.location.href = '/os/login'
-          }}
-          title="Sign out of WSTAR OS"
-          className="p-1.5 sm:p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-red-500/10 hover:text-red-500 text-slate-400 transition-colors cursor-pointer"
-        >
-          <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-        </button>
+        {/* User Identity / Logout */}
+        {currentUser && (
+          <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-800">
+            <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+              {currentUser.name.split(' ')[0]}
+            </span>
+            <button
+              onClick={async () => {
+                await fetch('/api/os/auth/logout', { method: 'POST' })
+                window.location.href = '/os/login'
+              }}
+              title="Logout"
+              className="p-1.5 text-slate-400 hover:text-red-500 rounded hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
       </div>
     </header>
   )

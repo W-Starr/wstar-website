@@ -4,7 +4,21 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
-### [2026-08-19 13:12] — Type Export Name Discrepancy in Source Command Route
+### [2026-08-19 13:44] — Work Item Done Mutation Rollback Due to ID Stripping & Feedback Status Type
+
+- **Date/Time:** 2026-08-19 13:44 (WAT / UTC+1)
+- **Context:** Resolving task operations where marking a work item as 'done' failed or rolled back, and eliminating local initial seed reliance.
+- **The Mistake/Error:**
+  1. `OSContext.tsx` stripped prefixes from Sanity `_id` (e.g. `replace(/^work-/, '').replace(/^item-/, '')`), causing the store to hold altered IDs like `1` instead of `work-item-1`. When mutating or patching status to `done`, `dispatchMutation` attempted to patch non-existent document `work-1`, triggering a Sanity 404 which rolled back the UI state.
+  2. In `feedbackStore.ts`, `updateFeedbackStatus(feedbackId, 'resolved')` was called, but `FeedbackItem['status']` is typed as `'new' | 'triaged' | 'converted' | 'dismissed'`.
+- **The Fix:**
+  1. Preserved exact, uncorrupted Sanity `_id` values across all domain stores and mapped documents directly.
+  2. Updated `/api/os/sync` to support `createOrReplace` and fallback `createIfNotExists` on patch to prevent rollbacks.
+  3. Replaced `'resolved'` with `'converted'` in `feedbackStore.ts`.
+  4. Removed initial seed reset controls and initialized all Zustand stores as empty arrays `[]`, fetching exclusively and directly from Sanity Cloud dataset.
+- **Lesson Learned:** Never strip or mutate authoritative database document IDs on the client side; keep raw database `_id` keys uniform across all API routes, Zustand stores, and mutations.
+
+---
 
 - **Date/Time:** 2026-08-19 13:12 (WAT / UTC+1)
 - **Context:** Implementing the Natural Language Universal Command API route `src/app/api/os/ai/source-command/route.ts`.

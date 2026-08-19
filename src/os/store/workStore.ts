@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { WorkItem, WorkItemStatus, WorkItemType, WorkItemPriority, ProductId } from '@/os/types'
-import { initialWorkItems } from '@/os/data/initialSeed'
 import { dispatchMutation } from './syncHelper'
 
 interface WorkStoreState {
@@ -38,7 +37,7 @@ function generateMonotonicItemNumber(type: WorkItemType, currentItems: WorkItem[
 }
 
 export const useWorkStore = create<WorkStoreState>((set, get) => ({
-  workItems: initialWorkItems,
+  workItems: [],
   lastError: null,
 
   setWorkItems: (workItems) => set({ workItems }),
@@ -60,12 +59,11 @@ export const useWorkStore = create<WorkStoreState>((set, get) => ({
     // Optimistic addition
     set({ workItems: [newItem, ...current] })
 
-    // Background sync with rollback on failure
+    // Background sync to Sanity
     dispatchMutation('create', 'workItem', id, newItem).then((res) => {
       if (!res.success) {
-        console.error('[WorkStore Rollback] addWorkItem failed, reverting state:', res.error)
+        console.warn('[WorkStore Sync Warning] addWorkItem failed:', res.error)
         set({
-          workItems: get().workItems.filter((i) => i.id !== id),
           lastError: res.error || 'Failed to save work item to cloud database',
         })
       }
@@ -85,18 +83,17 @@ export const useWorkStore = create<WorkStoreState>((set, get) => ({
       updatedAt: new Date().toISOString(),
     }
 
-    // Optimistic update
+    // Optimistic update: instantly reflects in UI
     set({
       workItems: current.map((i) => (i.id === id ? updatedItem : i)),
     })
 
-    // Background sync with rollback
-    dispatchMutation('patch', 'workItem', id.startsWith('work-') ? id : `work-${id}`, updates).then((res) => {
+    // Background sync to Sanity
+    dispatchMutation('patch', 'workItem', id, updates).then((res) => {
       if (!res.success) {
-        console.error('[WorkStore Rollback] updateWorkItem failed, reverting state:', res.error)
+        console.warn('[WorkStore Sync Warning] updateWorkItem failed:', res.error)
         set({
-          workItems: get().workItems.map((i) => (i.id === id ? originalItem : i)),
-          lastError: res.error || 'Failed to update work item',
+          lastError: res.error || 'Failed to update work item in cloud database',
         })
       }
     })
@@ -112,14 +109,10 @@ export const useWorkStore = create<WorkStoreState>((set, get) => ({
       workItems: current.filter((i) => i.id !== id),
     })
 
-    // Background sync with rollback
-    dispatchMutation('delete', 'workItem', id.startsWith('work-') ? id : `work-${id}`).then((res) => {
+    // Background sync to Sanity
+    dispatchMutation('delete', 'workItem', id).then((res) => {
       if (!res.success) {
-        console.error('[WorkStore Rollback] deleteWorkItem failed, restoring item:', res.error)
-        set({
-          workItems: [originalItem, ...get().workItems],
-          lastError: res.error || 'Failed to delete work item from cloud database',
-        })
+        console.warn('[WorkStore Sync Warning] deleteWorkItem failed:', res.error)
       }
     })
   },
@@ -171,7 +164,7 @@ export const useWorkStore = create<WorkStoreState>((set, get) => ({
 
   applyRemoteDoc: (doc) => {
     const current = get().workItems
-    const rawId = doc._id.replace(/^work-/, '')
+    const rawId = doc._id
     const mapped: WorkItem = {
       id: rawId,
       itemNumber: doc.itemNumber || rawId,
@@ -189,7 +182,7 @@ export const useWorkStore = create<WorkStoreState>((set, get) => ({
       subtasks: doc.subtasks || [],
     }
 
-    const index = current.findIndex((i) => i.id === rawId || i.id === doc._id)
+    const index = current.findIndex((i) => i.id === rawId)
     if (index >= 0) {
       const next = [...current]
       next[index] = { ...next[index], ...mapped }
@@ -200,9 +193,8 @@ export const useWorkStore = create<WorkStoreState>((set, get) => ({
   },
 
   applyRemoteDelete: (id) => {
-    const rawId = id.replace(/^work-/, '')
     set({
-      workItems: get().workItems.filter((i) => i.id !== rawId && i.id !== id),
+      workItems: get().workItems.filter((i) => i.id !== id),
     })
   },
 }))
