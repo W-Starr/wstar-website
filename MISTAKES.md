@@ -4,6 +4,24 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
+### [2026-08-19 15:52] — Gemini AI Response Truncation (1024 Token Limit), Rigid JSON Parsing & GDrive Auto-Content
+
+- **Date/Time:** 2026-08-19 15:52 (WAT / UTC+1)
+- **Context:** Resolving AI daily digest generation and document parsing failures in WSTAR OS (`/os` briefing and `/os/sources` analysis modal).
+- **The Mistake/Error:**
+  1. In `src/os/lib/gemini.ts`, `maxOutputTokens` defaulted to `1024`. When generating structured multi-workstream initiative extractions or comprehensive founder briefings, the LLM output exceeded 1024 tokens and stopped abruptly mid-string, triggering `JSON.parse` crashes with `Failed to parse Gemini response as structured JSON`.
+  2. JSON stripping regex `/^```json\s*/` failed when introductory text or leading whitespace was present.
+  3. In `SourceAnalysisModal.tsx`, documents synced from Google Drive without local plain-text cache were submitted with empty content without attempting an on-the-fly fetch.
+  4. Both `FounderHandoffCard.tsx` and `SourceAnalysisModal.tsx` swallowed errors silently in `catch` blocks without rendering clear retry notices to the user.
+- **The Fix:**
+  1. Upgraded `gemini.ts` with `maxOutputTokens: 8192`, supported models (`gemini-flash-latest`, `gemini-3.5-flash-lite`, `gemini-3.6-flash`, `gemini-3.7-flash`), and resilient regex + bracket-matching JSON sanitization.
+  2. In `analyze-source/route.ts`, added safe 45k-character trimming for large documents.
+  3. In `SourceAnalysisModal.tsx`, integrated automated on-the-fly text retrieval from `/api/os/sources/gdrive` when `source.content` is absent.
+  4. Added visible error state banners and retry buttons to both UI components.
+- **Lesson Learned:** Always provide generous `maxOutputTokens` for structured JSON extractions and build resilient substring-bracket extractors rather than assuming strict `^```json` starting format.
+
+---
+
 ### [2026-08-19 13:44] — Work Item Done Mutation Rollback Due to ID Stripping & Feedback Status Type
 
 - **Date/Time:** 2026-08-19 13:44 (WAT / UTC+1)

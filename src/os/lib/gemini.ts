@@ -6,7 +6,7 @@
 import { env } from '../config/env'
 
 export interface GeminiCallOptions {
-  model?: 'gemini-3.5-flash-lite' | 'gemini-flash-latest' | 'gemini-3.6-flash'
+  model?: 'gemini-flash-latest' | 'gemini-3.5-flash-lite' | 'gemini-3.6-flash' | 'gemini-3.7-flash'
   temperature?: number
   maxOutputTokens?: number
   jsonMode?: boolean
@@ -18,7 +18,7 @@ export async function callGemini(
   options: GeminiCallOptions = {}
 ): Promise<string> {
   const apiKey = env.geminiApiKey
-  const model = options.model || 'gemini-3.5-flash-lite'
+  const model = options.model || 'gemini-flash-latest'
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
 
   const requestBody: any = {
@@ -29,7 +29,7 @@ export async function callGemini(
     ],
     generationConfig: {
       temperature: options.temperature ?? 0.2,
-      maxOutputTokens: options.maxOutputTokens ?? 1024,
+      maxOutputTokens: options.maxOutputTokens ?? 8192,
     },
   }
 
@@ -54,10 +54,10 @@ export async function callGemini(
       const errorJson = await res.json().catch(() => ({}))
       const errorMessage = errorJson?.error?.message || `HTTP ${res.status}`
 
-      // If primary model is unavailable or rate-limited, fallback to gemini-flash-latest
-      if (model !== 'gemini-flash-latest' && res.status !== 400) {
-        console.warn(`[Gemini Engine] Primary model ${model} failed (${errorMessage}), falling back to gemini-flash-latest...`)
-        return callGemini(prompt, { ...options, model: 'gemini-flash-latest' })
+      // If primary model fails or is unavailable, fallback to gemini-3.6-flash
+      if (model !== 'gemini-3.6-flash' && res.status !== 400) {
+        console.warn(`[Gemini Engine] Primary model ${model} failed (${errorMessage}), falling back to gemini-3.6-flash...`)
+        return callGemini(prompt, { ...options, model: 'gemini-3.6-flash' })
       }
 
       throw new Error(`Gemini API Error: ${errorMessage}`)
@@ -78,7 +78,7 @@ export async function callGemini(
 }
 
 /**
- * Call Gemini with structured JSON parsing
+ * Call Gemini with structured JSON parsing and robust extraction
  */
 export async function callGeminiJson<T>(
   prompt: string,
@@ -89,12 +89,38 @@ export async function callGeminiJson<T>(
     jsonMode: true,
   })
 
+  // 1. First attempt: match markdown code block
+  let jsonString = responseText.trim()
+  const codeBlockMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)\s*```/i)
+  if (codeBlockMatch && codeBlockMatch[1]) {
+    jsonString = codeBlockMatch[1].trim()
+  } else {
+    // 2. Fallback: extract substring between first { or [ and last } or ]
+    const firstObj = responseText.indexOf('{')
+    const firstArr = responseText.indexOf('[')
+    const startIdx = firstObj === -1 ? firstArr : firstArr === -1 ? firstObj : Math.min(firstObj, firstArr)
+
+    const lastObj = responseText.lastIndexOf('}')
+    const lastArr = responseText.lastIndexOf(']')
+    const endIdx = Math.max(lastObj, lastArr)
+
+    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+      jsonString = responseText.substring(startIdx, endIdx + 1).trim()
+    }
+  }
+
   try {
-    // Strip markdown code fences if present in JSON output
-    const cleanJson = responseText.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim()
-    return JSON.parse(cleanJson) as T
-  } catch (e) {
-    console.error('[Gemini JSON Parse Error] Raw text:', responseText)
-    throw new Error('Failed to parse Gemini response as structured JSON')
+    return JSON.parse(jsonString) as T
+  } catch (initialErr) {
+    // 3. Last-resort cleanup: remove trailing commas before closing braces/brackets
+    try {
+      const sanitized = jsonString
+        .replace(/,\s*([}\]])/g, '$1')
+        .replace(/[\u0000-\u001F]+/g, ' ')
+      return JSON.parse(sanitized) as T
+    } catch (fallbackErr) {
+      console.error('[Gemini JSON Parse Error] Raw text:', responseText)
+      throw new Error('Failed to parse Gemini response as structured JSON')
+    }
   }
 }

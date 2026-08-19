@@ -17,6 +17,7 @@ export function FounderHandoffCard() {
   const [digest, setDigest] = useState<DigestData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [lastGeneratedTime, setLastGeneratedTime] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const isEngineer = role === 'engineer'
   const founderName = currentUser?.name?.split(' ')[0] || (isEngineer ? 'Abdulaziz' : 'Ibrahim')
@@ -24,6 +25,7 @@ export function FounderHandoffCard() {
   // Generate Digest Handler
   const generateDigest = useCallback(async () => {
     setIsLoading(true)
+    setErrorMessage(null)
     try {
       // Build an operational snapshot summary for Gemini
       const itemsSummary = {
@@ -47,19 +49,20 @@ export function FounderHandoffCard() {
         body: JSON.stringify({ role, itemsSummary }),
       })
 
-      if (res.ok) {
-        const json = await res.json()
-        if (json.success && json.digest) {
-          setDigest(json.digest)
-          const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          setLastGeneratedTime(nowStr)
-          if (typeof window !== 'undefined') {
-            sessionStorage.setItem(`wstar_os_digest_${role}`, JSON.stringify({ digest: json.digest, time: nowStr }))
-          }
+      const json = await res.json()
+      if (res.ok && json.success && json.digest) {
+        setDigest(json.digest)
+        const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        setLastGeneratedTime(nowStr)
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem(`wstar_os_digest_${role}`, JSON.stringify({ digest: json.digest, time: nowStr }))
         }
+      } else {
+        setErrorMessage(json.error || 'Failed to synthesize daily briefing.')
       }
-    } catch (e) {
+    } catch (e: any) {
       console.warn('[AI Digest Fetch Error]:', e)
+      setErrorMessage(e?.message || 'Network error refreshing briefing.')
     } finally {
       setIsLoading(false)
     }
@@ -151,6 +154,22 @@ export function FounderHandoffCard() {
           <span>{isLoading ? 'Synthesizing...' : 'Refresh AI Brief'}</span>
         </button>
       </div>
+
+      {/* Error Notice */}
+      {errorMessage && (
+        <div className="mt-3 p-3 rounded-xl bg-red-950/50 border border-red-800/60 text-red-200 text-xs flex items-center justify-between animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+          <button
+            onClick={() => setErrorMessage(null)}
+            className="text-red-400 hover:text-white text-xs"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* Digest Content Body */}
       {digest && (

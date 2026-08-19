@@ -43,12 +43,14 @@ export function SourceAnalysisModal({ source, isOpen, onClose }: SourceAnalysisM
   const [includeInitiative, setIncludeInitiative] = useState(true)
   const [isAdding, setIsAdding] = useState(false)
   const [feedbackSuccess, setFeedbackSuccess] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   // Initialize or trigger analysis on open
   useEffect(() => {
     if (!isOpen || !source) return
 
     setFeedbackSuccess(null)
+    setErrorMessage(null)
 
     if (source.extractedEntities) {
       setEntities(source.extractedEntities)
@@ -79,14 +81,34 @@ export function SourceAnalysisModal({ source, isOpen, onClose }: SourceAnalysisM
     if (!source) return
     setIsLoading(true)
     setEntities(null)
+    setErrorMessage(null)
 
     try {
+      let contentToAnalyze = source.content || source.summary || ''
+
+      // If document is from Google Drive and has an externalId but no stored content, fetch content from GDrive API first
+      if (!contentToAnalyze && source.externalId && source.provider === 'google_drive') {
+        try {
+          const gdriveRes = await fetch('/api/os/sources/gdrive', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fileId: source.externalId }),
+          })
+          const gdriveData = await gdriveRes.json()
+          if (gdriveData.success && gdriveData.content) {
+            contentToAnalyze = gdriveData.content
+          }
+        } catch (gErr) {
+          console.warn('[SourceAnalysisModal] Auto-fetch GDrive content notice:', gErr)
+        }
+      }
+
       const res = await fetch('/api/os/ai/analyze-source', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sourceTitle: source.title,
-          sourceContent: source.content || source.summary,
+          sourceContent: contentToAnalyze || source.title,
           sourceUrl: source.externalUrl,
           productId: source.relatedProductId,
         }),
@@ -97,9 +119,12 @@ export function SourceAnalysisModal({ source, isOpen, onClose }: SourceAnalysisM
         setEntities(data.extractedEntities)
         initSelections(data.extractedEntities)
         attachExtractedEntities(source.id, data.extractedEntities)
+      } else {
+        setErrorMessage(data.error || 'Failed to extract entities from document.')
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to run AI Source Analysis:', err)
+      setErrorMessage(err?.message || 'Failed to connect to AI analysis service.')
     } finally {
       setIsLoading(false)
     }
@@ -496,6 +521,24 @@ export function SourceAnalysisModal({ source, isOpen, onClose }: SourceAnalysisM
                   </div>
                 )}
               </div>
+            </div>
+          ) : errorMessage ? (
+            <div className="py-12 px-6 text-center space-y-4 max-w-md mx-auto">
+              <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 mx-auto">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">AI Analysis Notice</h3>
+                <p className="text-xs text-red-600 dark:text-red-400">{errorMessage}</p>
+              </div>
+              <button
+                type="button"
+                onClick={triggerAnalysis}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Retry AI Extraction</span>
+              </button>
             </div>
           ) : (
             <div className="py-12 text-center text-xs text-slate-500">

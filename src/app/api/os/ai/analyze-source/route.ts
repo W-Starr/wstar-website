@@ -70,7 +70,7 @@ Extract strictly into this JSON schema:
 export async function POST(req: NextRequest) {
   try {
     const ip = req.headers.get('x-forwarded-for') || '127.0.0.1'
-    const limit = checkRateLimit(`ai-analyze-source:${ip}`, { maxRequests: 15, windowMs: 60000 })
+    const limit = checkRateLimit(`ai-analyze-source:${ip}`, { maxRequests: 30, windowMs: 60000 })
     if (!limit.allowed) {
       return NextResponse.json(
         { success: false, error: 'Rate limit exceeded. Please wait a moment before analyzing another document.' },
@@ -89,17 +89,24 @@ export async function POST(req: NextRequest) {
 
     logger.info(`Analyzing source document: ${sourceTitle || 'Untitled'}`, 'AI-SOURCE-ANALYSIS')
 
+    // Safely truncate very large documents to ~45k characters for context budget
+    let trimmedContent = sourceContent || sourceTitle || ''
+    if (trimmedContent.length > 45000) {
+      trimmedContent = trimmedContent.slice(0, 45000) + '\n\n[... Document truncated for AI extraction context ...]'
+    }
+
     const userPrompt = `Analyze this company document and extract actionable WSTAR OS organizational records:
 Title: ${sourceTitle || 'Strategic Document'}
 Product Scope: ${productId || 'ace-acad'}
 Document URL / Origin: ${sourceUrl || 'Internal Document'}
 Content / Notes:
-${sourceContent || sourceTitle}`
+${trimmedContent}`
 
     const extractedEntities = await callGeminiJson<ExtractedEntities>(userPrompt, {
       model: 'gemini-flash-latest',
       systemInstruction: SYSTEM_PROMPT,
       temperature: 0.2,
+      maxOutputTokens: 8192,
     })
 
     return NextResponse.json({

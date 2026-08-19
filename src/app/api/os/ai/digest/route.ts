@@ -32,7 +32,7 @@ Return JSON format:
 export async function POST(req: NextRequest) {
   try {
     const ip = req.headers.get('x-forwarded-for') || '127.0.0.1'
-    const limit = checkRateLimit(`ai-digest:${ip}`, { maxRequests: 10, windowMs: 60000 })
+    const limit = checkRateLimit(`ai-digest:${ip}`, { maxRequests: 30, windowMs: 60000 })
     if (!limit.allowed) {
       return NextResponse.json(
         { success: false, error: 'Rate limit exceeded. Please wait 1 minute.' },
@@ -53,6 +53,7 @@ ${JSON.stringify(itemsSummary || {}, null, 2)}`
       model: 'gemini-flash-latest',
       systemInstruction: SYSTEM_PROMPT,
       temperature: 0.3,
+      maxOutputTokens: 4096,
     })
 
     return NextResponse.json({
