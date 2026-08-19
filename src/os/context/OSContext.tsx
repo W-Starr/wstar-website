@@ -38,6 +38,7 @@ import { initializeRealtimeListener } from '../sanity/realtime'
 
 export interface OSContextType {
   role: Role
+  currentUser: import('../store/metaStore').AuthenticatedFounder | null
   setRole: (role: Role) => void
   products: Product[]
   productAreas: ProductArea[]
@@ -139,11 +140,13 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
   const logActivityRaw = useActivityStore((state) => state.logActivity)
 
   const role = useMetaStore((state) => state.role)
+  const currentUser = useMetaStore((state) => state.currentUser)
   const sanitySyncStatus = useMetaStore((state) => state.sanitySyncStatus)
   const products = useMetaStore((state) => state.products)
   const productAreas = useMetaStore((state) => state.productAreas)
   const isLoaded = useMetaStore((state) => state.isLoaded)
   const setRole = useMetaStore((state) => state.setRole)
+  const fetchSession = useMetaStore((state) => state.fetchSession)
   const setSanitySyncStatus = useMetaStore((state) => state.setSanitySyncStatus)
   const setProducts = useMetaStore((state) => state.setProducts)
   const setProductAreas = useMetaStore((state) => state.setProductAreas)
@@ -156,82 +159,91 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
       targetType: ActivityItem['targetType'],
       badgeColor = 'blue'
     ) => {
-      const actorName = role === 'engineer' ? 'Abdulaziz' : 'Ibrahim (CEO)'
+      const actorName = currentUser?.name || (role === 'engineer' ? 'Abdulaziz' : 'Ibrahim (CEO)')
       logActivityRaw(action, targetTitle, targetType, actorName, badgeColor)
     },
-    [role, logActivityRaw]
+    [role, currentUser, logActivityRaw]
   )
 
-  // Fetch initial full state from Sanity
+  // Remote Sanity Fetch
   const refreshFromSanity = useCallback(async () => {
     try {
       setSanitySyncStatus('syncing')
       const res = await fetch('/api/os/fetch')
-      if (!res.ok) throw new Error('Fetch failed')
-      const json = await res.json()
+      if (!res.ok) {
+        setSanitySyncStatus('local_fallback')
+        return
+      }
 
-      if (json.success && json.hasData && json.data) {
+      const json = await res.json()
+      if (json.success && json.data) {
         if (json.data.workItems && json.data.workItems.length > 0) {
-          const mappedWorkItems: WorkItem[] = json.data.workItems.map((item: any) => ({
-            id: item._id.replace(/^work-/, ''),
-            itemNumber: item.itemNumber || item._id,
-            title: item.title,
-            description: item.description,
-            type: item.type || 'task',
-            priority: item.priority || 'medium',
-            status: item.status || 'backlog',
-            assignee: item.assignee || 'abdulaziz',
-            productId: item.productId || 'ace-acad',
-            productAreaId: item.productAreaId,
-            codeReference: item.codeReference,
-            createdAt: item._createdAt || new Date().toISOString(),
-            updatedAt: item._updatedAt || new Date().toISOString(),
-            subtasks: item.subtasks || [],
+          const mappedWork: WorkItem[] = json.data.workItems.map((w: any) => ({
+            id: w._id.replace(/^work-/, '').replace(/^item-/, ''),
+            itemNumber: w.itemNumber || `TASK-${w._id.slice(0, 4)}`,
+            title: w.title,
+            description: w.description,
+            type: w.type || 'task',
+            status: w.status || 'todo',
+            priority: w.priority || 'medium',
+            productId: w.productId || 'ace-acad',
+            productAreaId: w.productAreaId,
+            assignee: w.assignee || 'unassigned',
+            reporter: w.reporter,
+            blockerReason: w.blockerReason,
+            codeReference: w.codeReference,
+            dueDate: w.dueDate,
+            subtasks: w.subtasks || [],
+            bugMetadata: w.bugMetadata,
+            createdAt: w.createdAt || w._createdAt || new Date().toISOString(),
+            updatedAt: w.updatedAt || w._updatedAt || new Date().toISOString(),
           }))
-          setWorkItems(mappedWorkItems)
+          setWorkItems(mappedWork)
         }
 
         if (json.data.proposals && json.data.proposals.length > 0) {
-          const mappedProposals: Proposal[] = json.data.proposals.map((prop: any) => ({
-            id: prop._id.replace(/^proposal-/, ''),
-            proposalNumber: prop.proposalNumber || prop._id,
-            slug: prop.slug || prop._id,
-            title: prop.title,
-            subtitle: prop.subtitle || '',
-            category: prop.category || 'Architecture & Ingestion',
-            status: prop.status || 'under_review',
-            authors: prop.authors || ['Abdulaziz'],
-            filename: prop.filename || `${prop.slug || prop._id}.md`,
-            executiveSummary: prop.executiveSummary || prop.summary || '',
-            problemStatement: prop.problemStatement || [],
-            proposedSolution: prop.proposedSolution || '',
-            strategicAdvantages: prop.strategicAdvantages || [],
-            recommendedTierOrApproach: prop.recommendedTierOrApproach || {
-              name: 'Standard Implementation',
-              rationale: 'Baseline architecture',
+          const mappedProposals: Proposal[] = json.data.proposals.map((p: any) => ({
+            id: p._id.replace(/^prop-/, '').replace(/^proposal-/, ''),
+            proposalNumber: p.proposalNumber || `PROP-${p._id.slice(0, 3)}`,
+            slug: p.slug || p.filename?.replace('.md', '') || 'proposal',
+            title: p.title,
+            subtitle: p.subtitle || '',
+            category: p.category || 'Content Scaling & UGC',
+            status: p.status || 'approved_for_scoping',
+            date: p.date || new Date().toISOString(),
+            authors: p.authors || ['Abdulaziz Abdulwahab'],
+            relatedDocuments: p.relatedDocuments || [],
+            filename: p.filename || `${p.title}.md`,
+            executiveSummary: p.executiveSummary || '',
+            problemStatement: p.problemStatement || [],
+            proposedSolution: p.proposedSolution || '',
+            strategicAdvantages: p.strategicAdvantages || [],
+            recommendedTierOrApproach: p.recommendedTierOrApproach || {
+              name: 'Standard Tier',
+              rationale: '',
               estimatedCost: '$0',
               roi: 'High',
             },
-            keyRisks: prop.keyRisks || [],
-            date: prop.date || new Date().toISOString().split('T')[0],
-            phases: prop.phases || [],
-            actionItems: prop.actionItems || [],
+            keyRisks: p.keyRisks || [],
+            phases: p.phases || [],
+            actionItems: p.actionItems || [],
           }))
           setProposals(mappedProposals)
         }
 
         if (json.data.decisions && json.data.decisions.length > 0) {
-          const mappedDecisions: Decision[] = json.data.decisions.map((dec: any) => ({
-            id: dec._id.replace(/^decision-/, ''),
-            decisionNumber: dec.decisionNumber || dec._id,
-            title: dec.title,
-            decision: dec.decision,
-            status: dec.status || 'accepted',
-            participants: dec.participants || ['Abdulaziz Abdulwahab', 'Ibrahim Abdulwahab'],
-            date: dec.date || new Date().toISOString().split('T')[0],
-            productId: dec.productId,
-            consequences: dec.consequences,
-            alternativesConsidered: dec.alternativesConsidered,
+          const mappedDecisions: Decision[] = json.data.decisions.map((d: any) => ({
+            id: d._id.replace(/^decision-/, '').replace(/^dec-/, ''),
+            decisionNumber: d.decisionNumber || `DEC-${d._id.slice(0, 3)}`,
+            title: d.title,
+            decision: d.decision,
+            reason: d.reason,
+            status: d.status || 'accepted',
+            participants: d.participants || ['Abdulaziz Abdulwahab', 'Ibrahim Abdulwahab'],
+            date: d.date || new Date().toISOString().split('T')[0],
+            productId: d.productId || 'ace-acad',
+            consequences: d.consequences,
+            alternativesConsidered: d.alternativesConsidered || [],
           }))
           setDecisions(mappedDecisions)
         }
@@ -316,18 +328,13 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe()
   }, [])
 
-  // Initial Load (Local Storage + Remote Sanity query)
+  // Initial Load (Fetch Session + Local Storage + Remote Sanity query)
   useEffect(() => {
-    try {
-      const savedRole = localStorage.getItem('wstar_os_role') as Role
-      if (savedRole) setRole(savedRole)
-    } catch (e) {
-      console.error('Error loading role from storage', e)
-    } finally {
+    fetchSession().finally(() => {
       setIsLoaded(true)
       refreshFromSanity()
-    }
-  }, [setRole, setIsLoaded, refreshFromSanity])
+    })
+  }, [fetchSession, setIsLoaded, refreshFromSanity])
 
   // Seed Sanity Cloud Handler
   const seedSanityCloud = async () => {
@@ -424,6 +431,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
     <OSContext.Provider
       value={{
         role,
+        currentUser,
         setRole,
         products,
         productAreas,

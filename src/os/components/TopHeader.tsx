@@ -23,6 +23,7 @@ interface TopHeaderProps {
 export function TopHeader({ title, onToggleMobileSidebar, onOpenQuickCapture }: TopHeaderProps) {
   const {
     role,
+    currentUser,
     setRole,
     resetToInitialSeed,
     workItems,
@@ -157,35 +158,21 @@ export function TopHeader({ title, onToggleMobileSidebar, onOpenQuickCapture }: 
           </button>
         </div>
 
-        {/* Perspective Role Switcher */}
-        <div className="flex items-center p-0.5 sm:p-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-          <button
-            onClick={() => setRole('engineer')}
-            title="Switch to Abdulaziz (Lead Architect)"
-            className={`flex items-center gap-1 px-2 sm:px-3 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-all ${
-              role === 'engineer'
-                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-semibold'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-            <span className="hidden sm:inline">Abdulaziz</span>
-            <span className="sm:hidden">AA</span>
-          </button>
-
-          <button
-            onClick={() => setRole('ceo')}
-            title="Switch to Ibrahim (CEO)"
-            className={`flex items-center gap-1 px-2 sm:px-3 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-all ${
-              role === 'ceo'
-                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-semibold'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <UserCheck className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
-            <span className="hidden sm:inline">Ibrahim</span>
-            <span className="sm:hidden">IB</span>
-          </button>
+        {/* Authenticated Founder Identity Badge */}
+        <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+          {role === 'engineer' ? (
+            <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-blue-600 dark:text-blue-400">
+              <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-blue-500" />
+              <span className="hidden sm:inline">{currentUser?.name || 'Abdulaziz'} (Architect)</span>
+              <span className="sm:hidden">AA</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+              <UserCheck className="w-3.5 h-3.5 shrink-0 text-indigo-500" />
+              <span className="hidden sm:inline">{currentUser?.name || 'Ibrahim'} (CEO)</span>
+              <span className="sm:hidden">IB</span>
+            </div>
+          )}
         </div>
 
         {/* Logout Button */}
@@ -195,7 +182,7 @@ export function TopHeader({ title, onToggleMobileSidebar, onOpenQuickCapture }: 
             window.location.href = '/os/login'
           }}
           title="Sign out of WSTAR OS"
-          className="p-1.5 sm:p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-red-500/10 hover:text-red-500 text-slate-400 transition-colors"
+          className="p-1.5 sm:p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-red-500/10 hover:text-red-500 text-slate-400 transition-colors cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </button>

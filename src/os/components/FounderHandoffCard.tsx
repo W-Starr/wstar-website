@@ -13,13 +13,13 @@ interface DigestData {
 }
 
 export function FounderHandoffCard() {
-  const { role, workItems, proposals, feedbackItems, decisions } = useOS()
+  const { role, currentUser, workItems, proposals, feedbackItems, decisions } = useOS()
   const [digest, setDigest] = useState<DigestData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [lastGeneratedTime, setLastGeneratedTime] = useState<string | null>(null)
 
   const isEngineer = role === 'engineer'
-  const founderName = isEngineer ? 'Abdulaziz' : 'Ibrahim'
+  const founderName = currentUser?.name?.split(' ')[0] || (isEngineer ? 'Abdulaziz' : 'Ibrahim')
 
   // Generate Digest Handler
   const generateDigest = useCallback(async () => {
@@ -65,7 +65,7 @@ export function FounderHandoffCard() {
     }
   }, [role, workItems, proposals, feedbackItems, decisions])
 
-  // Load cached digest or generate on first mount
+  // Load cached digest or generate on role mount
   useEffect(() => {
     try {
       const cached = sessionStorage.getItem(`wstar_os_digest_${role}`)
@@ -79,36 +79,39 @@ export function FounderHandoffCard() {
       // Ignore sessionStorage error
     }
 
-    // Default static fallback if not yet fetched
-    if (!digest) {
-      setDigest({
-        headline: isEngineer
-          ? 'Lead Architect Brief: Focus on Drift SQLite and Firebase Authentication stability'
-          : 'CEO Brief: Strategic momentum on Ace Acad monetization and institution partnerships',
-        standoutSummary: isEngineer
-          ? 'Core app architecture is active across 40 work items. 2 critical test crashes are currently prioritized for immediate CI/CD pass.'
-          : 'User testing feedback is incoming for Ace Acad 2.0. Strategic proposals for UGC scaling and AI Adaptive Learning are staged for execution.',
-        criticalAlerts: [
-          'Starter unit test suite failure blocking automated CI verification on main branch',
-          'Paywall & offline drift encryption pending security audit before campus pilot',
-        ],
-        completedHighlights: [
-          'Zero-vulnerability authentication gateway & Edge JWT protection deployed',
-          'Zustand reactive state domain stores with automatic rollback integrated',
-        ],
-        recommendedActions: isEngineer
-          ? [
-              'Fix Flutter starter unit test pump widget exception in test/widget_test.dart',
-              'Finalize Drift migration scripts for version 3 local schema',
-            ]
-          : [
-              'Review and approve Proposal PROP-001 for UGC scaling and campus ambassadors',
-              'Review investor pitch deck draft and NDPC compliance checklist',
-            ],
-      })
-      setLastGeneratedTime('Just now')
-    }
-  }, [role, isEngineer, digest])
+    // Role-specific static fallback while live AI digest synthesizes
+    setDigest({
+      headline: isEngineer
+        ? 'Lead Architect Brief: Focus on Drift SQLite and Firebase Authentication stability'
+        : 'CEO Brief: Strategic momentum on Ace Acad monetization, GTM and investor briefings',
+      standoutSummary: isEngineer
+        ? 'Core app architecture is active across work items. Recent unit test fixes and Firestore whereIn batching have stabilized the CI pipeline.'
+        : 'User testing feedback is incoming for Ace Acad 2.0. Strategic proposals for Class Rep scaling and AI Adaptive Learning are ready for founder execution.',
+      criticalAlerts: isEngineer
+        ? [
+            'Paywall & offline drift encryption pending security audit before campus pilot',
+            'Verify all 13 core 100L courses syllabus structures in Firestore',
+          ]
+        : [
+            'NDPC DCMI Data Controller Registration required once active users scale across ABU cohorts',
+            'Investor briefing preparation with Tony Elumelu Foundation',
+          ],
+      completedHighlights: [
+        'Zero-vulnerability authentication gateway & Edge JWT protection deployed',
+        'Zustand reactive state domain stores with automatic rollback integrated',
+      ],
+      recommendedActions: isEngineer
+        ? [
+            'Verify sub-batch query chunking on mock exam quiz screens',
+            'Finalize Drift migration scripts for version 3 local schema',
+          ]
+        : [
+            'Review and approve Proposal PROP-001 for Class Rep cohort model & campus ambassadors',
+            'Schedule investor briefing with Tony Elumelu Foundation and update pitch deck',
+          ],
+    })
+    setLastGeneratedTime('Just now')
+  }, [role, isEngineer])
 
   return (
     <div className="relative rounded-2xl bg-linear-to-br from-slate-900 via-slate-900 to-blue-950/80 border border-blue-900/40 p-5 text-white shadow-xl overflow-hidden font-sans">
