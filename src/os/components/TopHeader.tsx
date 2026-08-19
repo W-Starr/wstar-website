@@ -11,14 +11,16 @@ import {
   Cloud,
   Sparkles,
   Menu,
+  LogOut,
 } from 'lucide-react'
 
 interface TopHeaderProps {
   title?: string
   onToggleMobileSidebar?: () => void
+  onOpenQuickCapture?: () => void
 }
 
-export function TopHeader({ title, onToggleMobileSidebar }: TopHeaderProps) {
+export function TopHeader({ title, onToggleMobileSidebar, onOpenQuickCapture }: TopHeaderProps) {
   const {
     role,
     setRole,
@@ -127,6 +129,19 @@ export function TopHeader({ title, onToggleMobileSidebar }: TopHeaderProps) {
           <span className="hidden lg:inline">Sync Code Seed</span>
         </button>
 
+        {/* Quick Capture Action Trigger */}
+        {onOpenQuickCapture && (
+          <button
+            onClick={onOpenQuickCapture}
+            title="Quick Capture (N)"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] sm:text-xs font-semibold shadow-xs transition-all hover:scale-102 cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span className="hidden md:inline">Quick Capture</span>
+            <span className="md:hidden">New</span>
+          </button>
+        )}
+
         {/* Notification Bell with Critical Alert */}
         <div className="relative">
           <button
@@ -172,6 +187,18 @@ export function TopHeader({ title, onToggleMobileSidebar }: TopHeaderProps) {
             <span className="sm:hidden">IB</span>
           </button>
         </div>
+
+        {/* Logout Button */}
+        <button
+          onClick={async () => {
+            await fetch('/api/os/auth/logout', { method: 'POST' })
+            window.location.href = '/os/login'
+          }}
+          title="Sign out of WSTAR OS"
+          className="p-1.5 sm:p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-red-500/10 hover:text-red-500 text-slate-400 transition-colors"
+        >
+          <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        </button>
       </div>
     </header>
   )

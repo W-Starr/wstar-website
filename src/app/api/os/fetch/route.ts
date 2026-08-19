@@ -1,18 +1,28 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@sanity/client'
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'qx20j59l'
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 
-const readClient = createClient({
-  projectId,
-  dataset,
-  apiVersion: '2024-03-01',
-  useCdn: false,
-})
+const readClient = projectId
+  ? createClient({
+      projectId,
+      dataset,
+      apiVersion: '2024-03-01',
+      useCdn: false,
+    })
+  : null
 
 export async function GET() {
   try {
+    if (!readClient) {
+      return NextResponse.json({
+        success: false,
+        hasData: false,
+        error: 'NEXT_PUBLIC_SANITY_PROJECT_ID is not configured in server environment',
+      }, { status: 500 })
+    }
+
     const query = `{
       "workItems": *[_type == "workItem"] | order(_createdAt desc),
       "proposals": *[_type == "proposal"] | order(_createdAt desc),
@@ -38,7 +48,7 @@ export async function GET() {
       data,
     })
   } catch (error: any) {
-    console.error('Error fetching OS data from Sanity:', error)
+    console.error('[WSTAR OS Fetch Error]:', error)
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
 }

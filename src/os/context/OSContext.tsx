@@ -1,20 +1,19 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import React, { createContext, useContext, useEffect, useCallback } from 'react'
 import {
   Role,
+  Product,
+  ProductArea,
+  Proposal,
   WorkItem,
   Decision,
   FeedbackItem,
-  Product,
-  ProductArea,
   Project,
   RoadmapItem,
   ActivityItem,
-  Proposal,
+  SanitySyncState,
   WorkItemStatus,
-  WorkItemPriority,
-  WorkItemType,
   ClassificationSuggestion,
 } from '../types'
 import {
@@ -28,11 +27,16 @@ import {
   initialRoadmap,
   initialActivities,
 } from '../data/initialSeed'
-import { sanityClient, projectId, dataset } from '../sanity/client'
+import { useWorkStore } from '../store/workStore'
+import { useProposalStore } from '../store/proposalStore'
+import { useDecisionStore } from '../store/decisionStore'
+import { useFeedbackStore } from '../store/feedbackStore'
+import { useRoadmapStore } from '../store/roadmapStore'
+import { useActivityStore } from '../store/activityStore'
+import { useMetaStore } from '../store/metaStore'
+import { initializeRealtimeListener } from '../sanity/realtime'
 
-export type SanitySyncState = 'synced' | 'syncing' | 'local_fallback' | 'seeding' | 'error'
-
-interface OSContextType {
+export interface OSContextType {
   role: Role
   setRole: (role: Role) => void
   products: Product[]
@@ -44,23 +48,32 @@ interface OSContextType {
   projects: Project[]
   roadmapItems: RoadmapItem[]
   activities: ActivityItem[]
-  
-  // Sanity Cloud Sync
   sanitySyncStatus: SanitySyncState
+  isLoaded: boolean
+  lastError: string | null
+
+  // Sanity Cloud Actions
   seedSanityCloud: () => Promise<{ success: boolean; message: string }>
   refreshFromSanity: () => Promise<void>
 
   // Proposal Actions
   updateProposalStatus: (id: string, status: Proposal['status']) => void
-  createWorkItemFromProposal: (proposalId: string, taskTitle: string, assignee: 'abdulaziz' | 'ibrahim') => WorkItem
+  createWorkItemFromProposal: (
+    proposalId: string,
+    taskTitle: string,
+    assignee: 'abdulaziz' | 'ibrahim'
+  ) => WorkItem
 
   // Work Item Actions
-  addWorkItem: (item: Omit<WorkItem, 'id' | 'createdAt' | 'updatedAt' | 'itemNumber'>) => WorkItem
+  addWorkItem: (
+    item: Omit<WorkItem, 'id' | 'createdAt' | 'updatedAt' | 'itemNumber'>
+  ) => WorkItem
   updateWorkItem: (id: string, updates: Partial<WorkItem>) => void
   deleteWorkItem: (id: string) => void
   updateWorkItemStatus: (id: string, status: WorkItemStatus) => void
   decomposeWorkItem: (id: string, subtaskTitles: string[]) => void
   toggleSubtask: (itemId: string, subtaskId: string) => void
+  addSubtask: (itemId: string, title: string) => void
 
   // Decision Actions
   addDecision: (decision: Omit<Decision, 'id' | 'decisionNumber'>) => Decision
@@ -68,7 +81,10 @@ interface OSContextType {
 
   // Feedback Actions
   updateFeedbackStatus: (id: string, status: FeedbackItem['status']) => void
-  convertFeedbackToWorkItem: (feedbackId: string, itemData: Partial<WorkItem>) => WorkItem
+  convertFeedbackToWorkItem: (
+    feedbackId: string,
+    itemData: Partial<WorkItem>
+  ) => WorkItem
 
   // Roadmap Actions
   addRoadmapItem: (item: Omit<RoadmapItem, 'id'>) => void
@@ -76,135 +92,203 @@ interface OSContextType {
 
   // Intelligence
   suggestClassification: (text: string) => ClassificationSuggestion
-  
+
   // Reset data to initial discovery seed
   resetToInitialSeed: () => void
 }
 
-const OSContext = createContext<OSContextType | undefined>(undefined)
-
-const STORAGE_KEYS = {
-  ROLE: 'wstar_os_role',
-  PROPOSALS: 'wstar_os_proposals',
-  WORK_ITEMS: 'wstar_os_work_items',
-  DECISIONS: 'wstar_os_decisions',
-  FEEDBACK: 'wstar_os_feedback',
-  ROADMAP: 'wstar_os_roadmap',
-  ACTIVITIES: 'wstar_os_activities',
-  PRODUCT_AREAS: 'wstar_os_product_areas',
-}
+const OSContext = createContext<OSContextType | null>(null)
 
 export function OSProvider({ children }: { children: React.ReactNode }) {
-  const [role, setRoleState] = useState<Role>('engineer')
-  const [products, setProducts] = useState<Product[]>(initialProducts)
-  const [productAreas, setProductAreas] = useState<ProductArea[]>(initialProductAreas)
-  const [proposals, setProposals] = useState<Proposal[]>(initialProposals)
-  const [workItems, setWorkItems] = useState<WorkItem[]>(initialWorkItems)
-  const [decisions, setDecisions] = useState<Decision[]>(initialDecisions)
-  const [feedbackItems, setFeedbackItems] = useState<FeedbackItem[]>(initialFeedback)
-  const [projects, setProjects] = useState<Project[]>(initialProjects)
-  const [roadmapItems, setRoadmapItems] = useState<RoadmapItem[]>(initialRoadmap)
-  const [activities, setActivities] = useState<ActivityItem[]>(initialActivities)
-  const [sanitySyncStatus, setSanitySyncStatus] = useState<SanitySyncState>('local_fallback')
-  const [isLoaded, setIsLoaded] = useState(false)
+  // Zustand store subscriptions
+  const workItems = useWorkStore((state) => state.workItems)
+  const workLastError = useWorkStore((state) => state.lastError)
+  const addWorkItem = useWorkStore((state) => state.addWorkItem)
+  const updateWorkItem = useWorkStore((state) => state.updateWorkItem)
+  const deleteWorkItem = useWorkStore((state) => state.deleteWorkItem)
+  const updateWorkItemStatus = useWorkStore((state) => state.updateWorkItemStatus)
+  const decomposeWorkItem = useWorkStore((state) => state.decomposeWorkItem)
+  const toggleSubtask = useWorkStore((state) => state.toggleSubtask)
+  const addSubtask = useWorkStore((state) => state.addSubtask)
+  const setWorkItems = useWorkStore((state) => state.setWorkItems)
 
-  // Helper to dispatch background mutation to Sanity API route
-  const dispatchSanityMutation = async (action: 'create' | 'update' | 'patch' | 'delete', docType: string, id: string, data?: any) => {
-    try {
-      setSanitySyncStatus('syncing')
-      const res = await fetch('/api/os/sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, docType, id, data }),
-      })
-      const result = await res.json()
-      if (result.mode === 'sanity_live') {
-        setSanitySyncStatus('synced')
-      } else {
-        setSanitySyncStatus('local_fallback')
-      }
-    } catch (e) {
-      console.warn('Sanity mutation dispatch failed, continuing in optimistic local mode:', e)
-      setSanitySyncStatus('local_fallback')
-    }
-  }
+  const proposals = useProposalStore((state) => state.proposals)
+  const setProposals = useProposalStore((state) => state.setProposals)
+  const updateProposalStatus = useProposalStore((state) => state.updateProposalStatus)
+  const createWorkItemFromProposal = useProposalStore((state) => state.createWorkItemFromProposal)
 
-  // Fetch live state from Sanity with local fallback
+  const decisions = useDecisionStore((state) => state.decisions)
+  const setDecisions = useDecisionStore((state) => state.setDecisions)
+  const addDecision = useDecisionStore((state) => state.addDecision)
+  const updateDecision = useDecisionStore((state) => state.updateDecision)
+
+  const feedbackItems = useFeedbackStore((state) => state.feedbackItems)
+  const setFeedbackItems = useFeedbackStore((state) => state.setFeedbackItems)
+  const updateFeedbackStatus = useFeedbackStore((state) => state.updateFeedbackStatus)
+  const convertFeedbackToWorkItem = useFeedbackStore((state) => state.convertFeedbackToWorkItem)
+
+  const roadmapItems = useRoadmapStore((state) => state.roadmapItems)
+  const projects = useRoadmapStore((state) => state.projects)
+  const setRoadmapItems = useRoadmapStore((state) => state.setRoadmapItems)
+  const setProjects = useRoadmapStore((state) => state.setProjects)
+  const addRoadmapItem = useRoadmapStore((state) => state.addRoadmapItem)
+  const updateRoadmapHorizon = useRoadmapStore((state) => state.updateRoadmapHorizon)
+
+  const activities = useActivityStore((state) => state.activities)
+  const setActivities = useActivityStore((state) => state.setActivities)
+  const logActivityRaw = useActivityStore((state) => state.logActivity)
+
+  const role = useMetaStore((state) => state.role)
+  const sanitySyncStatus = useMetaStore((state) => state.sanitySyncStatus)
+  const products = useMetaStore((state) => state.products)
+  const productAreas = useMetaStore((state) => state.productAreas)
+  const isLoaded = useMetaStore((state) => state.isLoaded)
+  const setRole = useMetaStore((state) => state.setRole)
+  const setSanitySyncStatus = useMetaStore((state) => state.setSanitySyncStatus)
+  const setProducts = useMetaStore((state) => state.setProducts)
+  const setProductAreas = useMetaStore((state) => state.setProductAreas)
+  const setIsLoaded = useMetaStore((state) => state.setIsLoaded)
+
+  const logActivity = useCallback(
+    (
+      action: string,
+      targetTitle: string,
+      targetType: ActivityItem['targetType'],
+      badgeColor = 'blue'
+    ) => {
+      const actorName = role === 'engineer' ? 'Abdulaziz' : 'Ibrahim (CEO)'
+      logActivityRaw(action, targetTitle, targetType, actorName, badgeColor)
+    },
+    [role, logActivityRaw]
+  )
+
+  // Fetch initial full state from Sanity
   const refreshFromSanity = useCallback(async () => {
     try {
       setSanitySyncStatus('syncing')
       const res = await fetch('/api/os/fetch')
       if (!res.ok) throw new Error('Fetch failed')
       const json = await res.json()
-      
+
       if (json.success && json.hasData && json.data) {
-        const d = json.data
-        if (d.workItems && d.workItems.length > 0) {
-          // Normalize Sanity items
-          const mappedWorkItems: WorkItem[] = d.workItems.map((item: any) => ({
-            id: item._id.replace('work-', ''),
-            itemNumber: item.itemNumber || 'TASK-000',
+        if (json.data.workItems && json.data.workItems.length > 0) {
+          const mappedWorkItems: WorkItem[] = json.data.workItems.map((item: any) => ({
+            id: item._id.replace(/^work-/, ''),
+            itemNumber: item.itemNumber || item._id,
             title: item.title,
-            type: item.type || 'task',
-            status: item.status || 'todo',
-            priority: item.priority || 'medium',
-            productId: item.product?._ref?.replace('product-', '') || 'ace-acad',
-            productAreaId: item.productArea?._ref?.replace('area-', '') || 'area-library',
-            assignee: item.assignee || 'abdulaziz',
             description: item.description,
-            dueDate: item.dueDate,
+            type: item.type || 'task',
+            priority: item.priority || 'medium',
+            status: item.status || 'backlog',
+            assignee: item.assignee || 'abdulaziz',
+            productId: item.productId || 'ace-acad',
+            productAreaId: item.productAreaId,
             codeReference: item.codeReference,
-            createdAt: item._createdAt,
-            updatedAt: item._updatedAt,
+            createdAt: item._createdAt || new Date().toISOString(),
+            updatedAt: item._updatedAt || new Date().toISOString(),
+            subtasks: item.subtasks || [],
           }))
           setWorkItems(mappedWorkItems)
         }
 
-        if (d.proposals && d.proposals.length > 0) {
-          const mappedProposals: Proposal[] = d.proposals.map((p: any) => ({
-            id: p._id.replace('proposal-', ''),
-            proposalNumber: p.proposalNumber,
-            title: p.title,
-            subtitle: p.subtitle,
-            category: p.category,
-            status: p.status,
-            date: p.date,
-            authors: p.authors || [],
-            executiveSummary: p.executiveSummary,
-            proposedSolution: p.proposedSolution,
-            filename: p.filename,
-            slug: p.title?.toLowerCase().replace(/\s+/g, '-'),
-            relatedDocuments: [],
-            problemStatement: [],
-            strategicAdvantages: [],
-            recommendedTierOrApproach: { name: 'Tier 2', rationale: '', estimatedCost: '', roi: '' },
-            keyRisks: [],
-            phases: [],
-            actionItems: [],
-            linkedWorkItemIds: [],
-            linkedDecisionIds: [],
+        if (json.data.proposals && json.data.proposals.length > 0) {
+          const mappedProposals: Proposal[] = json.data.proposals.map((prop: any) => ({
+            id: prop._id.replace(/^proposal-/, ''),
+            proposalNumber: prop.proposalNumber || prop._id,
+            slug: prop.slug || prop._id,
+            title: prop.title,
+            subtitle: prop.subtitle || '',
+            category: prop.category || 'Architecture & Ingestion',
+            status: prop.status || 'under_review',
+            authors: prop.authors || ['Abdulaziz'],
+            filename: prop.filename || `${prop.slug || prop._id}.md`,
+            executiveSummary: prop.executiveSummary || prop.summary || '',
+            problemStatement: prop.problemStatement || [],
+            proposedSolution: prop.proposedSolution || '',
+            strategicAdvantages: prop.strategicAdvantages || [],
+            recommendedTierOrApproach: prop.recommendedTierOrApproach || {
+              name: 'Standard Implementation',
+              rationale: 'Baseline architecture',
+              estimatedCost: '$0',
+              roi: 'High',
+            },
+            keyRisks: prop.keyRisks || [],
+            date: prop.date || new Date().toISOString().split('T')[0],
+            phases: prop.phases || [],
+            actionItems: prop.actionItems || [],
           }))
-          // Merge with detailed seed phases if available
-          setProposals((prev) =>
-            mappedProposals.map((mp) => {
-              const match = initialProposals.find((ip) => ip.proposalNumber === mp.proposalNumber)
-              return match ? { ...match, status: mp.status } : mp
-            })
-          )
+          setProposals(mappedProposals)
         }
 
-        if (d.decisions && d.decisions.length > 0) {
-          const mappedDecisions: Decision[] = d.decisions.map((dec: any) => ({
-            id: dec._id.replace('decision-', ''),
-            decisionNumber: dec.decisionNumber,
+        if (json.data.decisions && json.data.decisions.length > 0) {
+          const mappedDecisions: Decision[] = json.data.decisions.map((dec: any) => ({
+            id: dec._id.replace(/^decision-/, ''),
+            decisionNumber: dec.decisionNumber || dec._id,
             title: dec.title,
             decision: dec.decision,
             status: dec.status || 'accepted',
             participants: dec.participants || ['Abdulaziz Abdulwahab', 'Ibrahim Abdulwahab'],
             date: dec.date || new Date().toISOString().split('T')[0],
+            productId: dec.productId,
             consequences: dec.consequences,
+            alternativesConsidered: dec.alternativesConsidered,
           }))
           setDecisions(mappedDecisions)
+        }
+
+        if (json.data.feedbackItems && json.data.feedbackItems.length > 0) {
+          const mappedFeedback: FeedbackItem[] = json.data.feedbackItems.map((f: any) => ({
+            id: f._id.replace(/^feedback-/, ''),
+            subject: f.subject,
+            type: f.type || 'General',
+            description: f.description,
+            userId: f.userId || 'Anonymous',
+            timestamp: f.timestamp || f._createdAt || new Date().toISOString(),
+            status: f.status || 'new',
+            convertedWorkItemId: f.convertedWorkItemId,
+          }))
+          setFeedbackItems(mappedFeedback)
+        }
+
+        if (json.data.roadmapItems && json.data.roadmapItems.length > 0) {
+          const mappedRoadmap: RoadmapItem[] = json.data.roadmapItems.map((r: any) => ({
+            id: r._id.replace(/^roadmap-/, '').replace(/^road-/, ''),
+            title: r.title,
+            description: r.description,
+            horizon: r.horizon || 'now',
+            productId: r.productId || 'ace-acad',
+            targetQuarter: r.targetQuarter || r.targetDate || 'Q3 2026',
+            category: r.category || 'Feature',
+          }))
+          setRoadmapItems(mappedRoadmap)
+        }
+
+        if (json.data.projects && json.data.projects.length > 0) {
+          const mappedProjects: Project[] = json.data.projects.map((p: any) => ({
+            id: p._id.replace(/^project-/, ''),
+            name: p.name,
+            summary: p.summary,
+            productId: p.productId || 'ace-acad',
+            status: p.status || 'active',
+            targetDate: p.targetDate || '2026-10-01',
+            lead: p.lead || 'Abdulaziz Abdulwahab',
+            progress: typeof p.progress === 'number' ? p.progress : 0,
+            milestones: p.milestones || [],
+          }))
+          setProjects(mappedProjects)
+        }
+
+        if (json.data.activities && json.data.activities.length > 0) {
+          const mappedActivities: ActivityItem[] = json.data.activities.map((a: any) => ({
+            id: a._id.replace(/^act-/, ''),
+            actor: a.actor || 'System',
+            action: a.action || 'updated',
+            targetTitle: a.targetTitle || '',
+            targetType: a.targetType || 'task',
+            timestamp: a.timestamp || a._createdAt || new Date().toISOString(),
+            badgeColor: a.badgeColor || 'blue',
+          }))
+          setActivities(mappedActivities)
         }
 
         setSanitySyncStatus('synced')
@@ -215,82 +299,45 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
       console.warn('Unable to query Sanity remote dataset, utilizing local cache:', err)
       setSanitySyncStatus('local_fallback')
     }
+  }, [
+    setWorkItems,
+    setProposals,
+    setDecisions,
+    setFeedbackItems,
+    setRoadmapItems,
+    setProjects,
+    setActivities,
+    setSanitySyncStatus,
+  ])
+
+  // Real-time Sanity Listener Initialization
+  useEffect(() => {
+    const unsubscribe = initializeRealtimeListener()
+    return () => unsubscribe()
   }, [])
 
   // Initial Load (Local Storage + Remote Sanity query)
   useEffect(() => {
     try {
-      const savedRole = localStorage.getItem(STORAGE_KEYS.ROLE) as Role
-      if (savedRole) setRoleState(savedRole)
-
-      const savedProposals = localStorage.getItem(STORAGE_KEYS.PROPOSALS)
-      if (savedProposals) setProposals(JSON.parse(savedProposals))
-
-      const savedWork = localStorage.getItem(STORAGE_KEYS.WORK_ITEMS)
-      if (savedWork) setWorkItems(JSON.parse(savedWork))
-
-      const savedDecisions = localStorage.getItem(STORAGE_KEYS.DECISIONS)
-      if (savedDecisions) setDecisions(JSON.parse(savedDecisions))
-
-      const savedFeedback = localStorage.getItem(STORAGE_KEYS.FEEDBACK)
-      if (savedFeedback) setFeedbackItems(JSON.parse(savedFeedback))
-
-      const savedRoadmap = localStorage.getItem(STORAGE_KEYS.ROADMAP)
-      if (savedRoadmap) setRoadmapItems(JSON.parse(savedRoadmap))
-
-      const savedActivities = localStorage.getItem(STORAGE_KEYS.ACTIVITIES)
-      if (savedActivities) setActivities(JSON.parse(savedActivities))
+      const savedRole = localStorage.getItem('wstar_os_role') as Role
+      if (savedRole) setRole(savedRole)
     } catch (e) {
-      console.error('Error loading OS state from storage', e)
+      console.error('Error loading role from storage', e)
     } finally {
       setIsLoaded(true)
       refreshFromSanity()
     }
-  }, [refreshFromSanity])
-
-  // Live Sanity Realtime Subscription (Cross-brother / cross-device live updates)
-  useEffect(() => {
-    if (!projectId || !dataset) return
-
-    try {
-      const subscription = sanityClient
-        .listen('*[_type in ["workItem", "proposal", "decision", "feedbackItem", "activityItem"]]')
-        .subscribe((update) => {
-          if (update.result) {
-            console.log('Sanity Realtime Event Received:', update)
-            refreshFromSanity()
-          }
-        })
-
-      return () => {
-        subscription.unsubscribe()
-      }
-    } catch (e) {
-      console.warn('Realtime subscription listener failed to initialize:', e)
-    }
-  }, [refreshFromSanity])
-
-  // Save to local storage on change
-  useEffect(() => {
-    if (!isLoaded) return
-    try {
-      localStorage.setItem(STORAGE_KEYS.ROLE, role)
-      localStorage.setItem(STORAGE_KEYS.PROPOSALS, JSON.stringify(proposals))
-      localStorage.setItem(STORAGE_KEYS.WORK_ITEMS, JSON.stringify(workItems))
-      localStorage.setItem(STORAGE_KEYS.DECISIONS, JSON.stringify(decisions))
-      localStorage.setItem(STORAGE_KEYS.FEEDBACK, JSON.stringify(feedbackItems))
-      localStorage.setItem(STORAGE_KEYS.ROADMAP, JSON.stringify(roadmapItems))
-      localStorage.setItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(activities))
-    } catch (e) {
-      console.error('Error saving OS state to storage', e)
-    }
-  }, [role, proposals, workItems, decisions, feedbackItems, roadmapItems, activities, isLoaded])
+  }, [setRole, setIsLoaded, refreshFromSanity])
 
   // Seed Sanity Cloud Handler
   const seedSanityCloud = async () => {
     setSanitySyncStatus('seeding')
     try {
-      const res = await fetch('/api/os/seed', { method: 'POST' })
+      const res = await fetch('/api/os/seed', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirmSeed: true }),
+      })
       const json = await res.json()
       if (json.success) {
         setSanitySyncStatus('synced')
@@ -303,250 +350,6 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
     } catch (e: any) {
       setSanitySyncStatus('error')
       return { success: false, message: e.message || 'Network error while seeding Sanity' }
-    }
-  }
-
-  const setRole = (newRole: Role) => {
-    setRoleState(newRole)
-  }
-
-  const logActivity = (
-    action: string,
-    targetTitle: string,
-    targetType: ActivityItem['targetType'],
-    badgeColor = 'blue'
-  ) => {
-    const actorName = role === 'engineer' ? 'Abdulaziz' : 'Ibrahim (CEO)'
-    const newAct: ActivityItem = {
-      id: `act-${Date.now()}`,
-      actor: actorName,
-      action,
-      targetTitle,
-      targetType,
-      timestamp: new Date().toISOString(),
-      badgeColor,
-    }
-    setActivities((prev) => [newAct, ...prev])
-    dispatchSanityMutation('create', 'activityItem', newAct.id, newAct)
-  }
-
-  const updateProposalStatus = (id: string, status: Proposal['status']) => {
-    setProposals((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, status } : p))
-    )
-    const p = proposals.find((x) => x.id === id)
-    if (p) {
-      logActivity(`updated proposal status to ${status.replace('_', ' ')}`, `[${p.proposalNumber}] ${p.title}`, 'proposal', 'blue')
-      dispatchSanityMutation('patch', 'proposal', `proposal-${id}`, { status })
-    }
-  }
-
-  const createWorkItemFromProposal = (
-    proposalId: string,
-    taskTitle: string,
-    assignee: 'abdulaziz' | 'ibrahim'
-  ): WorkItem => {
-    const proposal = proposals.find((p) => p.id === proposalId)
-    const count = workItems.filter((i) => i.type === 'feature' || i.type === 'task').length + 1
-    const itemNumber = `TASK-${String(count + 100).padStart(3, '0')}`
-
-    const newItem: WorkItem = {
-      id: `item-${Date.now()}`,
-      itemNumber,
-      title: taskTitle,
-      description: `Action item extracted from proposal [${proposal?.proposalNumber || ''}]: ${proposal?.title || ''}`,
-      type: 'feature',
-      status: 'todo',
-      priority: 'high',
-      productId: 'ace-acad',
-      productAreaId: proposal?.category === 'Content Scaling & UGC' ? 'area-ugc' : 'area-ai-pipeline',
-      assignee,
-      codeReference: `proposals/${proposal?.filename || ''}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-
-    setWorkItems((prev) => [newItem, ...prev])
-    logActivity('promoted proposal task to work stream', `[${itemNumber}] ${taskTitle}`, 'task', 'purple')
-    dispatchSanityMutation('create', 'workItem', `work-${newItem.id}`, newItem)
-    return newItem
-  }
-
-  const addWorkItem = (
-    itemData: Omit<WorkItem, 'id' | 'createdAt' | 'updatedAt' | 'itemNumber'>
-  ): WorkItem => {
-    const prefix = itemData.type === 'bug' ? 'BUG' : itemData.type === 'tech_debt' ? 'DEBT' : 'TASK'
-    const count = workItems.filter((i) => i.type === itemData.type).length + 1
-    const itemNumber = `${prefix}-${String(count).padStart(3, '0')}`
-
-    const newItem: WorkItem = {
-      ...itemData,
-      id: `item-${Date.now()}`,
-      itemNumber,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-
-    setWorkItems((prev) => [newItem, ...prev])
-    logActivity('created', `[${itemNumber}] ${newItem.title}`, itemData.type === 'bug' ? 'bug' : 'task', itemData.type === 'bug' ? 'red' : 'emerald')
-    dispatchSanityMutation('create', 'workItem', `work-${newItem.id}`, newItem)
-    return newItem
-  }
-
-  const updateWorkItem = (id: string, updates: Partial<WorkItem>) => {
-    setWorkItems((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          const updated = { ...item, ...updates, updatedAt: new Date().toISOString() }
-          return updated
-        }
-        return item
-      })
-    )
-    dispatchSanityMutation('patch', 'workItem', `work-${id}`, updates)
-  }
-
-  const deleteWorkItem = (id: string) => {
-    const item = workItems.find((i) => i.id === id)
-    setWorkItems((prev) => prev.filter((i) => i.id !== id))
-    if (item) {
-      logActivity('deleted', `[${item.itemNumber}] ${item.title}`, 'task', 'slate')
-      dispatchSanityMutation('delete', 'workItem', `work-${id}`)
-    }
-  }
-
-  const updateWorkItemStatus = (id: string, status: WorkItemStatus) => {
-    const item = workItems.find((i) => i.id === id)
-    if (!item) return
-    updateWorkItem(id, { status })
-    logActivity(
-      status === 'done' ? 'completed' : status === 'blocked' ? 'blocked' : 'updated status to ' + status,
-      `[${item.itemNumber}] ${item.title}`,
-      item.type === 'bug' ? 'bug' : 'task',
-      status === 'done' ? 'emerald' : status === 'blocked' ? 'red' : 'blue'
-    )
-  }
-
-  const decomposeWorkItem = (id: string, subtaskTitles: string[]) => {
-    const item = workItems.find((i) => i.id === id)
-    if (!item) return
-
-    const newSubtasks = subtaskTitles.map((t, idx) => ({
-      id: `sub-${Date.now()}-${idx}`,
-      title: t,
-      completed: false,
-    }))
-
-    updateWorkItem(id, { subtasks: [...(item.subtasks || []), ...newSubtasks] })
-    logActivity('decomposed into subtasks', `[${item.itemNumber}] ${item.title}`, 'task', 'purple')
-  }
-
-  const toggleSubtask = (itemId: string, subtaskId: string) => {
-    setWorkItems((prev) =>
-      prev.map((item) => {
-        if (item.id === itemId && item.subtasks) {
-          const updated = {
-            ...item,
-            subtasks: item.subtasks.map((st) =>
-              st.id === subtaskId ? { ...st, completed: !st.completed } : st
-            ),
-            updatedAt: new Date().toISOString(),
-          }
-          dispatchSanityMutation('patch', 'workItem', `work-${itemId}`, { subtasks: updated.subtasks })
-          return updated
-        }
-        return item
-      })
-    )
-  }
-
-  const addDecision = (
-    decData: Omit<Decision, 'id' | 'decisionNumber'>
-  ): Decision => {
-    const count = decisions.length + 1
-    const decisionNumber = `DEC-${String(count).padStart(3, '0')}`
-
-    const newDec: Decision = {
-      ...decData,
-      id: `dec-${Date.now()}`,
-      decisionNumber,
-    }
-
-    setDecisions((prev) => [newDec, ...prev])
-    logActivity('recorded architectural decision', `[${decisionNumber}] ${newDec.title}`, 'decision', 'blue')
-    dispatchSanityMutation('create', 'decision', `decision-${newDec.id}`, newDec)
-    return newDec
-  }
-
-  const updateDecision = (id: string, updates: Partial<Decision>) => {
-    setDecisions((prev) =>
-      prev.map((dec) => (dec.id === id ? { ...dec, ...updates } : dec))
-    )
-    dispatchSanityMutation('patch', 'decision', `decision-${id}`, updates)
-  }
-
-  const updateFeedbackStatus = (id: string, status: FeedbackItem['status']) => {
-    setFeedbackItems((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, status } : f))
-    )
-    const item = feedbackItems.find((f) => f.id === id)
-    if (item) {
-      logActivity(`triaged feedback to ${status}`, item.subject, 'feedback', 'amber')
-      dispatchSanityMutation('patch', 'feedbackItem', `feedback-${id}`, { status })
-    }
-  }
-
-  const convertFeedbackToWorkItem = (
-    feedbackId: string,
-    itemData: Partial<WorkItem>
-  ): WorkItem => {
-    const fb = feedbackItems.find((f) => f.id === feedbackId)
-    const type: WorkItemType = fb?.type === 'Bug Report' ? 'bug' : 'feature'
-    const prefix = type === 'bug' ? 'BUG' : 'TASK'
-    const count = workItems.filter((i) => i.type === type).length + 1
-    const itemNumber = `${prefix}-${String(count).padStart(3, '0')}`
-
-    const newItem: WorkItem = {
-      id: `item-${Date.now()}`,
-      itemNumber,
-      title: itemData.title || fb?.subject || 'Feedback Item',
-      description: itemData.description || fb?.description || '',
-      type: itemData.type || type,
-      status: 'todo',
-      priority: itemData.priority || 'high',
-      productId: itemData.productId || 'ace-acad',
-      productAreaId: itemData.productAreaId || 'area-feedback',
-      assignee: itemData.assignee || 'abdulaziz',
-      reporter: fb?.userId,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-
-    setWorkItems((prev) => [newItem, ...prev])
-    updateFeedbackStatus(feedbackId, 'converted')
-    logActivity('converted user feedback to work item', `[${itemNumber}] ${newItem.title}`, type === 'bug' ? 'bug' : 'task', 'purple')
-    dispatchSanityMutation('create', 'workItem', `work-${newItem.id}`, newItem)
-    return newItem
-  }
-
-  const addRoadmapItem = (itemData: Omit<RoadmapItem, 'id'>) => {
-    const newItem: RoadmapItem = {
-      ...itemData,
-      id: `road-${Date.now()}`,
-    }
-    setRoadmapItems((prev) => [...prev, newItem])
-    logActivity('added roadmap item', newItem.title, 'project', 'blue')
-    dispatchSanityMutation('create', 'roadmapItem', `roadmap-${newItem.id}`, newItem)
-  }
-
-  const updateRoadmapHorizon = (id: string, horizon: RoadmapItem['horizon']) => {
-    setRoadmapItems((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, horizon } : r))
-    )
-    const item = roadmapItems.find((r) => r.id === id)
-    if (item) {
-      logActivity(`shifted roadmap horizon to ${horizon}`, item.title, 'project', 'purple')
-      dispatchSanityMutation('patch', 'roadmapItem', `roadmap-${id}`, { horizon })
     }
   }
 
@@ -564,11 +367,11 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
     ) {
       return {
         type: 'bug',
-        productId: 'ace-acad',
-        confidence: 0.9,
-        priority: lower.includes('crash') || lower.includes('exception') ? 'critical' : 'high',
+        productId: lower.includes('plant') ? 'plantiq' : lower.includes('wstar') ? 'wstar-core' : 'ace-acad',
         productAreaId: lower.includes('auth') ? 'area-auth' : lower.includes('pdf') ? 'area-library' : 'area-study-path',
+        priority: lower.includes('crash') || lower.includes('exception') ? 'critical' : 'high',
         assignee: 'abdulaziz',
+        confidence: 0.9,
       }
     }
 
@@ -581,46 +384,39 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
       lower.includes('strategy')
     ) {
       return {
-        type: 'research',
-        productId: 'wstar-core',
-        confidence: 0.85,
+        type: 'decision' as any,
+        productId: 'ace-acad',
         priority: 'high',
         assignee: 'ibrahim',
+        confidence: 0.85,
       }
     }
 
     return {
       type: 'task',
-      productId: 'ace-acad',
-      confidence: 0.7,
+      productId: lower.includes('plant') ? 'plantiq' : lower.includes('wstar') ? 'wstar-core' : 'ace-acad',
+      productAreaId: 'area-library',
       priority: 'medium',
       assignee: lower.includes('pitch') || lower.includes('investor') || lower.includes('legal') ? 'ibrahim' : 'abdulaziz',
-      productAreaId: 'area-library',
+      confidence: 0.7,
     }
   }
 
   const resetToInitialSeed = () => {
     if (typeof window !== 'undefined') {
       const confirmReset = window.confirm(
-        'Reset all OS state back to the authoritative code discovery seed?'
+        'Are you sure you want to reset all OS data back to the Ace Acad Discovery Seed? Local changes will be reinitialized.'
       )
-      if (!confirmReset) return
-      
-      localStorage.removeItem(STORAGE_KEYS.PROPOSALS)
-      localStorage.removeItem(STORAGE_KEYS.WORK_ITEMS)
-      localStorage.removeItem(STORAGE_KEYS.DECISIONS)
-      localStorage.removeItem(STORAGE_KEYS.FEEDBACK)
-      localStorage.removeItem(STORAGE_KEYS.ROADMAP)
-      localStorage.removeItem(STORAGE_KEYS.ACTIVITIES)
-
-      setProposals(initialProposals)
-      setWorkItems(initialWorkItems)
-      setDecisions(initialDecisions)
-      setFeedbackItems(initialFeedback)
-      setProjects(initialProjects)
-      setRoadmapItems(initialRoadmap)
-      setActivities(initialActivities)
-      setSanitySyncStatus('local_fallback')
+      if (confirmReset) {
+        setProducts(initialProducts)
+        setProposals(initialProposals)
+        setWorkItems(initialWorkItems)
+        setDecisions(initialDecisions)
+        setFeedbackItems(initialFeedback)
+        setProjects(initialProjects)
+        setRoadmapItems(initialRoadmap)
+        setActivities(initialActivities)
+      }
     }
   }
 
@@ -639,6 +435,8 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         roadmapItems,
         activities,
         sanitySyncStatus,
+        isLoaded,
+        lastError: workLastError,
         seedSanityCloud,
         refreshFromSanity,
         updateProposalStatus,
@@ -649,6 +447,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         updateWorkItemStatus,
         decomposeWorkItem,
         toggleSubtask,
+        addSubtask,
         addDecision,
         updateDecision,
         updateFeedbackStatus,

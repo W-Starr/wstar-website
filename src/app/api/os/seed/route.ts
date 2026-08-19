@@ -12,11 +12,13 @@ import {
   initialActivities,
 } from '@/os/data/initialSeed'
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'qx20j59l'
+import { seedRequestSchema } from '@/os/lib/validation'
+
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 const token = process.env.SANITY_API_WRITE_TOKEN || process.env.SANITY_API_TOKEN
 
-const writeClient = token
+const writeClient = token && projectId
   ? createClient({
       projectId,
       dataset,
@@ -26,19 +28,36 @@ const writeClient = token
     })
   : null
 
-export async function POST() {
+export async function POST(req: Request) {
   if (!writeClient) {
     return NextResponse.json(
       {
         success: false,
         error:
-          'SANITY_API_WRITE_TOKEN is missing. Please add SANITY_API_WRITE_TOKEN to .env.local or Vercel Environment Variables to seed Sanity.',
+          'SANITY_API_WRITE_TOKEN or NEXT_PUBLIC_SANITY_PROJECT_ID is missing in server environment.',
       },
       { status: 400 }
     )
   }
 
   try {
+    let body = {}
+    try {
+      body = await req.json()
+    } catch {
+      // Empty body allowed for manual post
+    }
+
+    const parseResult = seedRequestSchema.safeParse(body)
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Explicit { "confirmSeed": true } confirmation is required to execute database seeding.',
+        },
+        { status: 400 }
+      )
+    }
     let seededCount = 0
     const tx = writeClient.transaction()
 

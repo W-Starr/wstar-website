@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { useOS } from '../context/OSContext'
 import { WorkItem, WorkItemStatus } from '../types'
 import { StatusBadge } from './StatusBadge'
@@ -146,7 +147,18 @@ export function WorkItemDetailModal({
               </h3>
               <div className="p-2.5 rounded-lg bg-slate-900 text-slate-200 font-mono text-xs border border-slate-800 flex items-center justify-between gap-2">
                 <span className="truncate">{item.codeReference}</span>
-                <span className="text-[10px] text-slate-400 shrink-0">Discovered in Repo</span>
+                {item.codeReference.startsWith('PR-') || item.codeReference.startsWith('PROP-') ? (
+                  <Link
+                    href="/os/proposals"
+                    onClick={onClose}
+                    className="text-[10px] text-purple-400 hover:text-purple-300 underline shrink-0 flex items-center gap-1"
+                  >
+                    <span>Open Proposal Spec</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </Link>
+                ) : (
+                  <span className="text-[10px] text-slate-400 shrink-0">Discovered in Repo</span>
+                )}
               </div>
             </div>
           )}

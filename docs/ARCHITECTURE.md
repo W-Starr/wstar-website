@@ -1,10 +1,10 @@
 # WSTAR Technical Architecture & System Design
 
-This document details the architectural foundation, data flow, state management, and real-time synchronization of the **WSTAR Web Platform & Company Operating System**.
+This document details the architectural foundation, security layer, state management, Gemini AI engine, and real-time synchronization of the **WSTAR Enterprise Web Platform & Company Operating System**.
 
 ---
 
-## 1. Dual-Shell Architecture
+## 1. Dual-Shell Application Architecture
 
 The repository serves two distinct functional domains from a unified Next.js App Router codebase:
 
@@ -21,51 +21,130 @@ wstar-website/
 │   │       └── plantiq/       # PlantIQ AgriTech Diagnostics
 │   │
 │   ├── os/                    # Internal Company Operating System
-│   │   ├── page.tsx           # Dual-Perspective Founder Dashboard
-│   │   ├── work/              # Unified Work Stream & Kanban Board
-│   │   ├── proposals/         # Strategic Proposals Hub & Task Promotion
+│   │   ├── login/             # Founder JWT Authentication Portal
+│   │   ├── page.tsx           # Executive Dual-Perspective Dashboard + AI Briefing
+│   │   ├── work/              # Unified Work Stream, Kanban & Subtask Tracker
+│   │   ├── proposals/         # Strategic Proposals Hub & AI Task Extraction
 │   │   ├── ace-acad/          # Ace Acad Product Command Center
-│   │   ├── decisions/         # Architectural Decision Records (ADRs)
-│   │   ├── feedback/          # Student Qualitative Feedback Triage
-│   │   ├── roadmap/           # Multi-Horizon Strategy Planner
-│   │   └── activity/          # System Audit Trail & Real-time Stream
+│   │   ├── decisions/         # Architectural Decision Records (ADR) Ledger
+│   │   ├── feedback/          # Student Qualitative Feedback Triage & Converter
+│   │   ├── roadmap/           # Multi-Horizon Strategy Planner & Milestones
+│   │   └── activity/          # Audit Trail, Actor Filter & CSV Governance Export
 │   │
-│   └── api/os/                # Secure Server-Side Sanity Gateways
-│       ├── sync/              # Mutation handler (create, patch, delete)
-│       ├── seed/              # Batch database seeder
+│   └── api/os/                # Secure Server-Side Gateways & AI Services
+│       ├── auth/              # JWT session creation, validation & logout
+│       ├── ai/                # Gemini Flash NLP Classification & Task Extraction
+│       │   ├── classify/      # Real-time debounced entity & assignee extraction
+│       │   ├── decompose/     # Engineering subtask checklist generator
+│       │   ├── digest/        # Executive daily async handoff briefing
+│       │   └── extract-proposal-tasks/ # Multi-doc sprint backlog parser
+│       ├── sync/              # Zod-validated mutation handler (create/patch/delete)
+│       ├── seed/              # Batch database seeder with confirmation guard
 │       └── fetch/             # GROQ data retrieval endpoint
 ```
 
-### Layout Isolation
-The marketing `Navbar` and `Footer` are isolated via `src/components/MarketingShell.tsx`. Routes under `/os` render inside a dedicated full-viewport application layout with an interactive sidebar, breadcrumbs, role toggle, and command palette.
-
 ---
 
-## 2. Data Flow & Sanity Cloud Synchronization
+## 2. Security Architecture & Edge Authentication
 
-WSTAR OS implements a **hybrid resilient sync engine** providing instant local responsiveness, offline capability, and cross-device live updates between co-founders:
+WSTAR OS implements enterprise-grade zero-trust access control at the edge:
 
 ```mermaid
 graph TD
-    UserA[Abdulaziz's Device] -->|Optimistic Update| ContextA[React Context + LocalStorage]
-    ContextA -->|POST /api/os/sync| ServerAPI[Next.js Server Route Handlers]
-    ServerAPI -->|Authenticated Write| SanityCloud[(Sanity Production Dataset)]
+    Client[Browser Request] -->|GET /os/* or /api/os/*| Middleware[Next.js Edge Middleware]
+    Middleware -->|Inspect Cookie| CookieCheck{wstar_os_session?}
+    CookieCheck -->|Missing / Invalid| Redirect[Redirect /os/login or 401 Unauthorized]
+    CookieCheck -->|Valid jose JWT| Allow[Pass through with x-founder-role headers]
     
-    SanityCloud -->|Realtime Event Stream| ListenerB[sanityClient.listen]
-    ListenerB -->|State Invalidation| ContextB[React Context + LocalStorage]
-    ContextB -->|Instant Re-render| UserB[Ibrahim's Device]
+    Allow --> RouteHandler[App Router Handler]
+    RouteHandler --> RateLimiter[Sliding-Window Rate Limiter]
+    RateLimiter -->|Passed| BackendLogic[Execute AI / Sanity Write]
+    RateLimiter -->|Exceeded| 429[429 Rate Limit Exceeded]
 ```
 
-### Key Security & Architecture Properties:
-1. **Server-Side Token Security**: `SANITY_API_WRITE_TOKEN` is never prefixed with `NEXT_PUBLIC_` and remains strictly on the Node.js server. Client browsers communicate exclusively via internal `/api/os/*` routes.
-2. **Realtime Event Stream**: When either founder modifies a task, decision, or proposal status, `sanityClient.listen()` catches the mutation event and triggers `refreshFromSanity()`, updating all open browser windows without page refresh.
-3. **Local Optimistic Cache**: State is updated immediately in React Context and mirrored to `localStorage`. If internet connectivity drops, the OS continues operating seamlessly.
+### Key Security Implementations:
+1. **Edge JWT Protection (`src/middleware.ts`)**: Intercepts all requests targeting `/os/*` and `/api/os/*` before rendering, verifying signed `jose` JWT tokens.
+2. **Server-Side Token Isolation**: `SANITY_API_WRITE_TOKEN` and `GEMINI_API_KEY` are strictly server-side environment variables without `NEXT_PUBLIC_` prefixes.
+3. **Zod Runtime Validation (`src/os/lib/validation.ts`)**: All mutations dispatched to `/api/os/sync` are validated against strict TypeScript schemas.
+4. **Sliding-Window Rate Limiting (`src/os/lib/rateLimit.ts`)**: API and AI endpoints are guarded by per-IP rate limits to prevent token exhaustion and brute-force attacks.
 
 ---
 
-## 3. Design System & Anti-AI Editorial Aesthetics
+## 3. Modern Reactive State Layer (Zustand)
 
-The application adheres to strict editorial design principles:
-- **Typography Hierarchy**: **Montserrat** for structured headings and brand marks; **Inter** for readable UI body copy and tabular metrics.
-- **Design Restraint**: Zero generic purple-on-dark gradients, zero biscuit pill headlines, zero arbitrary emojis, and zero 3-card bento grids.
-- **Micro-Interactions**: Tactile `active:scale-[0.98]` active press states, subtle borders (`border-slate-200 dark:border-slate-800`), and accessible focus rings.
+State is organized into fine-grained modular Zustand domain stores located in `src/os/store/`:
+
+| Store | Responsibility | Features |
+|---|---|---|
+| **`useWorkStore`** | Work items, bugs, tasks | Optimistic updates, auto-rollback on failure, subtasks, monotonic IDs (`TASK-xxx`, `BUG-xxx`) |
+| **`useProposalStore`** | Strategic proposals | Roadmap phase promotion, sprint task extraction, status workflows |
+| **`useDecisionStore`** | Architectural Decision Records | Monotonic numbering (`DEC-xxx`), co-signers, alternatives considered |
+| **`useFeedbackStore`** | Customer feedback triage | 1-click conversion to tracked engineering work items |
+| **`useRoadmapStore`** | Milestones & multi-horizon items | Progress calculation, project status management |
+| **`useActivityStore`** | Live audit log | Full activity history with actor and target filtering |
+| **`useMetaStore`** | Products, areas, sync status | Role management (Abdulaziz vs Ibrahim), cloud sync indicators |
+| **`useToastStore`** | User feedback notifications | Ephemeral toast messages for mutations, rollbacks, and AI completions |
+
+### Optimistic Updates with Rollback
+Every mutation immediately updates the local UI for sub-millisecond perceived latency, then calls `dispatchMutation()` in the background. If the cloud write fails, the store automatically reverts to its pre-mutation snapshot and surfaces a non-blocking toast alert.
+
+---
+
+## 4. Real AI Intelligence Engine (Gemini Flash & Lite)
+
+WSTAR OS integrates Google Gemini Generative Language APIs with cost-optimized routing:
+
+```mermaid
+graph LR
+    subgraph UI
+        Capture[Quick Capture Modal]
+        Decomp[Decomposition Modal]
+        Handoff[Founder Handoff Card]
+        ProposalModal[Proposal Detail Modal]
+    end
+
+    subgraph API Routes
+        ClassifyRoute[/api/os/ai/classify]
+        DecompRoute[/api/os/ai/decompose]
+        DigestRoute[/api/os/ai/digest]
+        ExtractRoute[/api/os/ai/extract-proposal-tasks]
+    end
+
+    subgraph Gemini Models
+        FlashLite[gemini-3.5-flash-lite <br> $0.30/1M tokens]
+        FlashLatest[gemini-flash-latest <br> $1.50/1M tokens]
+    end
+
+    Capture -->|400ms Debounce| ClassifyRoute --> FlashLite
+    Decomp --> DecompRoute --> FlashLite
+    Handoff --> DigestRoute --> FlashLatest
+    ProposalModal --> ExtractRoute --> FlashLatest
+```
+
+### Cost & Latency Benchmark:
+- **`gemini-3.5-flash-lite`** ($0.30 / $2.50 per 1M tokens): Ultra-fast ~200ms latency for debounced quick-capture typing analysis and subtask generation.
+- **`gemini-flash-latest`** ($1.50 / $7.50 per 1M tokens): Higher reasoning capacity for multi-document strategic proposal decomposition and founder daily handoff briefings.
+
+---
+
+## 5. Granular Sanity Real-Time Subscriptions
+
+Instead of full-database refetches on listener events, `src/os/sanity/realtime.ts` listens to granular `appear`, `update`, and `disappear` mutations from Sanity and patches specific Zustand store slices directly:
+
+```typescript
+const subscription = client.listen(groq`*[_type in ["workItem", "decision", "proposal", "feedbackItem"]]`).subscribe((update) => {
+  if (update.result) {
+    applyRemoteDoc(update.result)
+  } else if (update.documentId) {
+    applyRemoteDelete(update.documentId)
+  }
+})
+```
+
+---
+
+## 6. Living Documentation & Operational Memory
+
+1. **`MISTAKES.md`**: Preserves continuous troubleshooting history and operational lessons learned.
+2. **`AUDIT_MASTER_IMPLEMENTATION_TRACKER.md`**: Master tracking document mapping all 22 independent audit findings across the 5 implementation phases.
+3. **`docs/ARCHITECTURE.md`**: Authoritative system architecture reference.

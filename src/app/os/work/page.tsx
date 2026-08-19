@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { useOS } from '@/os/context/OSContext'
 import { WorkItem, WorkItemStatus, WorkItemType, WorkItemPriority } from '@/os/types'
 import { StatusBadge } from '@/os/components/StatusBadge'
@@ -224,9 +225,20 @@ export default function WorkTrackerPage() {
                       <span>Assignee: <strong className="text-slate-600 dark:text-slate-300 capitalize">{item.assignee}</strong></span>
                       {item.dueDate && <span>Due: {item.dueDate}</span>}
                       {item.codeReference && (
-                        <span className="font-mono text-slate-400 bg-slate-100 dark:bg-slate-800 px-1 rounded truncate max-w-[200px] sm:max-w-xs">
-                          {item.codeReference}
-                        </span>
+                        item.codeReference.startsWith('PR-') || item.codeReference.startsWith('PROP-') ? (
+                          <Link
+                            href="/os/proposals"
+                            onClick={(e) => e.stopPropagation()}
+                            className="font-mono text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/60 hover:underline px-1.5 py-0.5 rounded text-[10px] font-semibold flex items-center gap-1 border border-purple-200 dark:border-purple-900/60"
+                          >
+                            <span>{item.codeReference}</span>
+                            <span className="text-[9px]">↗</span>
+                          </Link>
+                        ) : (
+                          <span className="font-mono text-slate-400 bg-slate-100 dark:bg-slate-800 px-1 rounded truncate max-w-[200px] sm:max-w-xs">
+                            {item.codeReference}
+                          </span>
+                        )
                       )}
                       {item.subtasks && item.subtasks.length > 0 && (
                         <span>
@@ -303,9 +315,20 @@ export default function WorkTrackerPage() {
                       </h4>
 
                       {item.codeReference && (
-                        <div className="text-[10px] font-mono text-slate-400 truncate bg-slate-50 dark:bg-slate-800/50 p-1 rounded">
-                          {item.codeReference}
-                        </div>
+                        item.codeReference.startsWith('PR-') || item.codeReference.startsWith('PROP-') ? (
+                          <Link
+                            href="/os/proposals"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-[10px] font-mono text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/60 hover:underline px-1.5 py-0.5 rounded flex items-center justify-between border border-purple-200 dark:border-purple-900/60"
+                          >
+                            <span>{item.codeReference}</span>
+                            <span className="text-[9px]">↗</span>
+                          </Link>
+                        ) : (
+                          <div className="text-[10px] font-mono text-slate-400 truncate bg-slate-50 dark:bg-slate-800/50 p-1 rounded">
+                            {item.codeReference}
+                          </div>
+                        )
                       )}
 
                       <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] text-slate-400">

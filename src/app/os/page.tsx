@@ -8,6 +8,7 @@ import { StatusBadge } from '@/os/components/StatusBadge'
 import { PriorityBadge } from '@/os/components/PriorityBadge'
 import { WorkItemDetailModal } from '@/os/components/WorkItemDetailModal'
 import { DecompositionModal } from '@/os/components/DecompositionModal'
+import { FounderHandoffCard } from '@/os/components/FounderHandoffCard'
 import {
   Sparkles,
   Bug,
@@ -105,6 +106,9 @@ export default function OSDashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Real-time AI Daily Founder Async Briefing */}
+      <FounderHandoffCard />
 
       {/* ========================================================================= */}
       {/* PERSPECTIVE A: ABDULAZIZ (ENGINEERING / TECH LEAD VIEW)                    */}

@@ -1,12 +1,12 @@
 # WSTAR — Corporate Web Platform & Company Operating System
 
-> **WSTAR** is an innovation-driven technology company spearheading impactful software solutions across Africa, led by founders Ibrahim Abdulwahab (CEO) and Abdulaziz Abdulwahab (Lead Technical Architect).
+> **WSTAR** is an innovation-driven technology company spearheading software and intelligence solutions across Africa, founded by Ibrahim Abdulwahab (CEO) and Abdulaziz Abdulwahab (Lead Technical Architect).
 
 ---
 
 ## 🌟 System Overview
 
-This repository houses two integrated systems built with **Next.js 16 (Turbopack)**, **Tailwind CSS v4**, and **Sanity CMS**:
+This repository houses two integrated systems built with **Next.js 16 (Turbopack)**, **Tailwind CSS v4**, **Zustand**, **Google Gemini AI**, and **Sanity CMS**:
 
 1. **Public Marketing & Corporate Shell (`/`)**:
    - Institutional homepage highlighting enterprise AI solutions, executive leadership, and company track record.
@@ -14,12 +14,18 @@ This repository houses two integrated systems built with **Next.js 16 (Turbopack
    - Investor relations portal, company about page, and NDPA 2023 / FCCPA statutory legal policies.
 
 2. **WSTAR Company Operating System (`/os`)**:
-   - **Dual-Perspective Dashboard**: Distinct tailored interfaces for Lead Engineer (Abdulaziz) and CEO (Ibrahim).
-   - **Work Stream & Bug Tracker (`/os/work`)**: Unified List & Kanban views for 40+ categorized tasks, bugs, and technical debt items across all products.
-   - **Strategic Proposals Hub (`/os/proposals`)**: Executive briefs, financial projections, and 1-click task promotion for `PROP-001` (Class Rep UGC), `PROP-002` (Tier 2 Hybrid AI), and `PROP-003` (UGC Staging).
-   - **Decision Ledger (`/os/decisions`)**: Architectural Decision Records (ADRs `DEC-001` to `DEC-006`).
-   - **Customer Feedback Triage (`/os/feedback`)**: Intake and 1-click work item conversion.
-   - **Sanity Cloud Real-Time Sync**: Multi-device live state synchronization (`sanityClient.listen`) between co-founders.
+   - **Edge JWT Auth Guard**: Zero-trust protected route gateway (`/os/*` and `/api/os/*`) with corporate founder accounts.
+   - **Real AI Intelligence Engine (Gemini Flash & Lite)**:
+     - Real-time debounced Quick Capture NLP classification (`/api/os/ai/classify`).
+     - Automated engineering subtask decomposition (`/api/os/ai/decompose`).
+     - Daily async founder handoff briefings (`/api/os/ai/digest`).
+     - Strategic proposal-to-sprint task extractor (`/api/os/ai/extract-proposal-tasks`).
+   - **Unified Work Stream (`/os/work`)**: Real-time Kanban and List views with subtask checklists and monotonic numbering (`TASK-xxx`, `BUG-xxx`).
+   - **Strategic Proposals Hub (`/os/proposals`)**: Executive briefs, financial projections, and 1-click sprint task promotion for `PROP-001`, `PROP-002`, and `PROP-003`.
+   - **Architectural Decision Records (`/os/decisions`)**: Immutable ADR ledger (`DEC-001` to `DEC-006`) with alternatives evaluated and co-signers.
+   - **Customer Feedback Triage (`/os/feedback`)**: Direct Firestore feed with 1-click conversion to tracked engineering work items.
+   - **Activity Audit Trail (`/os/activity`)**: Real-time action log with actor/type filtering and RFC-4180 CSV export.
+   - **Reactive Zustand Stores**: Optimistic mutations with automatic rollback on network failure.
 
 ---
 
@@ -29,7 +35,24 @@ This repository houses two integrated systems built with **Next.js 16 (Turbopack
 - **Node.js**: v20.x or higher
 - **Package Manager**: npm (or pnpm / yarn)
 
-### 2. Installation & Running Locally
+### 2. Environment Configuration
+Create `.env.local` in the project root:
+
+```env
+# Sanity CMS Structured Cloud Storage
+NEXT_PUBLIC_SANITY_PROJECT_ID=qx20j59l
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2024-03-01
+SANITY_API_WRITE_TOKEN=your_sanity_write_token_here
+
+# Google Gemini Intelligence Engine
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Auth Session Secret (Optional in dev)
+AUTH_JWT_SECRET=your_jwt_signing_secret_here
+```
+
+### 3. Installation & Running Locally
 ```bash
 # Clone the repository
 git clone https://github.com/KingAbdulAx/wstar-website.git
@@ -44,10 +67,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) for the marketing site, or [http://localhost:3000/os](http://localhost:3000/os) for the Company Operating System.
 
-### 3. Production Build
-```bash
-npm run build
-```
+### 4. Default Founder Login Accounts (Dev)
+- **Lead Technical Architect**: `abdulaziz@wstartech.ng` (Password: `WStarTech#2026!AA`)
+- **Founder & CEO**: `ibrahim@wstartech.ng` (Password: `WStarTech#2026!IB`)
 
 ---
 
@@ -55,26 +77,15 @@ npm run build
 
 For deep-dive technical and operational guides, see the `docs/` directory:
 
-- [**Technical Architecture & System Design**](docs/ARCHITECTURE.md): Dual-shell layout isolation, Sanity sync engine, GROQ data schemas, and design principles.
-- [**Founder User Manual (`/os`)**](docs/OPERATING_SYSTEM_MANUAL.md): How to use the dual-role perspectives, work stream, proposal promotions, and feedback triage.
+- [**Technical Architecture & System Design**](docs/ARCHITECTURE.md): Dual-shell layout isolation, Zustand stores, Edge JWT middleware, Gemini AI routing, and Sanity sync.
+- [**API Reference Manual**](docs/API_REFERENCE.md): Full REST specification for all `/api/os/*` routes (Auth, Gemini AI, Sanity sync).
+- [**Founder User Manual (`/os`)**](docs/OPERATING_SYSTEM_MANUAL.md): Operating guide for dual-role perspectives, proposal promotion, and feedback triage.
+- [**Audit Master Tracker**](AUDIT_MASTER_IMPLEMENTATION_TRACKER.md): Verification matrix tracking all 22 independent audit findings across 5 phases.
 - [**Deployment Guide**](docs/DEPLOYMENT.md): Step-by-step Vercel deployment, environment variable configuration, and Sanity Studio hosting.
 - [**Troubleshooting & Mistakes Log**](MISTAKES.md): Operational failure logs and bug fix history.
 
 ---
 
-## 🔒 Environment Variables
-
-Create `.env.local` in the project root:
-
-```env
-NEXT_PUBLIC_SANITY_PROJECT_ID=qx20j59l
-NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_SANITY_API_VERSION=2024-03-01
-SANITY_API_WRITE_TOKEN=your_sanity_write_token_here
-```
-
----
-
 ## ⚖️ License & Proprietary Notice
 
-© 2026 WSTAR Technologies. All rights reserved. Proprietary software for internal operations and public web presence.
+© 2026 WSTAR Technologies. All rights reserved. Proprietary software for internal company operations and public web presence.

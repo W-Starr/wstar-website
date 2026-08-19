@@ -14,6 +14,8 @@ export type WorkItemPriority = 'critical' | 'high' | 'medium' | 'low'
 
 export type ProductId = 'ace-acad' | 'plantiq' | 'wstar-core'
 
+export type SanitySyncState = 'local_fallback' | 'syncing' | 'synced' | 'error' | 'seeding'
+
 export interface Subtask {
   id: string
   title: string

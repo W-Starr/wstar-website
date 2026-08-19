@@ -1,17 +1,75 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import { OSProvider } from '@/os/context/OSContext'
 import { Sidebar } from '@/os/components/Sidebar'
 import { TopHeader } from '@/os/components/TopHeader'
 import { QuickCaptureModal } from '@/os/components/QuickCaptureModal'
 import { CommandPalette } from '@/os/components/CommandPalette'
+import { ShortcutsModal } from '@/os/components/ShortcutsModal'
+import { ToastContainer } from '@/os/components/Toast'
 import { X } from 'lucide-react'
 
 export default function OSLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
+  const router = useRouter()
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false)
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
+
+  // Global Keyboard Navigation Listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is actively typing in a form field
+      const target = e.target as HTMLElement
+      const isInput =
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.tagName === 'SELECT' ||
+        target.isContentEditable
+
+      if (isInput) return
+
+      // Shift + / or '?' key
+      if (e.key === '?') {
+        e.preventDefault()
+        setIsShortcutsOpen((prev) => !prev)
+        return
+      }
+
+      // 'N' or 'n' key for Quick Capture
+      if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault()
+        setIsQuickCaptureOpen(true)
+        return
+      }
+
+      // 1-6 Number keys for direct section navigation
+      const navMap: Record<string, string> = {
+        '1': '/os',
+        '2': '/os/work',
+        '3': '/os/proposals',
+        '4': '/os/decisions',
+        '5': '/os/feedback',
+        '6': '/os/roadmap',
+      }
+
+      if (navMap[e.key]) {
+        e.preventDefault()
+        router.push(navMap[e.key])
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [router])
+
+  // Clean login layout without OS chrome
+  if (pathname === '/os/login') {
+    return <div className="min-h-screen bg-slate-950 text-slate-100">{children}</div>
+  }
 
   return (
     <OSProvider>
@@ -62,13 +120,16 @@ export default function OSLayout({ children }: { children: React.ReactNode }) {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col min-w-0 w-full overflow-x-hidden">
-          <TopHeader onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)} />
+          <TopHeader
+            onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+            onOpenQuickCapture={() => setIsQuickCaptureOpen(true)}
+          />
           <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl w-full mx-auto">
             {children}
           </main>
         </div>
 
-        {/* Universal Modals */}
+        {/* Universal Modals & Overlays */}
         <QuickCaptureModal
           isOpen={isQuickCaptureOpen}
           onClose={() => setIsQuickCaptureOpen(false)}
@@ -82,6 +143,13 @@ export default function OSLayout({ children }: { children: React.ReactNode }) {
             setIsQuickCaptureOpen(true)
           }}
         />
+
+        <ShortcutsModal
+          isOpen={isShortcutsOpen}
+          onClose={() => setIsShortcutsOpen(false)}
+        />
+
+        <ToastContainer />
       </div>
     </OSProvider>
   )

@@ -66,6 +66,48 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ===== Modern Minimalist Custom Scrollbars ===== */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+/* Chrome, Edge, Safari (WebKit & Blink) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.65);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark mode scrollbars */
+.dark *,
+.dark ::-webkit-scrollbar-thumb {
+  scrollbar-color: rgba(100, 116, 139, 0.45) transparent;
+  background: rgba(100, 116, 139, 0.45);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.75);
+}
+
 /* Heading Typography */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);

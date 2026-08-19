@@ -1,11 +1,12 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@sanity/client'
+import { syncRequestSchema } from '@/os/lib/validation'
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'qx20j59l'
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 const token = process.env.SANITY_API_WRITE_TOKEN || process.env.SANITY_API_TOKEN
 
-const writeClient = token
+const writeClient = token && projectId
   ? createClient({
       projectId,
       dataset,
@@ -15,10 +16,24 @@ const writeClient = token
     })
   : null
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await req.json()
-    const { action, docType, id, data } = body
+    const rawBody = await req.json()
+
+    // 1. Zod Runtime Schema Validation
+    const parseResult = syncRequestSchema.safeParse(rawBody)
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Validation failed on mutation payload',
+          details: parseResult.error.format(),
+        },
+        { status: 400 }
+      )
+    }
+
+    const { action, docType, id, data } = parseResult.data
 
     if (!writeClient) {
       return NextResponse.json({
@@ -36,8 +51,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, mode: 'sanity_live', doc: created })
     }
 
-    if (action === 'update' || action === 'patch') {
-      const patched = await writeClient.patch(id).set(data).commit()
+    if (action === 'patch') {
+      const patched = await writeClient.patch(id).set(data || {}).commit()
       return NextResponse.json({ success: true, mode: 'sanity_live', doc: patched })
     }
 
@@ -46,9 +61,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, mode: 'sanity_live' })
     }
 
-    return NextResponse.json({ success: false, error: 'Unknown action' }, { status: 400 })
+    return NextResponse.json({ success: false, error: 'Unsupported mutation action' }, { status: 400 })
   } catch (error: any) {
-    console.error('Error syncing mutation to Sanity:', error)
+    console.error('[WSTAR OS Sync Error]:', error)
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
 }

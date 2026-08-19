@@ -25,10 +25,11 @@ interface ProposalDetailModalProps {
 }
 
 export function ProposalDetailModal({ proposal, onClose }: ProposalDetailModalProps) {
-  const { updateProposalStatus, createWorkItemFromProposal, workItems, decisions } = useOS()
+  const { updateProposalStatus, createWorkItemFromProposal, addWorkItem, workItems, decisions } = useOS()
   const [activeTab, setActiveTab] = useState<'brief' | 'architecture' | 'roadmap' | 'risks' | 'links'>('brief')
   const [extractedTasks, setExtractedTasks] = useState<string[]>([])
   const [extractSuccessMsg, setExtractSuccessMsg] = useState<string | null>(null)
+  const [isExtractingAI, setIsExtractingAI] = useState(false)
 
   if (!proposal) return null
 
@@ -41,6 +42,48 @@ export function ProposalDetailModal({ proposal, onClose }: ProposalDetailModalPr
     setExtractedTasks((prev) => [...prev, taskTitle])
     setExtractSuccessMsg(`Created work item ${newItem.itemNumber}: "${taskTitle}"`)
     setTimeout(() => setExtractSuccessMsg(null), 4000)
+  }
+
+  const handleAIBatchExtract = async () => {
+    try {
+      setIsExtractingAI(true)
+      const res = await fetch('/api/os/ai/extract-proposal-tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          proposalNumber: proposal.proposalNumber,
+          title: proposal.title,
+          problem: proposal.executiveSummary,
+          solution: proposal.proposedSolution,
+          phases: proposal.phases,
+        }),
+      })
+
+      const data = await res.json()
+      if (data.tasks && data.tasks.length > 0) {
+        let createdCount = 0
+        data.tasks.forEach((t: any) => {
+          addWorkItem({
+            title: t.title,
+            description: `${t.description}\n\n[Extracted from ${proposal.proposalNumber}: ${proposal.title}]`,
+            type: t.type || 'task',
+            priority: t.priority || 'medium',
+            status: 'todo',
+            productId: 'ace-acad',
+            assignee: t.assignee || 'abdulaziz',
+            codeReference: proposal.proposalNumber,
+          })
+          createdCount++
+        })
+
+        setExtractSuccessMsg(`✨ AI staged ${createdCount} sprint tasks into the Work Stream!`)
+        setTimeout(() => setExtractSuccessMsg(null), 5000)
+      }
+    } catch (err) {
+      console.error('AI extraction error:', err)
+    } finally {
+      setIsExtractingAI(false)
+    }
   }
 
   const getStatusBadge = (status: Proposal['status']) => {
@@ -506,6 +549,14 @@ export function ProposalDetailModal({ proposal, onClose }: ProposalDetailModalPr
               className="px-2.5 py-1 rounded text-xs font-semibold bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 transition-colors"
             >
               Stage for Execution
+            </button>
+            <button
+              disabled={isExtractingAI}
+              onClick={handleAIBatchExtract}
+              className="px-3 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{isExtractingAI ? 'Extracting with Gemini...' : 'AI Extract Sprint Tasks'}</span>
             </button>
           </div>
 

@@ -4,6 +4,39 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
+### [2026-08-19 10:04] — AI Endpoint Protection, Rate Limiting & Enterprise Readiness (Phase 5)
+
+- **Date/Time:** 2026-08-19 10:04 (WAT / UTC+1)
+- **Context:** Implementing Phase 5 of the Holistic Independent Audit (Integrations, Intelligence & Enterprise Readiness).
+- **The Mistake/Error:** AI endpoints (`/api/os/ai/*`) and Auth routes lacked server-side rate limiting and token exhaustion guards. Rapid bursts of debounced quick capture keystrokes or brute-force authentication attempts could exhaust Gemini API quotas and cause 429 cascades.
+- **The Fix:**
+  1. Built an in-memory sliding window rate limiter (`src/os/lib/rateLimit.ts`) with per-route limits (30 req/min for classification, 20 req/min for decomposition, 10 req/min for digests/extraction, 8 req/min for login).
+  2. Implemented structured telemetry logger (`src/os/lib/logger.ts`) with ISO timestamps and level categorization (`info`, `warn`, `error`).
+  3. Created Proposal-to-Roadmap sprint backlog AI decomposition route (`/api/os/ai/extract-proposal-tasks`) using `gemini-flash-latest` and wired it into `ProposalDetailModal.tsx`.
+  4. Upgraded Activity Audit Trail (`/os/activity`) with actor filters, event type filters, search, and RFC-4180 compliant CSV downloads.
+  5. Synchronized all system living documentation (`README.md`, `docs/ARCHITECTURE.md`, `docs/API_REFERENCE.md`).
+- **Lesson Learned:** Every public-facing AI or auth gateway must have proactive edge rate limiting to protect API token budgets and prevent upstream rate limit errors.
+
+---
+
+### [2026-08-19 09:10] — Classification Suggestion Type Mismatch & Security Gateway Hardening (Phase 1)
+
+- **Date/Time:** 2026-08-19 09:10 (WAT / UTC+1)
+- **Context:** Implementing Phase 1 of the Independent Holistic Audit (Security Hardening & Zero-Vulnerability Core).
+- **The Mistake/Error:** 
+  1. `suggestClassification()` in `OSContext.tsx` returned object keys `{ suggestedType, suggestedPriority, suggestedArea, suggestedAssignee }` whereas the `ClassificationSuggestion` interface in `types/index.ts` and the consumer in `QuickCaptureModal.tsx` expected `{ type, productId, productAreaId, priority, assignee, confidence }`. This caused auto-suggested classifications to return `undefined` and silently fail in the UI.
+  2. All `/os` subroutes and `/api/os/*` mutation endpoints were publicly accessible without authentication, unvalidated mutation payloads could be sent to Sanity, and hardcoded fallback project IDs (`qx20j59l`) were embedded directly in source code.
+- **The Fix:**
+  1. Refactored `suggestClassification()` in `src/os/context/OSContext.tsx` to return exact keys matching `ClassificationSuggestion`. Tested in browser; auto-suggestions for bugs (`🔴 P0 Critical`, `Abdulaziz`) and tasks populated correctly.
+  2. Added Next.js Edge route protection middleware (`src/middleware.ts`) using `jose` JWT verification, redirecting unauthenticated `/os` visitors to `/os/login` and blocking unauthenticated API requests with `401 Unauthorized`.
+  3. Created branded editorial login page at `src/app/os/login/page.tsx` for founders Abdulaziz and Ibrahim, and isolated it from the OS layout shell.
+  4. Added runtime Zod validation schemas (`src/os/lib/validation.ts`) for `/api/os/sync` and `/api/os/seed`.
+  5. Removed all hardcoded Sanity fallback IDs in favor of strict runtime validator `src/os/config/env.ts`.
+  6. Added HTTP response security headers in `next.config.ts`.
+- **Lesson Learned:** Always ensure contract keys between context providers, type definitions, and consuming modal components are strictly typed and aligned; never leave administrative internal tools open without middleware authentication.
+
+---
+
 ### [2026-08-19 08:15] — PowerShell Statement Separator Error (`&&`)
 
 - **Date/Time:** 2026-08-19 08:15 (WAT / UTC+1)

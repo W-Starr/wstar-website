@@ -77,6 +77,23 @@ export function DecisionDetailModal({
             </div>
           </div>
 
+          {/* Alternatives Considered */}
+          {decision.alternativesConsidered && decision.alternativesConsidered.length > 0 && (
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                Alternatives Considered & Rejected
+              </h3>
+              <ul className="p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+                {decision.alternativesConsidered.map((alt, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-amber-500 font-bold">•</span>
+                    <span>{alt}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Consequences & Trade-offs */}
           {decision.consequences && (
             <div>
