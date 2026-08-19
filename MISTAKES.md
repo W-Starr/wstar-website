@@ -4,6 +4,16 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
+### [2026-08-19 12:09] — Structured Logger Metadata Argument Typing in Google Drive Route
+
+- **Date/Time:** 2026-08-19 12:09 (WAT / UTC+1)
+- **Context:** Implementing the Google Drive API server endpoint `src/app/api/os/sources/gdrive/route.ts`.
+- **The Mistake/Error:** Passed the raw `unknown` catch error variable `e` directly as the 3rd argument to `logger.warn('...', 'GDRIVE-API', e)`. The structured logger interface in `src/os/lib/logger.ts` defines `metadata?: Record<string, unknown>`, causing TypeScript error: `Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown> | undefined'`.
+- **The Fix:** Changed the call to pass an object `{ error: e?.message || String(e) }`.
+- **Lesson Learned:** Always wrap error strings or instances into a key-value object when invoking structured telemetry loggers.
+
+---
+
 ### [2026-08-19 11:33] — TypeScript Mutation Dispatcher Signature Mismatch in SourceStore
 
 - **Date/Time:** 2026-08-19 11:33 (WAT / UTC+1)

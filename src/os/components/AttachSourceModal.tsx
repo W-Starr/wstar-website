@@ -27,6 +27,8 @@ interface AttachSourceModalProps {
   defaultProductId?: ProductId
 }
 
+import { GooglePickerButton } from './GooglePickerButton'
+
 export function AttachSourceModal({
   isOpen,
   onClose,
@@ -44,6 +46,22 @@ export function AttachSourceModal({
   const [parsedInfo, setParsedInfo] = useState<ParsedSourceUrl | null>(null)
   const [activeTab, setActiveTab] = useState<'link' | 'note'>('link')
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Handle file picked from Google Drive Picker
+  const handleGoogleDrivePicked = (file: {
+    id: string
+    name: string
+    mimeType: string
+    url: string
+    content?: string
+    author?: string
+  }) => {
+    setRawUrl(file.url)
+    setTitle(file.name)
+    if (file.content) {
+      setContent(file.content)
+    }
+  }
 
   // Real-time URL Detection
   useEffect(() => {
@@ -86,7 +104,7 @@ export function AttachSourceModal({
         provider,
         title: title.trim() || (parsedInfo?.suggestedTitle ?? 'Untitled Source'),
         summary: summary.trim() || undefined,
-        content: activeTab === 'note' ? content.trim() : undefined,
+        content: content.trim() || undefined,
         externalId,
         externalUrl,
         mimeType,
@@ -134,32 +152,39 @@ export function AttachSourceModal({
         </div>
 
         {/* Tab Selector */}
-        <div className="px-6 pt-4 flex gap-2 border-b border-slate-100 dark:border-slate-800">
-          <button
-            type="button"
-            onClick={() => setActiveTab('link')}
-            className={`pb-2 text-xs font-semibold px-3 border-b-2 transition-all flex items-center gap-1.5 ${
-              activeTab === 'link'
-                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
-            }`}
-          >
-            <LinkIcon className="w-3.5 h-3.5" />
-            <span>Google Drive / URL Link</span>
-          </button>
+        <div className="px-6 pt-4 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab('link')}
+              className={`pb-2 text-xs font-semibold px-3 border-b-2 transition-all flex items-center gap-1.5 ${
+                activeTab === 'link'
+                  ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
+              }`}
+            >
+              <LinkIcon className="w-3.5 h-3.5" />
+              <span>Google Drive / URL Link</span>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveTab('note')}
-            className={`pb-2 text-xs font-semibold px-3 border-b-2 transition-all flex items-center gap-1.5 ${
-              activeTab === 'note'
-                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
-            }`}
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Meeting Note / Text</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('note')}
+              className={`pb-2 text-xs font-semibold px-3 border-b-2 transition-all flex items-center gap-1.5 ${
+                activeTab === 'note'
+                  ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Meeting Note / Text</span>
+            </button>
+          </div>
+
+          {/* Interactive Google Drive Picker trigger */}
+          <div className="pb-2">
+            <GooglePickerButton onFilePicked={handleGoogleDrivePicked} />
+          </div>
         </div>
 
         {/* Body Form */}
@@ -167,9 +192,12 @@ export function AttachSourceModal({
           {activeTab === 'link' ? (
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Google Drive or External URL <span className="text-red-500">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Google Drive or External URL <span className="text-red-500">*</span>
+                  </label>
+                  <span className="text-[11px] text-slate-400">Paste URL or use button above</span>
+                </div>
                 <div className="relative">
                   <input
                     type="url"
