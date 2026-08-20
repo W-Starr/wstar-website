@@ -103,6 +103,38 @@ node scripts/wstar-agent.js task create \
 
 ---
 
+## ✏️ Modifying Existing Tasks & Documents
+
+Agents can update any field on existing work items, decisions, or rename document IDs:
+
+```bash
+# 1. Update task title, description, priority, or code reference
+node scripts/wstar-agent.js task update BUG-001 \
+  --title "Fix pdfrx bounding box overflow on Android 14" \
+  --priority critical \
+  --ref "lib/features/library/presentation/screens/study_path_screen.dart"
+
+# 2. Change task number identifier (e.g. from TASK-113 to BUG-011)
+node scripts/wstar-agent.js task update work-1787145592059 --number BUG-011 --type bug
+
+# 3. Reassign task or change product scope
+node scripts/wstar-agent.js task update BUG-001 --assignee ibrahim --product ace-acad
+
+# 4. Rename underlying Sanity document ID
+node scripts/wstar-agent.js task rename-id work-item-7 work-item-DEBT-002
+
+# 5. Delete a duplicate or invalid task
+node scripts/wstar-agent.js task delete work-1787237118353
+
+# 6. Update an existing Architectural Decision Record
+node scripts/wstar-agent.js decision update DEC-001 \
+  --title "Updated Decision Title" \
+  --decision "New decision text" \
+  --reason "Updated rationale"
+```
+
+---
+
 ## ⚡ Quick Reference Commands
 
 | Goal | Command |
@@ -111,9 +143,15 @@ node scripts/wstar-agent.js task create \
 | Filter by Product | `node scripts/wstar-agent.js tasks --product ace-acad` |
 | Get Task Details | `node scripts/wstar-agent.js task get <id_or_number>` |
 | Claim Task | `node scripts/wstar-agent.js task claim <id_or_number> --assignee abdulaziz` |
+| Update Any Fields | `node scripts/wstar-agent.js task update <id> --title "..." --priority high --status in_progress` |
+| Change Task Identifier | `node scripts/wstar-agent.js task update <id> --number BUG-012` |
+| Rename Document ID | `node scripts/wstar-agent.js task rename-id <old_id> <new_id>` |
+| Delete Task | `node scripts/wstar-agent.js task delete <id_or_number>` |
 | Resolve Task | `node scripts/wstar-agent.js task done <id_or_number> --note "Summary"` |
 | Create Task / Bug | `node scripts/wstar-agent.js task create --title "..." --type bug --priority high` |
 | Log Decision (ADR) | `node scripts/wstar-agent.js decision log --title "..." --decision "..." --reason "..."` |
+| Update Decision | `node scripts/wstar-agent.js decision update <id_or_number> --title "..."` |
 | View Activity Stream | `node scripts/wstar-agent.js activity` |
 | View Proposals | `node scripts/wstar-agent.js proposals` |
 | JSON Output Mode | Add `--json` to any command |
+

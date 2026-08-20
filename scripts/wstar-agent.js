@@ -355,8 +355,143 @@ async function handleTasks(positional, flags) {
     return;
   }
 
+  if (sub === 'update' || sub === 'edit' || sub === 'set' || sub === 'patch') {
+    const id = positional[2];
+    if (!id) {
+      console.error('Usage: node scripts/wstar-agent.js task update <id_or_number> [--title "New Title"] [--status todo|in_progress|done] [--priority critical|high|medium|low] [--assignee abdulaziz|ibrahim] [--product ace-acad] [--number TASK-123] [--desc "..."] [--ref "..."]');
+      process.exit(1);
+    }
+
+    const existing = await querySanity(`*[_type == "workItem" && (_id == "${id}" || itemNumber == "${id}")][0]`);
+    if (!existing) {
+      console.error(`[Error] Work item not found: ${id}`);
+      process.exit(1);
+    }
+
+    const patches = {
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (flags.title) patches.title = flags.title;
+    if (flags.description || flags.desc) patches.description = flags.description || flags.desc;
+    if (flags.type) patches.type = flags.type;
+    if (flags.status) patches.status = flags.status;
+    if (flags.priority) patches.priority = flags.priority;
+    if (flags.assignee) patches.assignee = flags.assignee;
+    if (flags.product) patches.productId = flags.product;
+    if (flags.ref || flags.codeReference) patches.codeReference = flags.ref || flags.codeReference;
+    if (flags.number || flags.itemNumber) patches.itemNumber = flags.number || flags.itemNumber;
+    if (flags.dueDate || flags.due) patches.dueDate = flags.dueDate || flags.due;
+
+    const changedKeys = Object.keys(patches).filter((k) => k !== 'updatedAt');
+    if (changedKeys.length === 0) {
+      console.log(`[Notice] No changes specified for task ${existing._id}. Use --title, --status, --priority, etc.`);
+      return;
+    }
+
+    await mutateSanity([
+      {
+        patch: {
+          id: existing._id,
+          set: patches,
+        },
+      },
+      {
+        create: {
+          _type: 'activityItem',
+          actor: 'AI Agent',
+          action: 'updated',
+          targetTitle: `${existing.itemNumber || existing._id}: ${flags.title || existing.title} (${changedKeys.join(', ')})`,
+          targetType: 'task',
+          timestamp: new Date().toISOString(),
+          badgeColor: 'blue',
+        },
+      },
+    ]);
+
+    console.log(`✅ Updated Work Item ${existing._id} (${existing.itemNumber || ''}):`);
+    changedKeys.forEach((key) => {
+      console.log(`   • ${key}: "${existing[key]}" → "${patches[key]}"`);
+    });
+    return;
+  }
+
+  if (sub === 'rename-id' || sub === 'change-id') {
+    const oldId = positional[2];
+    const newId = positional[3];
+
+    if (!oldId || !newId) {
+      console.error('Usage: node scripts/wstar-agent.js task rename-id <old_id> <new_id>');
+      process.exit(1);
+    }
+
+    const existing = await querySanity(`*[_type == "workItem" && (_id == "${oldId}" || itemNumber == "${oldId}")][0]`);
+    if (!existing) {
+      console.error(`[Error] Work item not found: ${oldId}`);
+      process.exit(1);
+    }
+
+    // Clean Sanity system fields for the cloned doc
+    const cloned = { ...existing, _id: newId };
+    delete cloned._rev;
+    delete cloned._createdAt;
+    delete cloned._updatedAt;
+    cloned.updatedAt = new Date().toISOString();
+
+    await mutateSanity([
+      { create: cloned },
+      { delete: { id: existing._id } },
+      {
+        create: {
+          _type: 'activityItem',
+          actor: 'AI Agent',
+          action: 'renamed document ID',
+          targetTitle: `from ${existing._id} to ${newId} (${existing.title})`,
+          targetType: 'task',
+          timestamp: new Date().toISOString(),
+          badgeColor: 'purple',
+        },
+      },
+    ]);
+
+    console.log(`✅ Successfully renamed document ID from "${existing._id}" to "${newId}"`);
+    return;
+  }
+
+  if (sub === 'delete' || sub === 'rm' || sub === 'remove') {
+    const id = positional[2];
+    if (!id) {
+      console.error('Usage: node scripts/wstar-agent.js task delete <id_or_number>');
+      process.exit(1);
+    }
+
+    const existing = await querySanity(`*[_type == "workItem" && (_id == "${id}" || itemNumber == "${id}")][0] {_id, itemNumber, title}`);
+    if (!existing) {
+      console.error(`[Error] Work item not found: ${id}`);
+      process.exit(1);
+    }
+
+    await mutateSanity([
+      { delete: { id: existing._id } },
+      {
+        create: {
+          _type: 'activityItem',
+          actor: 'AI Agent',
+          action: 'deleted',
+          targetTitle: `${existing.itemNumber || existing._id}: ${existing.title}`,
+          targetType: 'task',
+          timestamp: new Date().toISOString(),
+          badgeColor: 'rose',
+        },
+      },
+    ]);
+
+    console.log(`🗑️ Deleted Work Item: ${existing._id} ("${existing.title}")`);
+    return;
+  }
+
   console.error(`Unknown task command: ${sub}`);
-  console.log('Available commands: task list, task get, task claim, task done, task create');
+  console.log('Available commands: task list, task get, task claim, task done, task update, task create, task rename-id, task delete');
 }
 
 async function handleDecisions(positional, flags) {
@@ -433,7 +568,61 @@ async function handleDecisions(positional, flags) {
     return;
   }
 
+  if (sub === 'update' || sub === 'edit' || sub === 'set') {
+    const id = positional[2];
+    if (!id) {
+      console.error('Usage: node scripts/wstar-agent.js decision update <id_or_number> [--title "..."] [--decision "..."] [--reason "..."] [--status accepted|deprecated|superseded]');
+      process.exit(1);
+    }
+
+    const existing = await querySanity(`*[_type == "decision" && (_id == "${id}" || decisionNumber == "${id}")][0]`);
+    if (!existing) {
+      console.error(`[Error] Decision not found: ${id}`);
+      process.exit(1);
+    }
+
+    const patches = {};
+    if (flags.title) patches.title = flags.title;
+    if (flags.decision) patches.decision = flags.decision;
+    if (flags.reason || flags.rationale) patches.reason = flags.reason || flags.rationale;
+    if (flags.status) patches.status = flags.status;
+    if (flags.product) patches.productId = flags.product;
+    if (flags.number || flags.decisionNumber) patches.decisionNumber = flags.number || flags.decisionNumber;
+
+    if (Object.keys(patches).length === 0) {
+      console.log(`[Notice] No changes specified for decision ${existing._id}.`);
+      return;
+    }
+
+    await mutateSanity([
+      {
+        patch: {
+          id: existing._id,
+          set: patches,
+        },
+      },
+      {
+        create: {
+          _type: 'activityItem',
+          actor: 'AI Agent',
+          action: 'updated decision',
+          targetTitle: `${existing.decisionNumber || existing._id}: ${flags.title || existing.title}`,
+          targetType: 'decision',
+          timestamp: new Date().toISOString(),
+          badgeColor: 'amber',
+        },
+      },
+    ]);
+
+    console.log(`✅ Updated Decision ${existing._id} (${existing.decisionNumber || ''}):`);
+    Object.keys(patches).forEach((key) => {
+      console.log(`   • ${key}: "${existing[key]}" → "${patches[key]}"`);
+    });
+    return;
+  }
+
   console.error(`Unknown decision command: ${sub}`);
+  console.log('Available commands: decision list, decision log, decision update');
 }
 
 async function handleActivity(positional, flags) {
