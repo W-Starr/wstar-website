@@ -64,6 +64,8 @@ export default function OSLayout({ children }: { children: React.ReactNode }) {
         '5': '/os/decisions',
         '6': '/os/feedback',
         '7': '/os/roadmap',
+        '8': '/os/timeline',
+        '9': '/os/activity',
       }
 
       if (navMap[e.key]) {

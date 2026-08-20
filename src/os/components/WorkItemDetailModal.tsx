@@ -308,7 +308,11 @@ export function WorkItemDetailModal({
 
           {/* Metadata Footer */}
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 space-y-1">
-            {liveItem.dueDate && <div>Due Date: {liveItem.dueDate}</div>}
+            {(liveItem.startDate || liveItem.dueDate) && (
+              <div>Timeline: {liveItem.startDate || 'Start TBD'} → {liveItem.dueDate || 'Deadline TBD'}</div>
+            )}
+            {liveItem.storyPoints && <span className="mr-3">Story Points: {liveItem.storyPoints}</span>}
+            {liveItem.estimatedHours && <span>Est. Hours: {liveItem.estimatedHours}h</span>}
             <div>Created: {new Date(liveItem.createdAt).toLocaleString()}</div>
             <div>Last Updated: {new Date(liveItem.updatedAt).toLocaleString()}</div>
           </div>

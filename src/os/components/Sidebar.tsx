@@ -17,6 +17,7 @@ import {
   Search,
   FileCode,
   HardDrive,
+  ChartGantt,
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -93,6 +94,12 @@ export function Sidebar({
       name: 'Roadmap',
       href: '/os/roadmap',
       icon: Compass,
+      badge: null,
+    },
+    {
+      name: 'Timeline & Pulse',
+      href: '/os/timeline',
+      icon: ChartGantt,
       badge: null,
     },
     {
