@@ -40,11 +40,16 @@ export interface WorkItem {
   priority: WorkItemPriority
   productId: ProductId
   productAreaId?: string
+  projectId?: string
   assignee: 'abdulaziz' | 'ibrahim' | 'unassigned'
   reporter?: string
   blockerReason?: string
   codeReference?: string
+  startDate?: string
   dueDate?: string
+  estimatedHours?: number
+  storyPoints?: number
+  dependencies?: string[] // IDs or itemNumbers of blocking prerequisite tasks
   subtasks?: Subtask[]
   bugMetadata?: BugMetadata
   sourceId?: string
@@ -110,9 +115,11 @@ export interface Project {
   summary: string
   productId: ProductId
   status: 'planned' | 'active' | 'at_risk' | 'blocked' | 'completed'
+  startDate?: string
   targetDate: string
   lead: string
   progress: number // 0-100
+  dependencies?: string[] // IDs of prerequisite projects
   milestones: Milestone[]
   sourceId?: string
   sourceRef?: SourceRef
@@ -122,8 +129,10 @@ export interface Milestone {
   id: string
   projectId: string
   title: string
+  startDate?: string
   dueDate: string
   completed: boolean
+  dependencies?: string[]
 }
 
 export interface RoadmapItem {

@@ -126,11 +126,19 @@ node scripts/wstar-agent.js task rename-id work-item-7 work-item-DEBT-002
 # 5. Delete a duplicate or invalid task
 node scripts/wstar-agent.js task delete work-1787237118353
 
-# 6. Update an existing Architectural Decision Record
-node scripts/wstar-agent.js decision update DEC-001 \
-  --title "Updated Decision Title" \
-  --decision "New decision text" \
-  --reason "Updated rationale"
+# 7. Set Task Dependencies & Timeline Deadlines
+node scripts/wstar-agent.js task update BUG-001 \
+  --dependsOn "TASK-101,BUG-004" \
+  --start "2026-09-01" \
+  --due "2026-09-10" \
+  --points 5 \
+  --hours 12
+
+# 8. Manage Projects
+node scripts/wstar-agent.js projects
+node scripts/wstar-agent.js project get project-proj-3
+node scripts/wstar-agent.js project create --name "..." --product ace-acad --target "2026-10-15"
+node scripts/wstar-agent.js project update project-proj-3 --progress 40 --status active
 ```
 
 ---
@@ -140,18 +148,24 @@ node scripts/wstar-agent.js decision update DEC-001 \
 | Goal | Command |
 |---|---|
 | List Todo Tasks | `node scripts/wstar-agent.js tasks --status todo` |
-| Filter by Product | `node scripts/wstar-agent.js tasks --product ace-acad` |
+| Filter by Product / Project | `node scripts/wstar-agent.js tasks --product ace-acad --project project-proj-3` |
 | Get Task Details | `node scripts/wstar-agent.js task get <id_or_number>` |
 | Claim Task | `node scripts/wstar-agent.js task claim <id_or_number> --assignee abdulaziz` |
+| Set Dependencies (Blocked By) | `node scripts/wstar-agent.js task update <id> --dependsOn "TASK-101,BUG-004"` |
+| Set Timeline Dates | `node scripts/wstar-agent.js task update <id> --start 2026-09-01 --due 2026-09-15` |
+| Link to Project | `node scripts/wstar-agent.js task update <id> --project project-proj-3` |
 | Update Any Fields | `node scripts/wstar-agent.js task update <id> --title "..." --priority high --status in_progress` |
 | Change Task Identifier | `node scripts/wstar-agent.js task update <id> --number BUG-012` |
 | Rename Document ID | `node scripts/wstar-agent.js task rename-id <old_id> <new_id>` |
 | Delete Task | `node scripts/wstar-agent.js task delete <id_or_number>` |
 | Resolve Task | `node scripts/wstar-agent.js task done <id_or_number> --note "Summary"` |
-| Create Task / Bug | `node scripts/wstar-agent.js task create --title "..." --type bug --priority high` |
+| Create Task / Bug | `node scripts/wstar-agent.js task create --title "..." --type bug --priority high --dependsOn "..." --due "..."` |
+| List Projects | `node scripts/wstar-agent.js projects` |
+| Create / Update Project | `node scripts/wstar-agent.js project create --name "..."` / `node scripts/wstar-agent.js project update <id>` |
 | Log Decision (ADR) | `node scripts/wstar-agent.js decision log --title "..." --decision "..." --reason "..."` |
 | Update Decision | `node scripts/wstar-agent.js decision update <id_or_number> --title "..."` |
 | View Activity Stream | `node scripts/wstar-agent.js activity` |
 | View Proposals | `node scripts/wstar-agent.js proposals` |
 | JSON Output Mode | Add `--json` to any command |
+
 

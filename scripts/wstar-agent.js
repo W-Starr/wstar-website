@@ -141,6 +141,7 @@ async function handleTasks(positional, flags) {
   if (sub === 'list' || sub === 'ls') {
     let filters = ['_type == "workItem"'];
     if (flags.product) filters.push(`(productId == "${flags.product}" || product._ref == "product-${flags.product}")`);
+    if (flags.project) filters.push(`(projectId == "${flags.project}" || project._ref == "project-${flags.project}")`);
     if (flags.status) filters.push(`status == "${flags.status}"`);
     if (flags.priority) filters.push(`priority == "${flags.priority}"`);
     if (flags.assignee) filters.push(`assignee == "${flags.assignee}"`);
@@ -155,6 +156,7 @@ async function handleTasks(positional, flags) {
       priority,
       assignee,
       productId,
+      projectId,
       codeReference,
       _updatedAt
     }`;
@@ -206,6 +208,16 @@ async function handleTasks(positional, flags) {
       console.log(`  Description: ${item.description || 'N/A'}`);
       console.log(`  Type: ${item.type} | Priority: ${item.priority} | Status: ${item.status}`);
       console.log(`  Assignee: ${item.assignee || 'unassigned'} | Product: ${item.productId || 'ace-acad'}`);
+      if (item.projectId) console.log(`  Project: ${item.projectId}`);
+      if (item.startDate || item.dueDate) {
+        console.log(`  Timeline: ${item.startDate || 'TBD'} → ${item.dueDate || 'TBD'}`);
+      }
+      if (item.estimatedHours || item.storyPoints) {
+        console.log(`  Estimate: ${item.estimatedHours ? `${item.estimatedHours}h` : ''} ${item.storyPoints ? `(${item.storyPoints} pts)` : ''}`);
+      }
+      if (item.dependencies && item.dependencies.length > 0) {
+        console.log(`  ⚠️ Depends On (Blocked By): ${item.dependencies.join(', ')}`);
+      }
       if (item.codeReference) console.log(`  Code Reference: ${item.codeReference}`);
       if (item.subtasks && item.subtasks.length > 0) {
         console.log('  Subtasks:');
@@ -330,8 +342,16 @@ async function handleTasks(positional, flags) {
       status: flags.status || 'todo',
       priority: priority,
       productId: productId,
+      projectId: flags.project || flags.projectId,
       assignee: assignee,
       codeReference: codeRef,
+      startDate: flags.startDate || flags.start,
+      dueDate: flags.dueDate || flags.due,
+      estimatedHours: flags.hours || flags.estimatedHours ? parseInt(flags.hours || flags.estimatedHours, 10) : undefined,
+      storyPoints: flags.points || flags.storyPoints ? parseInt(flags.points || flags.storyPoints, 10) : undefined,
+      dependencies: flags.dependsOn || flags.dependencies
+        ? (Array.isArray(flags.dependsOn || flags.dependencies) ? (flags.dependsOn || flags.dependencies) : (flags.dependsOn || flags.dependencies).split(',').map((s) => s.trim()))
+        : [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -358,7 +378,7 @@ async function handleTasks(positional, flags) {
   if (sub === 'update' || sub === 'edit' || sub === 'set' || sub === 'patch') {
     const id = positional[2];
     if (!id) {
-      console.error('Usage: node scripts/wstar-agent.js task update <id_or_number> [--title "New Title"] [--status todo|in_progress|done] [--priority critical|high|medium|low] [--assignee abdulaziz|ibrahim] [--product ace-acad] [--number TASK-123] [--desc "..."] [--ref "..."]');
+      console.error('Usage: node scripts/wstar-agent.js task update <id_or_number> [--title "New Title"] [--status todo|in_progress|done] [--priority critical|high|medium|low] [--assignee abdulaziz|ibrahim] [--product ace-acad] [--project <projectId>] [--start YYYY-MM-DD] [--due YYYY-MM-DD] [--dependsOn TASK-1,TASK-2] [--number TASK-123]');
       process.exit(1);
     }
 
@@ -379,9 +399,17 @@ async function handleTasks(positional, flags) {
     if (flags.priority) patches.priority = flags.priority;
     if (flags.assignee) patches.assignee = flags.assignee;
     if (flags.product) patches.productId = flags.product;
+    if (flags.project || flags.projectId) patches.projectId = flags.project || flags.projectId;
     if (flags.ref || flags.codeReference) patches.codeReference = flags.ref || flags.codeReference;
     if (flags.number || flags.itemNumber) patches.itemNumber = flags.number || flags.itemNumber;
+    if (flags.startDate || flags.start) patches.startDate = flags.startDate || flags.start;
     if (flags.dueDate || flags.due) patches.dueDate = flags.dueDate || flags.due;
+    if (flags.hours || flags.estimatedHours) patches.estimatedHours = parseInt(flags.hours || flags.estimatedHours, 10);
+    if (flags.points || flags.storyPoints) patches.storyPoints = parseInt(flags.points || flags.storyPoints, 10);
+    if (flags.dependsOn || flags.dependencies) {
+      const deps = flags.dependsOn || flags.dependencies;
+      patches.dependencies = Array.isArray(deps) ? deps : deps.split(',').map((s) => s.trim());
+    }
 
     const changedKeys = Object.keys(patches).filter((k) => k !== 'updatedAt');
     if (changedKeys.length === 0) {
@@ -705,6 +733,168 @@ async function handleProposals(positional, flags) {
   });
 }
 
+async function handleProjects(positional, flags) {
+  const sub = positional[1] || 'list';
+
+  if (sub === 'list' || sub === 'ls') {
+    let filters = ['_type == "project"'];
+    if (flags.product) filters.push(`(productId == "${flags.product}" || product._ref == "product-${flags.product}")`);
+    if (flags.status) filters.push(`status == "${flags.status}"`);
+
+    const projects = await querySanity(`*[${filters.join(' && ')}] | order(_createdAt desc) {
+      _id,
+      name,
+      summary,
+      status,
+      productId,
+      targetDate,
+      lead,
+      progress,
+      milestones
+    }`);
+
+    if (flags.json) {
+      console.log(JSON.stringify(projects, null, 2));
+      return;
+    }
+
+    console.log(`\n🚀 WSTAR OS Projects (${projects.length} found):\n`);
+    if (projects.length === 0) {
+      console.log('  No projects found.\n');
+      return;
+    }
+
+    projects.forEach((proj) => {
+      console.log(`  📁 [${proj._id}] ${proj.name} [${proj.status || 'active'}] (${proj.progress || 0}% complete)`);
+      console.log(`     Summary: ${proj.summary || 'N/A'}`);
+      console.log(`     Product: ${proj.productId || 'ace-acad'} | Lead: ${proj.lead || 'Abdulaziz'} | Target: ${proj.targetDate || '2026-10-01'}`);
+      if (proj.milestones && proj.milestones.length > 0) {
+        console.log(`     Milestones (${proj.milestones.length}): ${proj.milestones.map((m) => (typeof m === 'string' ? m : m.title)).join(', ')}`);
+      }
+      console.log('');
+    });
+    return;
+  }
+
+  if (sub === 'get') {
+    const id = positional[2];
+    if (!id) {
+      console.error('Usage: node scripts/wstar-agent.js project get <id>');
+      process.exit(1);
+    }
+
+    const proj = await querySanity(`*[_type == "project" && (_id == "${id}" || _id == "project-${id}")][0]`);
+    if (!proj) {
+      console.error(`[Error] Project not found: ${id}`);
+      process.exit(1);
+    }
+
+    if (flags.json) {
+      console.log(JSON.stringify(proj, null, 2));
+    } else {
+      console.log('\n📁 Project Details:');
+      console.log(`  ID: ${proj._id}`);
+      console.log(`  Name: ${proj.name}`);
+      console.log(`  Summary: ${proj.summary || 'N/A'}`);
+      console.log(`  Status: ${proj.status || 'active'} | Progress: ${proj.progress || 0}%`);
+      console.log(`  Product: ${proj.productId || 'ace-acad'} | Lead: ${proj.lead || 'Abdulaziz'}`);
+      console.log(`  Target Date: ${proj.targetDate || '2026-10-01'}`);
+      if (proj.milestones && proj.milestones.length > 0) {
+        console.log('  Milestones:');
+        proj.milestones.forEach((m) => console.log(`    • ${typeof m === 'string' ? m : m.title}`));
+      }
+      console.log('');
+    }
+    return;
+  }
+
+  if (sub === 'create' || sub === 'add') {
+    const name = flags.name || positional.slice(2).join(' ');
+    if (!name) {
+      console.error('Usage: node scripts/wstar-agent.js project create --name "..." --summary "..." [--product ace-acad] [--lead "Abdulaziz"] [--target "2026-10-01"]');
+      process.exit(1);
+    }
+
+    const docId = `project-${Date.now()}`;
+    const newProj = {
+      _id: docId,
+      _type: 'project',
+      name: name,
+      summary: flags.summary || flags.desc || '',
+      productId: flags.product || 'ace-acad',
+      status: flags.status || 'active',
+      lead: flags.lead || 'Abdulaziz Abdulwahab',
+      targetDate: flags.target || flags.targetDate || '2026-10-01',
+      progress: flags.progress ? parseInt(flags.progress, 10) : 0,
+      milestones: flags.milestones ? (Array.isArray(flags.milestones) ? flags.milestones : flags.milestones.split(',')) : [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    await mutateSanity([
+      { create: newProj },
+      {
+        create: {
+          _type: 'activityItem',
+          actor: 'AI Agent',
+          action: 'created project',
+          targetTitle: name,
+          targetType: 'project',
+          timestamp: new Date().toISOString(),
+          badgeColor: 'purple',
+        },
+      },
+    ]);
+
+    console.log(`✅ Created Project: [${docId}] "${name}" [${newProj.productId}]`);
+    return;
+  }
+
+  if (sub === 'update' || sub === 'edit') {
+    const id = positional[2];
+    if (!id) {
+      console.error('Usage: node scripts/wstar-agent.js project update <id> [--name "..."] [--summary "..."] [--status active|completed] [--progress 50]');
+      process.exit(1);
+    }
+
+    const existing = await querySanity(`*[_type == "project" && (_id == "${id}" || _id == "project-${id}")][0]`);
+    if (!existing) {
+      console.error(`[Error] Project not found: ${id}`);
+      process.exit(1);
+    }
+
+    const patches = { updatedAt: new Date().toISOString() };
+    if (flags.name) patches.name = flags.name;
+    if (flags.summary || flags.desc) patches.summary = flags.summary || flags.desc;
+    if (flags.status) patches.status = flags.status;
+    if (flags.progress) patches.progress = parseInt(flags.progress, 10);
+    if (flags.lead) patches.lead = flags.lead;
+    if (flags.target || flags.targetDate) patches.targetDate = flags.target || flags.targetDate;
+    if (flags.product) patches.productId = flags.product;
+
+    await mutateSanity([
+      { patch: { id: existing._id, set: patches } },
+      {
+        create: {
+          _type: 'activityItem',
+          actor: 'AI Agent',
+          action: 'updated project',
+          targetTitle: `${existing.name} (${Object.keys(patches).filter((k) => k !== 'updatedAt').join(', ')})`,
+          targetType: 'project',
+          timestamp: new Date().toISOString(),
+          badgeColor: 'blue',
+        },
+      },
+    ]);
+
+    console.log(`✅ Updated Project ${existing._id} ("${flags.name || existing.name}")`);
+    return;
+  }
+
+  console.error(`Unknown project command: ${sub}`);
+  console.log('Available commands: project list, project get, project create, project update');
+}
+
 // 5. Main Dispatcher
 async function main() {
   const rawArgs = process.argv.slice(2);
@@ -716,14 +906,23 @@ Usage:
   node scripts/wstar-agent.js <command> [options]
 
 Commands:
-  tasks / task list                     List work items (--product, --status, --priority, --assignee)
+  tasks / task list                     List work items (--product, --status, --priority, --assignee, --project)
   task get <id>                         Inspect full details of a work item
   task claim <id>                       Claim and set task status to in_progress
   task done <id> [--note "text"]        Mark task as done and log verification activity
+  task update <id> [options]            Update task fields (--title, --status, --priority, --project, etc.)
   task create --title "..." [options]   Create a new task or bug ticket
+  task rename-id <old_id> <new_id>      Atomically change document _id
+  task delete <id>                      Delete a task
+  
+  projects / project list               List projects (--product, --status)
+  project get <id>                      Get project details
+  project create --name "..."           Create a new project
+  project update <id> [options]         Update project progress, status, or details
   
   decisions / decision list             List architectural decision records (ADRs)
   decision log --title "..." ...        Log an architectural decision
+  decision update <id> [options]        Update an existing decision
   
   activity / activity list              View live operational stream
   activity log --action "..." ...       Emit a manual activity event
@@ -735,6 +934,7 @@ Options:
   --product <ace-acad|plantiq|wstar>    Filter by product scope
   --status <todo|in_progress|done>      Filter by status
   --priority <critical|high|medium|low> Filter by priority
+  --project <projectId>                 Filter or assign to project
 `);
     return;
   }
@@ -747,6 +947,10 @@ Options:
       case 'tasks':
       case 'task':
         await handleTasks(positional, flags);
+        break;
+      case 'projects':
+      case 'project':
+        await handleProjects(positional, flags);
         break;
       case 'decisions':
       case 'decision':
@@ -771,3 +975,4 @@ Options:
 }
 
 main();
+
