@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { Role, Product, ProductArea, SanitySyncState } from '@/os/types'
-import { initialProducts, initialProductAreas } from '@/os/data/initialSeed'
 
 export interface AuthenticatedFounder {
   id: string
@@ -30,8 +29,8 @@ export const useMetaStore = create<MetaStoreState>((set) => ({
   role: 'engineer',
   currentUser: null,
   sanitySyncStatus: 'local_fallback',
-  products: initialProducts,
-  productAreas: initialProductAreas,
+  products: [],
+  productAreas: [],
   isLoaded: false,
 
   setRole: (role) => {

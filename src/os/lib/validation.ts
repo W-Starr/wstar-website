@@ -42,11 +42,4 @@ export const syncRequestSchema = z.object({
   data: z.record(z.string(), z.any()).optional(),
 })
 
-export const seedRequestSchema = z.object({
-  confirmSeed: z.boolean().refine((val) => val === true, {
-    message: 'Explicit confirmSeed confirmation is required to seed data',
-  }),
-})
-
 export type SyncRequest = z.infer<typeof syncRequestSchema>
-export type SeedRequest = z.infer<typeof seedRequestSchema>

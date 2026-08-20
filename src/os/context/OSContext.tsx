@@ -46,7 +46,6 @@ export interface OSContextType {
   lastError: string | null
 
   // Sanity Cloud Actions
-  seedSanityCloud: () => Promise<{ success: boolean; message: string }>
   refreshFromSanity: () => Promise<void>
 
   // Proposal Actions
@@ -343,6 +342,34 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
           setSources(mappedSources)
         }
 
+        if (json.data.products && Array.isArray(json.data.products)) {
+          const mappedProducts: Product[] = json.data.products.map((p: any) => ({
+            id: p._id.replace(/^product-/, ''),
+            name: p.name,
+            tagline: p.tagline || '',
+            description: p.description || '',
+            status: p.status || 'live',
+            targetAudience: p.targetAudience || '',
+            version: p.version || '1.0.0',
+            healthStatus: p.healthStatus || 'healthy',
+            areas: p.areas || [],
+          }))
+          setProducts(mappedProducts)
+        }
+
+        if (json.data.productAreas && Array.isArray(json.data.productAreas)) {
+          const mappedAreas: ProductArea[] = json.data.productAreas.map((a: any) => ({
+            id: a._id.replace(/^area-/, ''),
+            name: a.name,
+            description: a.description || '',
+            maturity: typeof a.maturity === 'number' ? a.maturity : 50,
+            owner: a.owner || 'Abdulaziz',
+            iconName: a.iconName || 'Layers',
+            product: a.product?._ref ? a.product._ref.replace(/^product-/, '') : 'ace-acad',
+          }))
+          setProductAreas(mappedAreas)
+        }
+
         setSanitySyncStatus('synced')
       } else {
         setSanitySyncStatus('local_fallback')
@@ -360,6 +387,8 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
     setProjects,
     setActivities,
     setSources,
+    setProducts,
+    setProductAreas,
     setSanitySyncStatus,
   ])
 
@@ -376,30 +405,6 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
       refreshFromSanity()
     })
   }, [fetchSession, setIsLoaded, refreshFromSanity])
-
-  // Seed Sanity Cloud Handler
-  const seedSanityCloud = async () => {
-    setSanitySyncStatus('seeding')
-    try {
-      const res = await fetch('/api/os/seed', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ confirmSeed: true }),
-      })
-      const json = await res.json()
-      if (json.success) {
-        setSanitySyncStatus('synced')
-        await refreshFromSanity()
-        return { success: true, message: json.message }
-      } else {
-        setSanitySyncStatus('error')
-        return { success: false, message: json.error || 'Failed to seed Sanity dataset' }
-      }
-    } catch (e: any) {
-      setSanitySyncStatus('error')
-      return { success: false, message: e.message || 'Network error while seeding Sanity' }
-    }
-  }
 
   const suggestClassification = (text: string): ClassificationSuggestion => {
     const lower = text.toLowerCase()
@@ -469,7 +474,6 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         sanitySyncStatus,
         isLoaded,
         lastError: workLastError,
-        seedSanityCloud,
         refreshFromSanity,
         updateProposalStatus,
         createWorkItemFromProposal,
