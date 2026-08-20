@@ -146,5 +146,23 @@ Universal write dispatcher for creating, updating, or deleting Sanity CMS docume
   - `patch`: `{ "action": "patch", "documentId": "...", "patches": { "status": "done" } }`
   - `delete`: `{ "action": "delete", "documentId": "..." }`
 
-### `POST /api/os/seed`
-Batch-seeds standard company baseline data. Requires `{ "confirmSeed": true }`.
+### `GET /api/os/fetch`
+Queries all active collections from Sanity Cloud (`workItems`, `proposals`, `decisions`, `feedbackItems`, `projects`, `roadmapItems`, `activities`, `products`, `productAreas`, `sources`).
+
+- **Response:** `200 OK`
+  ```json
+  {
+    "success": true,
+    "hasData": true,
+    "data": { ... }
+  }
+  ```
+
+### `GET /api/os/sources` & `POST /api/os/sources`
+Manages connected knowledge sources (Google Drive docs, local markdown specifications, statutory filings) and triggers background AI entity extraction.
+
+### `POST /api/os/sources/sync-drive`
+Crawls the WSTAR Google Drive folder tree using the server-side Service Account and syncs document metadata and text content to Sanity.
+
+### `POST /api/os/feedback/fetch-firebase`
+Directly connects to Google Cloud Firestore, queries recent Ace Acad user feedback submissions, and maps them to Sanity feedback documents.
