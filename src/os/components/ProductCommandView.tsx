@@ -9,6 +9,7 @@ import { WorkItemDetailModal } from '@/os/components/WorkItemDetailModal'
 import { DecompositionModal } from '@/os/components/DecompositionModal'
 import { ProjectDetailModal } from '@/os/components/ProjectDetailModal'
 import { ProductAreaDetailModal } from '@/os/components/ProductAreaDetailModal'
+import { NewProductAreaModal } from '@/os/components/NewProductAreaModal'
 import { ProductCommandSynthesizerModal } from '@/os/components/ProductCommandSynthesizerModal'
 import { DataRegistryTable } from '@/os/components/DataRegistryTable'
 import {
@@ -30,6 +31,7 @@ import {
   Edit3,
   Clock,
   Target,
+  Plus,
 } from 'lucide-react'
 
 interface ProductCommandViewProps {
@@ -61,6 +63,7 @@ export function ProductCommandView({
   const [decompositionItem, setDecompositionItem] = useState<WorkItem | null>(null)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [selectedArea, setSelectedArea] = useState<ProductArea | null>(null)
+  const [isCreatingArea, setIsCreatingArea] = useState(false)
   const [isSynthesizerOpen, setIsSynthesizerOpen] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [isContextOpen, setIsContextOpen] = useState(false)
@@ -298,8 +301,8 @@ export function ProductCommandView({
       </div>
 
       {/* ─── Product Areas with Computed Maturity ─── */}
-      {filteredProductAreas.length > 0 && (
-        <section className="space-y-3">
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <Layers className="w-4 h-4 text-blue-600" />
             <span>Product Areas</span>
@@ -307,7 +310,32 @@ export function ProductCommandView({
               ({filteredProductAreas.length} areas)
             </span>
           </h3>
+          <button
+            type="button"
+            onClick={() => setIsCreatingArea(true)}
+            className="px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 text-xs font-semibold flex items-center gap-1.5 transition-all border border-blue-200 dark:border-blue-800/60 cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>New Area</span>
+          </button>
+        </div>
 
+        {filteredProductAreas.length === 0 ? (
+          <div className="p-8 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-center space-y-2.5">
+            <Layers className="w-8 h-8 text-slate-300 dark:text-slate-600 mx-auto" />
+            <p className="text-xs text-slate-500 font-medium">
+              No product areas defined for {productName} yet.
+            </p>
+            <button
+              type="button"
+              onClick={() => setIsCreatingArea(true)}
+              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Create First Area</span>
+            </button>
+          </div>
+        ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {filteredProductAreas.map((area) => {
               const computedMaturity = getAreaMaturity(area.id)
@@ -367,8 +395,8 @@ export function ProductCommandView({
               )
             })}
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
       {/* ─── Projects with Computed Progress ─── */}
       <section className="space-y-3">
@@ -757,6 +785,12 @@ export function ProductCommandView({
         isOpen={Boolean(selectedArea)}
         onClose={() => setSelectedArea(null)}
         onOpenTaskDetail={(t) => setSelectedItem(t)}
+      />
+
+      <NewProductAreaModal
+        isOpen={isCreatingArea}
+        onClose={() => setIsCreatingArea(false)}
+        defaultProductId={productId}
       />
 
       <ProductCommandSynthesizerModal

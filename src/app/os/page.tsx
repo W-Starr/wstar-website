@@ -9,6 +9,7 @@ import { PriorityBadge } from '@/os/components/PriorityBadge'
 import { WorkItemDetailModal } from '@/os/components/WorkItemDetailModal'
 import { DecompositionModal } from '@/os/components/DecompositionModal'
 import { ProductAreaDetailModal } from '@/os/components/ProductAreaDetailModal'
+import { NewProductAreaModal } from '@/os/components/NewProductAreaModal'
 import { FounderHandoffCard } from '@/os/components/FounderHandoffCard'
 import { useComputedProgress } from '@/os/hooks/useComputedProgress'
 import {
@@ -27,6 +28,7 @@ import {
   Activity,
   Layers,
   FileCode,
+  Plus,
 } from 'lucide-react'
 
 export default function OSDashboardPage() {
@@ -47,6 +49,7 @@ export default function OSDashboardPage() {
   const [selectedItem, setSelectedItem] = useState<WorkItem | null>(null)
   const [decompositionItem, setDecompositionItem] = useState<WorkItem | null>(null)
   const [selectedArea, setSelectedArea] = useState<ProductArea | null>(null)
+  const [isCreatingArea, setIsCreatingArea] = useState(false)
 
   // Filters for Abdulaziz View
   const abdulazizFocusItems = workItems
@@ -263,12 +266,23 @@ export default function OSDashboardPage() {
                   <Layers className="w-4 h-4 text-blue-500" />
                   <span>ACE ACAD PRODUCT HEALTH</span>
                 </div>
-                <Link
-                  href="/os/ace-acad"
-                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                >
-                  Deep dive →
-                </Link>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsCreatingArea(true)}
+                    className="text-xs text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 font-medium flex items-center gap-1 cursor-pointer"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>New Area</span>
+                  </button>
+                  <span className="text-slate-300 dark:text-slate-700">•</span>
+                  <Link
+                    href="/os/ace-acad"
+                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  >
+                    Deep dive →
+                  </Link>
+                </div>
               </div>
 
               <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 shadow-2xs space-y-2.5">
@@ -576,6 +590,12 @@ export default function OSDashboardPage() {
         isOpen={Boolean(selectedArea)}
         onClose={() => setSelectedArea(null)}
         onOpenTaskDetail={(t) => setSelectedItem(t)}
+      />
+
+      <NewProductAreaModal
+        isOpen={isCreatingArea}
+        onClose={() => setIsCreatingArea(false)}
+        defaultProductId="ace-acad"
       />
     </div>
   )
