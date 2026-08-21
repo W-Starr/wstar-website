@@ -3,11 +3,12 @@
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useOS } from '@/os/context/OSContext'
-import { WorkItem, Project, ProductCommandConfig } from '@/os/types'
+import { WorkItem, Project, ProductCommandConfig, ProductArea } from '@/os/types'
 import { useComputedProgress } from '@/os/hooks/useComputedProgress'
 import { WorkItemDetailModal } from '@/os/components/WorkItemDetailModal'
 import { DecompositionModal } from '@/os/components/DecompositionModal'
 import { ProjectDetailModal } from '@/os/components/ProjectDetailModal'
+import { ProductAreaDetailModal } from '@/os/components/ProductAreaDetailModal'
 import { ProductCommandSynthesizerModal } from '@/os/components/ProductCommandSynthesizerModal'
 import { DataRegistryTable } from '@/os/components/DataRegistryTable'
 import {
@@ -59,6 +60,7 @@ export function ProductCommandView({
   const [selectedItem, setSelectedItem] = useState<WorkItem | null>(null)
   const [decompositionItem, setDecompositionItem] = useState<WorkItem | null>(null)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [selectedArea, setSelectedArea] = useState<ProductArea | null>(null)
   const [isSynthesizerOpen, setIsSynthesizerOpen] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [isContextOpen, setIsContextOpen] = useState(false)
@@ -324,10 +326,11 @@ export function ProductCommandView({
               return (
                 <div
                   key={area.id}
-                  className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs space-y-2.5"
+                  onClick={() => setSelectedArea(area)}
+                  className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-500/50 hover:shadow-md shadow-2xs space-y-2.5 cursor-pointer transition-all group"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors truncate">
                       {area.name}
                     </span>
                     <span className="font-mono text-xs font-bold text-slate-500">
@@ -355,8 +358,9 @@ export function ProductCommandView({
                     <span>
                       Tasks: <strong>{areaTasksDone}/{areaTasksTotal}</strong>
                     </span>
-                    <span>
-                      Lead: <strong>{area.owner}</strong>
+                    <span className="text-blue-600 dark:text-blue-400 font-semibold group-hover:underline flex items-center gap-0.5">
+                      <span>View & Add Tasks</span>
+                      <span>→</span>
                     </span>
                   </div>
                 </div>
@@ -746,6 +750,13 @@ export function ProductCommandView({
         project={selectedProject}
         isOpen={Boolean(selectedProject)}
         onClose={() => setSelectedProject(null)}
+      />
+
+      <ProductAreaDetailModal
+        area={selectedArea}
+        isOpen={Boolean(selectedArea)}
+        onClose={() => setSelectedArea(null)}
+        onOpenTaskDetail={(t) => setSelectedItem(t)}
       />
 
       <ProductCommandSynthesizerModal

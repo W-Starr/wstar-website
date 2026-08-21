@@ -3,11 +3,12 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useOS } from '@/os/context/OSContext'
-import { WorkItem, Decision, FeedbackItem } from '@/os/types'
+import { WorkItem, Decision, FeedbackItem, ProductArea } from '@/os/types'
 import { StatusBadge } from '@/os/components/StatusBadge'
 import { PriorityBadge } from '@/os/components/PriorityBadge'
 import { WorkItemDetailModal } from '@/os/components/WorkItemDetailModal'
 import { DecompositionModal } from '@/os/components/DecompositionModal'
+import { ProductAreaDetailModal } from '@/os/components/ProductAreaDetailModal'
 import { FounderHandoffCard } from '@/os/components/FounderHandoffCard'
 import { useComputedProgress } from '@/os/hooks/useComputedProgress'
 import {
@@ -45,6 +46,7 @@ export default function OSDashboardPage() {
 
   const [selectedItem, setSelectedItem] = useState<WorkItem | null>(null)
   const [decompositionItem, setDecompositionItem] = useState<WorkItem | null>(null)
+  const [selectedArea, setSelectedArea] = useState<ProductArea | null>(null)
 
   // Filters for Abdulaziz View
   const abdulazizFocusItems = workItems
@@ -269,32 +271,38 @@ export default function OSDashboardPage() {
                 </Link>
               </div>
 
-              <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 shadow-2xs space-y-3">
+              <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 shadow-2xs space-y-2.5">
                 {productAreas.slice(0, 6).map((area) => {
                   const maturity = getAreaMaturity(area.id)
                   return (
-                  <div key={area.id} className="space-y-1">
-                    <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
-                      <span className="truncate pr-2">{area.name}</span>
-                      <span className="font-mono text-slate-500 shrink-0">
-                        {maturity}%
-                      </span>
+                    <div
+                      key={area.id}
+                      onClick={() => setSelectedArea(area)}
+                      className="space-y-1 p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors group"
+                    >
+                      <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        <span className="truncate pr-2 group-hover:text-blue-600 transition-colors">
+                          {area.name}
+                        </span>
+                        <span className="font-mono text-slate-500 shrink-0">
+                          {maturity}%
+                        </span>
+                      </div>
+                      <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${
+                            maturity >= 85
+                              ? 'bg-emerald-500'
+                              : maturity >= 70
+                              ? 'bg-blue-500'
+                              : maturity >= 30
+                              ? 'bg-purple-500'
+                              : 'bg-amber-500'
+                          }`}
+                          style={{ width: `${maturity}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                      <div
-                        className={`h-full rounded-full ${
-                          maturity >= 85
-                            ? 'bg-emerald-500'
-                            : maturity >= 70
-                            ? 'bg-blue-500'
-                            : maturity >= 30
-                            ? 'bg-purple-500'
-                            : 'bg-amber-500'
-                        }`}
-                        style={{ width: `${maturity}%` }}
-                      />
-                    </div>
-                  </div>
                   )
                 })}
               </div>
@@ -561,6 +569,13 @@ export default function OSDashboardPage() {
         item={decompositionItem}
         isOpen={Boolean(decompositionItem)}
         onClose={() => setDecompositionItem(null)}
+      />
+
+      <ProductAreaDetailModal
+        area={selectedArea}
+        isOpen={Boolean(selectedArea)}
+        onClose={() => setSelectedArea(null)}
+        onOpenTaskDetail={(t) => setSelectedItem(t)}
       />
     </div>
   )
