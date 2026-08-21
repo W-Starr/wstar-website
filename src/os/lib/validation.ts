@@ -33,6 +33,7 @@ export const docTypeSchema = z.enum([
   'product',
   'productArea',
   'project',
+  'productCommandCenter',
 ])
 
 export const syncRequestSchema = z.object({

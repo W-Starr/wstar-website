@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import { Role, Product, ProductArea, SanitySyncState } from '@/os/types'
+import { Role, Product, ProductArea, ProductCommandConfig, SanitySyncState } from '@/os/types'
+import { dispatchMutation } from './syncHelper'
 
 export interface AuthenticatedFounder {
   id: string
@@ -14,6 +15,7 @@ interface MetaStoreState {
   sanitySyncStatus: SanitySyncState
   products: Product[]
   productAreas: ProductArea[]
+  productCommandConfigs: ProductCommandConfig[]
   isLoaded: boolean
 
   setRole: (role: Role) => void
@@ -22,15 +24,18 @@ interface MetaStoreState {
   setSanitySyncStatus: (status: SanitySyncState) => void
   setProducts: (products: Product[]) => void
   setProductAreas: (areas: ProductArea[]) => void
+  setProductCommandConfigs: (configs: ProductCommandConfig[]) => void
+  saveProductCommandConfig: (config: ProductCommandConfig) => void
   setIsLoaded: (isLoaded: boolean) => void
 }
 
-export const useMetaStore = create<MetaStoreState>((set) => ({
+export const useMetaStore = create<MetaStoreState>((set, get) => ({
   role: 'engineer',
   currentUser: null,
   sanitySyncStatus: 'local_fallback',
   products: [],
   productAreas: [],
+  productCommandConfigs: [],
   isLoaded: false,
 
   setRole: (role) => {
@@ -59,5 +64,30 @@ export const useMetaStore = create<MetaStoreState>((set) => ({
   setSanitySyncStatus: (sanitySyncStatus) => set({ sanitySyncStatus }),
   setProducts: (products) => set({ products }),
   setProductAreas: (productAreas) => set({ productAreas }),
+  setProductCommandConfigs: (productCommandConfigs) => set({ productCommandConfigs }),
+
+  saveProductCommandConfig: (config) => {
+    const current = get().productCommandConfigs
+    const docId = config.id || `product-command-${config.productId}`
+    const updatedConfig = { ...config, id: docId }
+
+    const index = current.findIndex((c) => c.productId === config.productId)
+    let next: ProductCommandConfig[]
+    if (index >= 0) {
+      next = [...current]
+      next[index] = updatedConfig
+    } else {
+      next = [...current, updatedConfig]
+    }
+
+    set({ productCommandConfigs: next })
+
+    dispatchMutation('create', 'productCommandCenter', docId, updatedConfig).then((res) => {
+      if (!res.success) {
+        console.warn('[MetaStore Sync Warning] saveProductCommandConfig failed:', res.error)
+      }
+    })
+  },
+
   setIsLoaded: (isLoaded) => set({ isLoaded }),
 }))

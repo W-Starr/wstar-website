@@ -32,7 +32,8 @@ export async function GET() {
       "roadmapItems": *[_type == "roadmapItem"],
       "activities": *[_type == "activityItem"] | order(timestamp desc),
       "products": *[_type == "product"],
-      "productAreas": *[_type == "productArea"]
+      "productAreas": *[_type == "productArea"],
+      "productCommandCenters": *[_type == "productCommandCenter"]
     }`
 
     const data = await readClient.fetch(query)

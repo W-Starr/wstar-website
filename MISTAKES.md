@@ -4,6 +4,22 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
+### [2026-08-21 11:30] — ProductArea / Proposal Property Mismatches and Missing onOpenDecomposition Prop
+
+- **Date/Time:** 2026-08-21 11:30 (WAT / UTC+1)
+- **Context:** Implementing the reusable `ProductCommandView.tsx` component and multi-product command center engine.
+- **The Mistake/Error:**
+  1. In `ProductCommandView.tsx`, `ProductArea` was queried via `a.product` instead of `a.productId`.
+  2. `Proposal` interface lacked `productId?: ProductId` optional field.
+  3. `<WorkItemDetailModal>` was instantiated without the required `onOpenDecomposition` prop.
+- **The Fix:**
+  1. Updated `ProductCommandView.tsx` to reference `a.productId`.
+  2. Added `productId?: ProductId` to `Proposal` in `src/os/types/index.ts` and mapped it in `OSContext.tsx`.
+  3. Passed `onOpenDecomposition={(item) => setDecompositionItem(item)}` to `WorkItemDetailModal`.
+- **Lesson Learned:** Check component prop requirements and interface definitions across related types before invoking modals.
+
+---
+
 ### [2026-08-21 10:52] — Missing Milestone and X Imports in Projects Hub & OSContext
 
 - **Date/Time:** 2026-08-21 10:52 (WAT / UTC+1)

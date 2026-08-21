@@ -11,6 +11,7 @@ import {
   FeedbackItem,
   Project,
   Milestone,
+  ProductCommandConfig,
   RoadmapItem,
   ActivityItem,
   SanitySyncState,
@@ -42,6 +43,7 @@ export interface OSContextType {
   roadmapItems: RoadmapItem[]
   activities: ActivityItem[]
   sources: Source[]
+  productCommandConfigs: ProductCommandConfig[]
   sanitySyncStatus: SanitySyncState
   isLoaded: boolean
   lastError: string | null
@@ -110,6 +112,9 @@ export interface OSContextType {
 
   // Intelligence
   suggestClassification: (text: string) => ClassificationSuggestion
+
+  // Product Command Centers
+  saveProductCommandConfig: (config: ProductCommandConfig) => void
 }
 
 const OSContext = createContext<OSContextType | null>(null)
@@ -176,12 +181,15 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
   const sanitySyncStatus = useMetaStore((state) => state.sanitySyncStatus)
   const products = useMetaStore((state) => state.products)
   const productAreas = useMetaStore((state) => state.productAreas)
+  const productCommandConfigs = useMetaStore((state) => state.productCommandConfigs)
   const isLoaded = useMetaStore((state) => state.isLoaded)
   const setRole = useMetaStore((state) => state.setRole)
   const fetchSession = useMetaStore((state) => state.fetchSession)
   const setSanitySyncStatus = useMetaStore((state) => state.setSanitySyncStatus)
   const setProducts = useMetaStore((state) => state.setProducts)
   const setProductAreas = useMetaStore((state) => state.setProductAreas)
+  const setProductCommandConfigs = useMetaStore((state) => state.setProductCommandConfigs)
+  const saveProductCommandConfig = useMetaStore((state) => state.saveProductCommandConfig)
   const setIsLoaded = useMetaStore((state) => state.setIsLoaded)
 
   const logActivity = useCallback(
@@ -245,6 +253,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
             slug: p.slug || p.filename?.replace('.md', '') || 'proposal',
             title: p.title,
             subtitle: p.subtitle || '',
+            productId: p.productId || (p.product?._ref ? p.product._ref.replace(/^product-/, '') : 'ace-acad'),
             category: p.category || 'Architecture & Planning',
             status: p.status || 'under_review',
             date: p.date || p._createdAt || new Date().toISOString(),
@@ -393,9 +402,24 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
             maturity: typeof a.maturity === 'number' ? a.maturity : 50,
             owner: a.owner || 'Abdulaziz',
             iconName: a.iconName || 'Layers',
-            product: a.product?._ref ? a.product._ref.replace(/^product-/, '') : 'ace-acad',
+            productId: a.productId || (a.product?._ref ? a.product._ref.replace(/^product-/, '') : 'ace-acad'),
           }))
           setProductAreas(mappedAreas)
+        }
+
+        if (json.data.productCommandCenters && Array.isArray(json.data.productCommandCenters)) {
+          const mappedConfigs: ProductCommandConfig[] = json.data.productCommandCenters.map((c: any) => ({
+            id: c._id,
+            productId: c.productId || c._id.replace(/^product-command-/, ''),
+            productName: c.productName,
+            versionBadge: c.versionBadge || 'v1.0.0',
+            architecturePillars: c.architecturePillars || [],
+            domainRegistry: c.domainRegistry || { title: 'DOMAIN INVENTORY REGISTRY', columns: [], rows: [] },
+            lifecyclePipeline: c.lifecyclePipeline,
+            sourceIds: c.sourceIds || [],
+            lastSynthesizedAt: c.lastSynthesizedAt || c._updatedAt,
+          }))
+          setProductCommandConfigs(mappedConfigs)
         }
 
         setSanitySyncStatus('synced')
@@ -417,6 +441,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
     setSources,
     setProducts,
     setProductAreas,
+    setProductCommandConfigs,
     setSanitySyncStatus,
   ])
 
@@ -499,6 +524,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         roadmapItems,
         activities,
         sources,
+        productCommandConfigs,
         sanitySyncStatus,
         isLoaded,
         lastError: workLastError,
@@ -534,6 +560,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         attachExtractedEntities,
         linkEntityToSource,
         suggestClassification,
+        saveProductCommandConfig,
       }}
     >
       {children}

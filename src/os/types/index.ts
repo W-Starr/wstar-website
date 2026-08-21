@@ -12,7 +12,47 @@ export type WorkItemStatus = 'backlog' | 'todo' | 'in_progress' | 'blocked' | 'd
 
 export type WorkItemPriority = 'critical' | 'high' | 'medium' | 'low'
 
-export type ProductId = 'ace-acad' | 'plantiq' | 'wstar-core'
+export type ProductId = 'ace-acad' | 'plantiq' | 'wstar-core' | string
+
+export interface ProductArchitecturePillar {
+  label: string
+  value: string
+  description: string
+  badgeColor?: string
+}
+
+export interface ProductDomainColumn {
+  key: string
+  label: string
+  isMono?: boolean
+}
+
+export interface ProductLifecycleStage {
+  stageNumber: number
+  name: string
+  status: string
+  description: string
+}
+
+export interface ProductCommandConfig {
+  id?: string
+  productId: string
+  productName?: string
+  versionBadge: string
+  architecturePillars: ProductArchitecturePillar[]
+  domainRegistry: {
+    title: string
+    subtitle?: string
+    columns: ProductDomainColumn[]
+    rows: Record<string, any>[]
+  }
+  lifecyclePipeline?: {
+    title: string
+    stages: ProductLifecycleStage[]
+  }
+  sourceIds?: string[]
+  lastSynthesizedAt?: string
+}
 
 export type SanitySyncState = 'local_fallback' | 'syncing' | 'synced' | 'error' | 'seeding'
 
@@ -180,7 +220,8 @@ export interface Proposal {
   slug: string
   title: string
   subtitle: string
-  category: 'Content Scaling & UGC' | 'AI & Adaptive Learning' | 'Architecture & Ingestion'
+  productId?: ProductId
+  category: 'Content Scaling & UGC' | 'AI & Adaptive Learning' | 'Architecture & Ingestion' | string
   status: 'approved_for_scoping' | 'recommended_tier2' | 'staged_for_execution' | 'under_review'
   date: string
   authors: string[]
