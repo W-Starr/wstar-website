@@ -7,7 +7,7 @@ export default function AceAcadCommandPage() {
   return (
     <ProductCommandView
       productId="ace-acad"
-      defaultFallbackName="Ace Acad (ABU Zaria 100L Pilot)"
+      defaultFallbackName="Ace Acad"
       defaultFallbackTagline="Architecture, syllabus ingestion pipeline, discovered codebase debt, and module health."
     />
   )

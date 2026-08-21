@@ -327,7 +327,7 @@ export default function OSDashboardPage() {
                 <span>Healthy (Beta Active)</span>
               </div>
               <p className="text-[11px] text-slate-500">
-                Foundations solid. Free pilot ready for 100L ABU Zaria cohort.
+                Foundations solid. Free pilot ready for university cohort.
               </p>
             </div>
 

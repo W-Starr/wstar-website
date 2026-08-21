@@ -101,7 +101,7 @@ export function ProductCommandView({
     if (productId === 'ace-acad') {
       return {
         productId: 'ace-acad',
-        productName: 'Ace Acad (ABU Zaria 100L Pilot)',
+        productName: 'Ace Acad',
         versionBadge: 'Flutter Engine • v1.0.0+3',
         architecturePillars: [
           { label: 'Target Cohort', value: '100-Level Freshmen', description: '12 Faculties, 60+ Departments, 13 core science/general curriculum courses at ABU Zaria.', badgeColor: 'blue' },

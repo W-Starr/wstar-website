@@ -47,7 +47,7 @@ export function Sidebar({
   const productList = products.length > 0
     ? products
     : [
-        { id: 'ace-acad', name: 'Ace Acad', tagline: 'ABU 100L Pilot' },
+        { id: 'ace-acad', name: 'Ace Acad', tagline: 'Learning Platform' },
         { id: 'plantiq', name: 'PlantIQ', tagline: 'Agronomy Diagnostics' },
       ]
 
@@ -248,7 +248,7 @@ export function Sidebar({
       </nav>
 
       {/* Footer / Sanity Studio Link */}
-      <div className="p-3 border-t border-slate-100 dark:border-slate-900 space-y-2 mt-auto">
+      <div className="p-3 border-t border-slate-100 dark:border-slate-900 mt-auto">
         <a
           href="http://localhost:3333"
           target="_blank"
@@ -261,11 +261,6 @@ export function Sidebar({
           </div>
           <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200" />
         </a>
-
-        <div className="px-3 py-1 flex items-center justify-between text-[11px] text-slate-400">
-          <span>ABU Zaria 100L Cohort</span>
-          <span className="font-mono">v1.0.0</span>
-        </div>
       </div>
     </aside>
   )
