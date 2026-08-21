@@ -9,6 +9,7 @@ import { PriorityBadge } from '@/os/components/PriorityBadge'
 import { WorkItemDetailModal } from '@/os/components/WorkItemDetailModal'
 import { DecompositionModal } from '@/os/components/DecompositionModal'
 import { FounderHandoffCard } from '@/os/components/FounderHandoffCard'
+import { useComputedProgress } from '@/os/hooks/useComputedProgress'
 import {
   Sparkles,
   Bug,
@@ -40,6 +41,8 @@ export default function OSDashboardPage() {
     updateWorkItemStatus,
   } = useOS()
 
+  const { getAreaMaturity } = useComputedProgress(workItems, projects, productAreas)
+
   const [selectedItem, setSelectedItem] = useState<WorkItem | null>(null)
   const [decompositionItem, setDecompositionItem] = useState<WorkItem | null>(null)
 
@@ -65,9 +68,11 @@ export default function OSDashboardPage() {
 
   const inProgressWork = workItems.filter((w) => w.status === 'in_progress')
 
-  const totalMaturity = Math.round(
-    productAreas.reduce((acc, a) => acc + a.maturity, 0) / productAreas.length
-  )
+  const totalMaturity = productAreas.length > 0
+    ? Math.round(
+        productAreas.reduce((acc, a) => acc + getAreaMaturity(a.id), 0) / productAreas.length
+      )
+    : 0
 
   return (
     <div className="space-y-8 animate-in fade-in duration-150">
@@ -265,30 +270,33 @@ export default function OSDashboardPage() {
               </div>
 
               <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 shadow-2xs space-y-3">
-                {productAreas.slice(0, 6).map((area) => (
+                {productAreas.slice(0, 6).map((area) => {
+                  const maturity = getAreaMaturity(area.id)
+                  return (
                   <div key={area.id} className="space-y-1">
                     <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
                       <span className="truncate pr-2">{area.name}</span>
                       <span className="font-mono text-slate-500 shrink-0">
-                        {area.maturity}%
+                        {maturity}%
                       </span>
                     </div>
                     <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                       <div
                         className={`h-full rounded-full ${
-                          area.maturity >= 85
+                          maturity >= 85
                             ? 'bg-emerald-500'
-                            : area.maturity >= 70
+                            : maturity >= 70
                             ? 'bg-blue-500'
-                            : area.maturity >= 30
+                            : maturity >= 30
                             ? 'bg-purple-500'
                             : 'bg-amber-500'
                         }`}
-                        style={{ width: `${area.maturity}%` }}
+                        style={{ width: `${maturity}%` }}
                       />
                     </div>
                   </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           </div>

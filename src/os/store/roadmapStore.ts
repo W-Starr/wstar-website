@@ -166,20 +166,17 @@ export const useRoadmapStore = create<RoadmapStoreState>((set, get) => ({
     }
 
     const updatedMilestones = [...(project.milestones || []), newMilestone]
-    const completedCount = updatedMilestones.filter((m) => m.completed).length
-    const progress = updatedMilestones.length > 0 ? Math.round((completedCount / updatedMilestones.length) * 100) : project.progress
 
     const updatedProject: Project = {
       ...project,
       milestones: updatedMilestones,
-      progress,
     }
 
     set({
       projects: current.map((p) => (p.id === projectId ? updatedProject : p)),
     })
 
-    dispatchMutation('patch', 'project', projectId, { milestones: updatedMilestones, progress }).then((res) => {
+    dispatchMutation('patch', 'project', projectId, { milestones: updatedMilestones }).then((res) => {
       if (!res.success) {
         console.warn('[RoadmapStore Sync Warning] addMilestone failed:', res.error)
       }
@@ -195,20 +192,16 @@ export const useRoadmapStore = create<RoadmapStoreState>((set, get) => ({
       m.id === milestoneId ? { ...m, completed: !m.completed } : m
     )
 
-    const completedCount = updatedMilestones.filter((m) => m.completed).length
-    const progress = updatedMilestones.length > 0 ? Math.round((completedCount / updatedMilestones.length) * 100) : project.progress
-
     const updatedProject: Project = {
       ...project,
       milestones: updatedMilestones,
-      progress,
     }
 
     set({
       projects: current.map((p) => (p.id === projectId ? updatedProject : p)),
     })
 
-    dispatchMutation('patch', 'project', projectId, { milestones: updatedMilestones, progress }).then((res) => {
+    dispatchMutation('patch', 'project', projectId, { milestones: updatedMilestones }).then((res) => {
       if (!res.success) {
         console.warn('[RoadmapStore Sync Warning] toggleMilestone failed:', res.error)
       }
@@ -221,20 +214,17 @@ export const useRoadmapStore = create<RoadmapStoreState>((set, get) => ({
     if (!project || !project.milestones) return
 
     const updatedMilestones = project.milestones.filter((m) => m.id !== milestoneId)
-    const completedCount = updatedMilestones.filter((m) => m.completed).length
-    const progress = updatedMilestones.length > 0 ? Math.round((completedCount / updatedMilestones.length) * 100) : 0
 
     const updatedProject: Project = {
       ...project,
       milestones: updatedMilestones,
-      progress,
     }
 
     set({
       projects: current.map((p) => (p.id === projectId ? updatedProject : p)),
     })
 
-    dispatchMutation('patch', 'project', projectId, { milestones: updatedMilestones, progress }).then((res) => {
+    dispatchMutation('patch', 'project', projectId, { milestones: updatedMilestones }).then((res) => {
       if (!res.success) {
         console.warn('[RoadmapStore Sync Warning] deleteMilestone failed:', res.error)
       }

@@ -22,6 +22,7 @@ import { Project, WorkItem, Milestone } from '../types'
 import { ProjectStatusBadge } from './ProjectStatusBadge'
 import { StatusBadge } from './StatusBadge'
 import { PriorityBadge } from './PriorityBadge'
+import { useComputedProgress } from '../hooks/useComputedProgress'
 
 // ─── Distinct Project Color Palette ───
 const PROJECT_COLORS = [
@@ -78,6 +79,7 @@ export function GanttTimeline({
   onProjectClick,
   onTaskClick,
 }: GanttTimelineProps) {
+  const { getProjectProgress } = useComputedProgress(workItems, projects, [])
   const [viewMode, setViewMode] = useState<ViewMode>('month')
   const [offset, setOffset] = useState(0)
   const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null)
@@ -424,23 +426,30 @@ export function GanttTimeline({
                     {/* Background track */}
                     <div className={`absolute inset-0 ${color.bar} opacity-30 dark:opacity-35 rounded-lg`} />
                     {/* Progress fill */}
-                    <div
-                      className={`absolute inset-y-0 left-0 ${color.bar} opacity-75 dark:opacity-70 rounded-l-lg ${
-                        proj.progress >= 100 ? 'rounded-r-lg' : ''
-                      }`}
-                      style={{ width: `${Math.min(100, proj.progress)}%` }}
-                    />
-                    {/* Bar Border */}
-                    <div className={`absolute inset-0 rounded-lg border-2 ${color.border}`} />
-                    {/* Label inside bar */}
-                    <div className="absolute inset-0 flex items-center justify-between px-2.5 overflow-hidden">
-                      <span className="text-[11px] font-bold text-slate-900 dark:text-white truncate drop-shadow-sm">
-                        {proj.name}
-                      </span>
-                      <span className="text-[10px] font-mono font-bold text-slate-900 dark:text-white bg-white/40 dark:bg-black/30 px-1.5 py-0.5 rounded ml-1">
-                        {proj.progress}%
-                      </span>
-                    </div>
+                    {(() => {
+                      const prog = getProjectProgress(proj.id)
+                      return (
+                        <>
+                          <div
+                            className={`absolute inset-y-0 left-0 ${color.bar} opacity-75 dark:opacity-70 rounded-l-lg ${
+                              prog >= 100 ? 'rounded-r-lg' : ''
+                            }`}
+                            style={{ width: `${Math.min(100, prog)}%` }}
+                          />
+                          {/* Bar Border */}
+                          <div className={`absolute inset-0 rounded-lg border-2 ${color.border}`} />
+                          {/* Label inside bar */}
+                          <div className="absolute inset-0 flex items-center justify-between px-2.5 overflow-hidden">
+                            <span className="text-[11px] font-bold text-slate-900 dark:text-white truncate drop-shadow-sm">
+                              {proj.name}
+                            </span>
+                            <span className="text-[10px] font-mono font-bold text-slate-900 dark:text-white bg-white/40 dark:bg-black/30 px-1.5 py-0.5 rounded ml-1">
+                              {prog}%
+                            </span>
+                          </div>
+                        </>
+                      )
+                    })()}
                   </div>
 
                   {/* Milestone Diamonds along the bar */}

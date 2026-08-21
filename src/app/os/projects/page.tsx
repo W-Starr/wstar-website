@@ -9,6 +9,7 @@ import { ProjectStatusBadge } from '@/os/components/ProjectStatusBadge'
 import { ProjectDetailModal } from '@/os/components/ProjectDetailModal'
 import { WorkItemDetailModal } from '@/os/components/WorkItemDetailModal'
 import { DecompositionModal } from '@/os/components/DecompositionModal'
+import { useComputedProgress } from '@/os/hooks/useComputedProgress'
 import {
   FolderKanban,
   Search,
@@ -32,8 +33,11 @@ export default function ProjectsPage() {
     projects,
     workItems,
     products,
+    productAreas,
     addProject,
   } = useOS()
+
+  const { getProjectProgress } = useComputedProgress(workItems, projects, productAreas)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [filterProduct, setFilterProduct] = useState<string>('all')
@@ -171,7 +175,7 @@ export default function ProjectsPage() {
             Average Progress
           </div>
           <div className="text-2xl font-bold font-heading text-slate-800 dark:text-slate-200">
-            {projects.length > 0 ? Math.round(projects.reduce((a, b) => a + (b.progress || 0), 0) / projects.length) : 0}%
+            {projects.length > 0 ? Math.round(projects.reduce((a, b) => a + getProjectProgress(b.id), 0) / projects.length) : 0}%
           </div>
         </div>
       </div>
@@ -228,6 +232,7 @@ export default function ProjectsPage() {
           )
           const doneTasks = tasks.filter((t) => t.status === 'done').length
           const completedMilestonesCount = (project.milestones || []).filter((m) => m.completed).length
+          const computedProgress = getProjectProgress(project.id)
 
           return (
             <div
@@ -274,7 +279,7 @@ export default function ProjectsPage() {
                 <div>
                   <div className="flex items-center justify-between text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">
                     <span>Progress</span>
-                    <span>{project.progress}%</span>
+                    <span>{computedProgress}%</span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                     <div
@@ -285,7 +290,7 @@ export default function ProjectsPage() {
                           ? 'bg-amber-500'
                           : 'bg-blue-500'
                       }`}
-                      style={{ width: `${project.progress}%` }}
+                      style={{ width: `${computedProgress}%` }}
                     />
                   </div>
                 </div>
