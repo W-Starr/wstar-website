@@ -113,6 +113,11 @@ export interface OSContextType {
   // Intelligence
   suggestClassification: (text: string) => ClassificationSuggestion
 
+  // Product Area Actions
+  addProductArea: (area: Omit<ProductArea, 'id'>) => ProductArea
+  updateProductArea: (id: string, updates: Partial<ProductArea>) => void
+  deleteProductArea: (id: string) => void
+
   // Product Command Centers
   saveProductCommandConfig: (config: ProductCommandConfig) => void
 }
@@ -188,6 +193,9 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
   const setSanitySyncStatus = useMetaStore((state) => state.setSanitySyncStatus)
   const setProducts = useMetaStore((state) => state.setProducts)
   const setProductAreas = useMetaStore((state) => state.setProductAreas)
+  const addProductArea = useMetaStore((state) => state.addProductArea)
+  const updateProductArea = useMetaStore((state) => state.updateProductArea)
+  const deleteProductArea = useMetaStore((state) => state.deleteProductArea)
   const setProductCommandConfigs = useMetaStore((state) => state.setProductCommandConfigs)
   const saveProductCommandConfig = useMetaStore((state) => state.saveProductCommandConfig)
   const setIsLoaded = useMetaStore((state) => state.setIsLoaded)
@@ -560,6 +568,9 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         attachExtractedEntities,
         linkEntityToSource,
         suggestClassification,
+        addProductArea,
+        updateProductArea,
+        deleteProductArea,
         saveProductCommandConfig,
       }}
     >

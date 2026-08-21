@@ -20,6 +20,8 @@ import {
   ChevronRight,
   TrendingUp,
   FolderKanban,
+  Edit2,
+  Check,
 } from 'lucide-react'
 
 interface ProductAreaDetailModalProps {
@@ -41,7 +43,15 @@ export function ProductAreaDetailModal({
     addWorkItem,
     updateWorkItemStatus,
     deleteWorkItem,
+    deleteProductArea,
+    updateProductArea,
   } = useOS()
+
+  // Edit Area Form State
+  const [isEditingArea, setIsEditingArea] = useState(false)
+  const [editName, setEditName] = useState(area?.name || '')
+  const [editDescription, setEditDescription] = useState(area?.description || '')
+  const [editOwner, setEditOwner] = useState(area?.owner || 'Abdulaziz')
 
   // New Task Form State
   const [newTaskTitle, setNewTaskTitle] = useState('')
@@ -106,6 +116,29 @@ export function ProductAreaDetailModal({
     setIsAddingTask(false)
   }
 
+  const handleSaveArea = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editName.trim()) return
+
+    updateProductArea(area.id, {
+      name: editName.trim(),
+      description: editDescription.trim(),
+      owner: editOwner,
+    })
+    setIsEditingArea(false)
+  }
+
+  const handleDeleteArea = () => {
+    if (
+      window.confirm(
+        `Are you sure you want to delete "${area.name}"? This will permanently remove this product area from Sanity Cloud.`
+      )
+    ) {
+      deleteProductArea(area.id)
+      onClose()
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150">
       <div
@@ -114,7 +147,7 @@ export function ProductAreaDetailModal({
       >
         {/* Modal Top Bar */}
         <div className="p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
-          <div className="space-y-1">
+          <div className="space-y-1 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="font-mono text-xs font-bold text-slate-400">
                 AREA-{area.id}
@@ -127,21 +160,105 @@ export function ProductAreaDetailModal({
                 <span>Lead: <strong>{area.owner}</strong></span>
               </span>
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-tight font-heading flex items-center gap-2">
-              <Layers className="w-5 h-5 text-blue-600" />
-              <span>{area.name}</span>
-            </h2>
-            <p className="text-xs text-slate-500 leading-relaxed max-w-xl">
-              {area.description}
-            </p>
+
+            {isEditingArea ? (
+              <form onSubmit={handleSaveArea} className="space-y-3 pt-2">
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase mb-1">
+                    Area Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="w-full text-sm font-bold px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-hidden focus:ring-1 focus:ring-blue-500"
+                    placeholder="Product Area Name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                    className="w-full text-xs px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-hidden focus:ring-1 focus:ring-blue-500 resize-none"
+                    placeholder="Area purpose, architectural domain, or scope"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1">
+                    <label className="block text-[10px] font-semibold text-slate-400 uppercase mb-1">
+                      Lead Owner
+                    </label>
+                    <input
+                      type="text"
+                      value={editOwner}
+                      onChange={(e) => setEditOwner(e.target.value)}
+                      className="w-full text-xs px-3 py-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                      placeholder="e.g. Abdulaziz"
+                    />
+                  </div>
+                  <div className="flex items-end gap-2 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingArea(false)}
+                      className="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Save</span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            ) : (
+              <>
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-tight font-heading flex items-center gap-2">
+                  <Layers className="w-5 h-5 text-blue-600" />
+                  <span>{area.name}</span>
+                </h2>
+                <p className="text-xs text-slate-500 leading-relaxed max-w-xl">
+                  {area.description}
+                </p>
+              </>
+            )}
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer shrink-0"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {!isEditingArea && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setIsEditingArea(true)}
+                  className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-xl transition-colors cursor-pointer"
+                  title="Edit Area Details"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteArea}
+                  className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl transition-colors cursor-pointer"
+                  title="Delete Product Area"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </>
+            )}
+            <button
+              onClick={onClose}
+              className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer shrink-0"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Modal Body */}
