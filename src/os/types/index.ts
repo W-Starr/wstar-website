@@ -138,11 +138,12 @@ export interface Milestone {
 export interface RoadmapItem {
   id: string
   title: string
-  horizon: 'now' | 'next' | 'later' | 'ideas'
+  horizon: 'now' | 'next' | 'later' | 'ideas' | 'shipped'
   productId: ProductId
   description: string
   targetQuarter: string
   category: string
+  shippedDate?: string
   sourceId?: string
 }
 

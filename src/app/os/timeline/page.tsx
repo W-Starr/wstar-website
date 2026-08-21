@@ -1,28 +1,34 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useOS } from '@/os/context/OSContext'
-import { WorkItem } from '@/os/types'
+import { WorkItem, Project } from '@/os/types'
 import { CompanyPulseStrip } from '@/os/components/CompanyPulseStrip'
 import { GanttTimeline } from '@/os/components/GanttTimeline'
 import { DeadlineFeed } from '@/os/components/DeadlineFeed'
 import { WorkItemDetailModal } from '@/os/components/WorkItemDetailModal'
 import { DecompositionModal } from '@/os/components/DecompositionModal'
+import { ProjectDetailModal } from '@/os/components/ProjectDetailModal'
 import {
   ChartGantt,
   HeartPulse,
   CalendarClock,
 } from 'lucide-react'
 
-export default function TimelinePage() {
+function TimelineContent() {
+  const searchParams = useSearchParams()
+  const initialProjectId = searchParams.get('project')
+
   const {
     workItems,
     projects,
     feedbackItems,
     activities,
-    updateWorkItemStatus,
   } = useOS()
 
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(initialProjectId)
+  const [selectedProjectForModal, setSelectedProjectForModal] = useState<Project | null>(null)
   const [selectedItem, setSelectedItem] = useState<WorkItem | null>(null)
   const [decompositionItem, setDecompositionItem] = useState<WorkItem | null>(null)
 
@@ -67,12 +73,15 @@ export default function TimelinePage() {
           <div className="flex items-center gap-2 mb-3">
             <ChartGantt className="w-4 h-4 text-blue-500" />
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Project Timeline
+              Project Timeline & Schedules
             </h2>
           </div>
           <GanttTimeline
             projects={projects}
             workItems={workItems}
+            selectedProjectId={selectedProjectId}
+            onSelectProject={(id) => setSelectedProjectId(id)}
+            onProjectClick={(proj) => setSelectedProjectForModal(proj)}
             onTaskClick={(item) => setSelectedItem(item)}
           />
         </section>
@@ -96,6 +105,16 @@ export default function TimelinePage() {
         </section>
       </div>
 
+      {/* ─── Project Detail Modal ─── */}
+      {selectedProjectForModal && (
+        <ProjectDetailModal
+          project={selectedProjectForModal}
+          isOpen={!!selectedProjectForModal}
+          onClose={() => setSelectedProjectForModal(null)}
+          onOpenTaskDetail={(task) => setSelectedItem(task)}
+        />
+      )}
+
       {/* ─── Work Item Detail Modal ─── */}
       <WorkItemDetailModal
         item={selectedItem}
@@ -114,5 +133,13 @@ export default function TimelinePage() {
         onClose={() => setDecompositionItem(null)}
       />
     </div>
+  )
+}
+
+export default function TimelinePage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-xs text-slate-400">Loading timeline...</div>}>
+      <TimelineContent />
+    </Suspense>
   )
 }

@@ -13,11 +13,15 @@ export function ShortcutsModal({ isOpen, onClose }: ShortcutsModalProps) {
 
   const navigationShortcuts = [
     { key: '1', label: 'Executive Dashboard', path: '/os' },
-    { key: '2', label: 'Work Stream & Bug Tracker', path: '/os/work' },
-    { key: '3', label: 'Strategic Proposals & Specs', path: '/os/proposals' },
-    { key: '4', label: 'Decision Ledger (ADR)', path: '/os/decisions' },
-    { key: '5', label: 'Customer Feedback Queue', path: '/os/feedback' },
-    { key: '6', label: 'Product Roadmap & Horizons', path: '/os/roadmap' },
+    { key: '2', label: 'Projects & Initiatives Hub', path: '/os/projects' },
+    { key: '3', label: 'Source Intelligence', path: '/os/sources' },
+    { key: '4', label: 'Work Stream & Bug Tracker', path: '/os/work' },
+    { key: '5', label: 'Timeline & Company Pulse', path: '/os/timeline' },
+    { key: '6', label: 'Strategic Proposals & Specs', path: '/os/proposals' },
+    { key: '7', label: 'Decision Ledger (ADR)', path: '/os/decisions' },
+    { key: '8', label: 'Customer Feedback Queue', path: '/os/feedback' },
+    { key: '9', label: 'Product Roadmap & Horizons', path: '/os/roadmap' },
+    { key: '0', label: 'Activity & Audit Feed', path: '/os/activity' },
   ]
 
   const actionShortcuts = [

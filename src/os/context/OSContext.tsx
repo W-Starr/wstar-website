@@ -10,6 +10,7 @@ import {
   Decision,
   FeedbackItem,
   Project,
+  Milestone,
   RoadmapItem,
   ActivityItem,
   SanitySyncState,
@@ -81,6 +82,17 @@ export interface OSContextType {
   // Roadmap Actions
   addRoadmapItem: (item: Omit<RoadmapItem, 'id'>) => void
   updateRoadmapHorizon: (id: string, horizon: RoadmapItem['horizon']) => void
+  markRoadmapItemShipped: (id: string) => void
+  updateRoadmapItem: (id: string, updates: Partial<RoadmapItem>) => void
+  deleteRoadmapItem: (id: string) => void
+
+  // Project Actions
+  addProject: (project: Omit<Project, 'id'>) => Project
+  updateProject: (id: string, updates: Partial<Project>) => void
+  deleteProject: (id: string) => void
+  addMilestone: (projectId: string, milestone: Omit<Milestone, 'id' | 'projectId'>) => void
+  toggleMilestone: (projectId: string, milestoneId: string) => void
+  deleteMilestone: (projectId: string, milestoneId: string) => void
 
   // Source Actions
   addSource: (
@@ -136,6 +148,15 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
   const setProjects = useRoadmapStore((state) => state.setProjects)
   const addRoadmapItem = useRoadmapStore((state) => state.addRoadmapItem)
   const updateRoadmapHorizon = useRoadmapStore((state) => state.updateRoadmapHorizon)
+  const markRoadmapItemShipped = useRoadmapStore((state) => state.markRoadmapItemShipped)
+  const updateRoadmapItem = useRoadmapStore((state) => state.updateRoadmapItem)
+  const deleteRoadmapItem = useRoadmapStore((state) => state.deleteRoadmapItem)
+  const addProject = useRoadmapStore((state) => state.addProject)
+  const updateProject = useRoadmapStore((state) => state.updateProject)
+  const deleteProject = useRoadmapStore((state) => state.deleteProject)
+  const addMilestone = useRoadmapStore((state) => state.addMilestone)
+  const toggleMilestone = useRoadmapStore((state) => state.toggleMilestone)
+  const deleteMilestone = useRoadmapStore((state) => state.deleteMilestone)
 
   const sources = useSourceStore((state) => state.sources)
   const setSources = useSourceStore((state) => state.setSources)
@@ -497,6 +518,15 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         convertFeedbackToWorkItem,
         addRoadmapItem,
         updateRoadmapHorizon,
+        markRoadmapItemShipped,
+        updateRoadmapItem,
+        deleteRoadmapItem,
+        addProject,
+        updateProject,
+        deleteProject,
+        addMilestone,
+        toggleMilestone,
+        deleteMilestone,
         addSource,
         updateSource,
         deleteSource,

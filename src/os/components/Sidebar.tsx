@@ -18,6 +18,7 @@ import {
   FileCode,
   HardDrive,
   ChartGantt,
+  FolderKanban,
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -32,7 +33,7 @@ export function Sidebar({
   onCloseMobile,
 }: SidebarProps) {
   const pathname = usePathname()
-  const { workItems, feedbackItems, proposals, sources } = useOS()
+  const { workItems, feedbackItems, proposals, sources, projects } = useOS()
 
   const openBugsCount = workItems.filter(
     (i) => i.type === 'bug' && i.status !== 'done'
@@ -41,6 +42,7 @@ export function Sidebar({
   const newFeedbackCount = feedbackItems.filter((f) => f.status === 'new').length
   const proposalsCount = proposals?.length || 3
   const sourcesCount = sources?.length || 5
+  const activeProjectsCount = projects.filter((p) => p.status === 'active' || p.status === 'at_risk').length
 
   const navItems = [
     {
@@ -48,6 +50,13 @@ export function Sidebar({
       href: '/os',
       icon: LayoutDashboard,
       badge: null,
+    },
+    {
+      name: 'Projects & Hub',
+      href: '/os/projects',
+      icon: FolderKanban,
+      badge: activeProjectsCount > 0 ? `${activeProjectsCount} active` : null,
+      badgeColor: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20',
     },
     {
       name: 'Source Intelligence',
@@ -69,6 +78,12 @@ export function Sidebar({
       icon: Sparkles,
       badge: '82% MVP',
       badgeColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
+    },
+    {
+      name: 'Timeline & Pulse',
+      href: '/os/timeline',
+      icon: ChartGantt,
+      badge: null,
     },
     {
       name: 'Strategic Proposals',
@@ -94,12 +109,6 @@ export function Sidebar({
       name: 'Roadmap',
       href: '/os/roadmap',
       icon: Compass,
-      badge: null,
-    },
-    {
-      name: 'Timeline & Pulse',
-      href: '/os/timeline',
-      icon: ChartGantt,
       badge: null,
     },
     {

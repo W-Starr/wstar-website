@@ -4,6 +4,20 @@ This document records operational failures, failed command attempts, troubleshoo
 
 ---
 
+### [2026-08-21 10:52] — Missing Milestone and X Imports in Projects Hub & OSContext
+
+- **Date/Time:** 2026-08-21 10:52 (WAT / UTC+1)
+- **Context:** Implementing the Projects Hub page (`src/app/os/projects/page.tsx`) and milestone CRUD methods in `src/os/context/OSContext.tsx`.
+- **The Mistake/Error:**
+  1. `OSContext.tsx` declared `addMilestone: (projectId: string, milestone: Omit<Milestone, ...>) => void` without importing `Milestone` from `../types`.
+  2. `src/app/os/projects/page.tsx` used `<X className="w-5 h-5" />` in the new project modal without importing `X` from `lucide-react`.
+- **The Fix:**
+  1. Added `Milestone` to `import { ... } from '../types'` in `OSContext.tsx`.
+  2. Added `X` to `import { ... } from 'lucide-react'` in `projects/page.tsx`.
+- **Lesson Learned:** Always cross-check that all referenced TS interfaces and JSX icon components are explicitly listed in import declarations before running production builds.
+
+---
+
 ### [2026-08-19 15:52] — Gemini AI Response Truncation (1024 Token Limit), Rigid JSON Parsing & GDrive Auto-Content
 
 - **Date/Time:** 2026-08-19 15:52 (WAT / UTC+1)

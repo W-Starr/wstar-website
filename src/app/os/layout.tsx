@@ -55,17 +55,18 @@ export default function OSLayout({ children }: { children: React.ReactNode }) {
         return
       }
 
-      // 1-7 Number keys for direct section navigation
+      // Number keys for direct section navigation
       const navMap: Record<string, string> = {
         '1': '/os',
-        '2': '/os/sources',
-        '3': '/os/work',
-        '4': '/os/proposals',
-        '5': '/os/decisions',
-        '6': '/os/feedback',
-        '7': '/os/roadmap',
-        '8': '/os/timeline',
-        '9': '/os/activity',
+        '2': '/os/projects',
+        '3': '/os/sources',
+        '4': '/os/work',
+        '5': '/os/timeline',
+        '6': '/os/proposals',
+        '7': '/os/decisions',
+        '8': '/os/feedback',
+        '9': '/os/roadmap',
+        '0': '/os/activity',
       }
 
       if (navMap[e.key]) {
