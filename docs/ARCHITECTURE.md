@@ -14,6 +14,7 @@ wstar-website/
 │   ├── (Marketing Shell)      # Public Corporate & Product Pages
 │   │   ├── page.tsx           # WSTAR Enterprise Solutions & Leadership
 │   │   ├── about/             # Company Mission & African Innovation
+│   │   ├── ai-solutions/      # WSTAR AI Solutions (Industrial & B2B Agentic AI)
 │   │   ├── investors/         # Investment Deck & Market Sizing
 │   │   ├── contact/           # Business Enquiries & Partnerships
 │   │   └── products/          # Product Showcase & NDPA Legal Center

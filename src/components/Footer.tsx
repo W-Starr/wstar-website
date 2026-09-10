@@ -24,7 +24,8 @@ const Footer = () => {
                 </div>
 
                 <div className={styles.footerCol}>
-                    <h4>Products</h4>
+                    <h4>Products & Solutions</h4>
+                    <Link href="/ai-solutions" className={styles.footerLink}>WSTAR AI Solutions</Link>
                     <Link href="/products/ace-acad" className={styles.footerLink}>Ace-Acad</Link>
                     <Link href="/products/plantiq" className={styles.footerLink}>PlantIQ</Link>
                 </div>

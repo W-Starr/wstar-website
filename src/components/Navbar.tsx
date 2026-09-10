@@ -43,11 +43,21 @@ const Navbar = () => {
                     <Link href="/about" className={styles.navLink} onClick={closeMenu}>
                         About
                     </Link>
+                    <Link href="/ai-solutions" className={styles.navLink} onClick={closeMenu}>
+                        AI Solutions
+                    </Link>
                     <div className={styles.navDropdown}>
                         <span className={`${styles.navLink} ${styles.dropdownTrigger}`}>
                             Products <ChevronDown size={14} className={styles.dropdownArrow} />
                         </span>
                         <div className={styles.dropdownMenu}>
+                            <Link
+                                href="/ai-solutions"
+                                className={styles.dropdownItem}
+                                onClick={closeMenu}
+                            >
+                                WSTAR AI Solutions (Industrial AI)
+                            </Link>
                             <Link
                                 href="/products/ace-acad"
                                 className={styles.dropdownItem}

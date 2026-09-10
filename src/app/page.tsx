@@ -108,13 +108,52 @@ export default function Home() {
       <section className="section section--dark" id="products">
         <div className="container">
           <div className="section-header">
-            <h2>Flagship Products</h2>
+            <h2>Flagship Products &amp; Solutions</h2>
             <p>
-              Engineered specifically to solve high-friction bottlenecks in African higher education and smart agriculture.
+              Engineering bespoke technology to solve high-friction bottlenecks across industrial workflows, higher education, and smart agriculture.
             </p>
           </div>
 
           <div className={styles.productsGrid}>
+            {/* WSTAR AI Solutions Featured Card */}
+            <div className={styles.featuredInitiativeCard}>
+              <div className={styles.productHeader}>
+                <div className={styles.productTag}>
+                  Enterprise AI Initiative • Industrial &amp; B2B Workflows
+                </div>
+                <h3>WSTAR AI Solutions: Autonomous Industrial Agents</h3>
+                <p>
+                  Engineering bespoke, physics-aware operational agents driven by Mechatronics principles.
+                  We replace manual quoting and administrative bottlenecks with deterministic AI for mid-market
+                  distributors, manufacturers, and technical service teams.
+                </p>
+              </div>
+
+              <div className={styles.productFeatures}>
+                <div className={styles.featureItem}>
+                  <Cpu className={styles.featureIcon} />
+                  <span>Autonomous Procurement Agents: Ingest messy RFQs, match parametric CAD tolerances, and draft 1-click replies</span>
+                </div>
+                <div className={styles.featureItem}>
+                  <Database className={styles.featureIcon} />
+                  <span>B2B Knowledge RAG Agents: Air-gapped indexing of OEM manuals and SOPs for tier-one deflection</span>
+                </div>
+                <div className={styles.featureItem}>
+                  <ShieldCheck className={styles.featureIcon} />
+                  <span>Deterministic Execution: Zero public model training, strict engineering tolerances, and 1-click human approval</span>
+                </div>
+              </div>
+
+              <div className={styles.productFooter} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <CTAButton href="/ai-solutions#intake-form" variant="primary" size="small">
+                  Request a Custom Sandbox
+                </CTAButton>
+                <CTAButton href="/ai-solutions" variant="secondary" size="small">
+                  Explore Architecture
+                </CTAButton>
+              </div>
+            </div>
+
             {/* Ace-Acad Card */}
             <div className={styles.productCard}>
               <div className={styles.productHeader}>

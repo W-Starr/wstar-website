@@ -1,0 +1,296 @@
+.intakeWrapper {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.formCard {
+  background: var(--navy-surface);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-xl);
+  padding: 40px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.fullWidth {
+  grid-column: span 2;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formLabel {
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gray-200);
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.requiredStar {
+  color: var(--bright-blue);
+}
+
+.formInput,
+.formSelect,
+.formTextarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: #0A0D17;
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-md);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
+}
+
+.formSelect {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2325A6DD' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.formSelect option {
+  background: #111628;
+  color: #FFFFFF;
+}
+
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+  border-color: var(--bright-blue);
+  box-shadow: 0 0 0 3px rgba(37, 166, 221, 0.18);
+}
+
+.formTextarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* The Asynchronous Promise banner directly above the submit button */
+.asyncPromiseBox {
+  margin-top: 24px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: rgba(37, 166, 221, 0.08);
+  border: 1px solid rgba(37, 166, 221, 0.3);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.asyncPromiseIcon {
+  color: var(--bright-blue);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.asyncPromiseText {
+  font-size: 0.92rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.55;
+  color: #E2E8F0;
+  margin: 0;
+}
+
+.submitActions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.submitPrimaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--gradient-blue);
+  color: var(--white);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(37, 166, 221, 0.35);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.submitPrimaryBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(37, 166, 221, 0.45);
+}
+
+.submitSecondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: transparent;
+  color: var(--gray-300);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--navy-border);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.submitSecondaryBtn:hover {
+  color: var(--white);
+  border-color: var(--bright-blue);
+  background: rgba(37, 166, 221, 0.08);
+}
+
+/* Right Side Context / Guarantee Card */
+.intakeSideCard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.guaranteeBox {
+  background: var(--navy-surface);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+}
+
+.guaranteeTitle {
+  font-size: 1.15rem;
+  color: var(--white);
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+
+.guaranteeText {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--gray-300);
+  margin-bottom: 24px;
+}
+
+.trustList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.trustItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.trustIcon {
+  color: #10B981;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.trustItemTitle {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 2px;
+}
+
+.trustItemDesc {
+  font-size: 0.82rem;
+  color: var(--gray-400);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Success Confirmation State */
+.confirmationCard {
+  background: var(--navy-surface);
+  border: 1px solid #10B981;
+  border-radius: var(--radius-xl);
+  padding: 44px;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(16, 185, 129, 0.15);
+}
+
+.successIconWrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10B981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.confirmationTitle {
+  font-size: 1.5rem;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+
+.confirmationText {
+  font-size: 1rem;
+  color: var(--gray-300);
+  max-width: 520px;
+  margin: 0 auto 24px;
+  line-height: 1.6;
+}
+
+.ticketBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  background: #0A0D17;
+  border: 1px solid var(--navy-border);
+  padding: 8px 18px;
+  border-radius: var(--radius-md);
+  color: var(--bright-blue);
+  margin-bottom: 28px;
+}
+
+@media (max-width: 900px) {
+  .intakeWrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    grid-column: span 1;
+  }
+
+  .formCard {
+    padding: 28px 20px;
+  }
+}

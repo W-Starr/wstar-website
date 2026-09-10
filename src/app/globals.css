@@ -7,10 +7,13 @@
   --navy-card: #151C33;
   --navy-border: #1E284A;
   --navy-border-subtle: #182038;
+  --dark-card: #151C33;
   
   --bright-blue: #25A6DD;
   --medium-blue: #196CA4;
   --teal-accent: #14827A;
+  --gradient-blue: linear-gradient(135deg, #25A6DD 0%, #196CA4 100%);
+  --shadow-button: 0 4px 14px rgba(37, 166, 221, 0.35);
   
   --white: #FFFFFF;
   --ink-primary: #0F172A;
@@ -55,6 +58,7 @@
 /* Base resets */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 84px;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 

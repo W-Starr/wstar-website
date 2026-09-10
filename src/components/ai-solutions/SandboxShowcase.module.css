@@ -1,0 +1,440 @@
+.galleryContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Video Showcase Top Selector */
+.galleryTabs {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--navy-border);
+}
+
+.galleryTab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: var(--navy-surface);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-md);
+  color: var(--gray-400);
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.galleryTab:hover {
+  color: var(--white);
+  border-color: rgba(37, 166, 221, 0.4);
+  background: var(--navy-card);
+}
+
+.galleryTabActive {
+  color: var(--white);
+  background: rgba(37, 166, 221, 0.12);
+  border-color: var(--bright-blue);
+  box-shadow: 0 4px 16px rgba(37, 166, 221, 0.15);
+}
+
+.heroAssetBadge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: #14827A;
+  color: var(--white);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+}
+
+/* Loom Video Hero Player */
+.videoPlayerCard {
+  background: #0A0D17;
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+}
+
+.videoPlayerTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: var(--navy-card);
+  border-bottom: 1px solid var(--navy-border-subtle);
+}
+
+.videoTopLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.windowControls {
+  display: flex;
+  gap: 6px;
+}
+
+.dotRed {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #EF4444;
+}
+
+.dotYellow {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #F59E0B;
+}
+
+.dotGreen {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #10B981;
+}
+
+.videoTitle {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gray-200);
+  margin-left: 8px;
+}
+
+.loomTag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #625DF5;
+  background: rgba(98, 93, 245, 0.12);
+  border: 1px solid rgba(98, 93, 245, 0.3);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+}
+
+/* Video Stage */
+.videoStage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  max-height: 520px;
+  background: linear-gradient(135deg, #0d1222 0%, #060911 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px;
+  overflow: hidden;
+}
+
+.watermark {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.4;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  pointer-events: none;
+}
+
+/* Simulated Screen Sandbox Content */
+.sandboxScreen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  height: 85%;
+  margin-bottom: 12px;
+}
+
+.sandboxWindow {
+  background: rgba(17, 22, 40, 0.85);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+.windowTitle {
+  font-family: var(--font-heading);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray-400);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--navy-border-subtle);
+}
+
+.windowBadge {
+  font-size: 0.68rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(37, 166, 221, 0.15);
+  color: var(--bright-blue);
+  font-family: monospace;
+}
+
+.windowContent {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.74rem;
+  line-height: 1.55;
+  color: var(--gray-300);
+  overflow-y: auto;
+}
+
+.emailSubject {
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.emailSender {
+  font-size: 0.72rem;
+  color: var(--gray-400);
+  margin-bottom: 10px;
+}
+
+.emailHighlight {
+  color: #F87171;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.jsonKey {
+  color: #38BDF8;
+}
+
+.jsonString {
+  color: #34D399;
+}
+
+.jsonNum {
+  color: #FBBF24;
+}
+
+/* Video Player Bottom Controls */
+.videoControlsBar {
+  background: rgba(10, 13, 23, 0.95);
+  border-top: 1px solid var(--navy-border-subtle);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.playPauseBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--bright-blue);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.playPauseBtn:hover {
+  transform: scale(1.06);
+  background-color: #1c92c5;
+}
+
+.timelineTrack {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+}
+
+.timelineProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  background: var(--gradient-blue);
+  border-radius: 3px;
+}
+
+.timelineHandle {
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.timeDisplay {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--gray-300);
+}
+
+.volumeBtn, .fullscreenBtn {
+  background: transparent;
+  border: none;
+  color: var(--gray-400);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.volumeBtn:hover, .fullscreenBtn:hover {
+  color: var(--white);
+}
+
+/* Video Description & Demonstration Points */
+.videoDescriptionCard {
+  background: var(--navy-surface);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.descLeft h4 {
+  font-size: 1.2rem;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.descText {
+  font-size: 0.95rem;
+  color: var(--gray-300);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.demoPointsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.demoPointItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--gray-300);
+  background: rgba(10, 13, 23, 0.4);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--navy-border-subtle);
+}
+
+.demoPointIcon {
+  color: var(--bright-blue);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.demoPointItem strong {
+  color: var(--white);
+}
+
+/* Fullscreen mode support */
+.videoPlayerCard:fullscreen {
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #0A0D17;
+}
+
+.videoPlayerCard:fullscreen .videoStage {
+  flex: 1;
+  max-height: none;
+  aspect-ratio: auto;
+  padding: 32px;
+}
+
+/* Responsive Viewports */
+@media (max-width: 840px) {
+  .videoStage {
+    aspect-ratio: auto;
+    min-height: 520px;
+    height: auto;
+    padding: 20px 16px;
+  }
+
+  .sandboxScreen {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .sandboxWindow {
+    min-height: 220px;
+  }
+
+  .videoDescriptionCard {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .videoStage {
+    min-height: 560px;
+    padding: 16px 12px;
+  }
+
+  .videoPlayerTopBar {
+    padding: 10px 14px;
+  }
+
+  .videoControlsBar {
+    padding: 10px 12px;
+    gap: 12px;
+  }
+
+  .playPauseBtn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .timeDisplay {
+    font-size: 0.72rem;
+  }
+}

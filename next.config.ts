@@ -30,6 +30,20 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/products/ai-solutions",
+        destination: "/ai-solutions",
+        permanent: true,
+      },
+      {
+        source: "/solutions/ai",
+        destination: "/ai-solutions",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

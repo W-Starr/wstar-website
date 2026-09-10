@@ -10,6 +10,7 @@ This repository houses two integrated systems built with **Next.js 16 (Turbopack
 
 1. **Public Marketing & Corporate Shell (`/`)**:
    - Institutional homepage highlighting enterprise AI solutions, executive leadership, and company track record.
+   - **WSTAR AI Solutions (`/ai-solutions`)**: High-conversion enterprise initiative showcasing deterministic Agentic AI systems for industrial & B2B workflows (Autonomous Procurement Agents, Parametric ERP Substitution, B2B Knowledge RAG, 90s sandbox Loom gallery, and targeted bottleneck intake flow).
    - Product showcases for **Ace Acad** (Smart academic mobile companion for Nigerian tertiary students) and **PlantIQ** (AI-driven smart agriculture & crop pathology).
    - Investor relations portal, company about page, and NDPA 2023 / FCCPA statutory legal policies.
 
