@@ -81,6 +81,13 @@ const Navbar = () => {
                     >
                         Investors
                     </Link>
+                    <Link
+                        href="/publications"
+                        className={styles.navLink}
+                        onClick={closeMenu}
+                    >
+                        Publications
+                    </Link>
                     <Link href="/contact" className={styles.navLink} onClick={closeMenu}>
                         Contact
                     </Link>

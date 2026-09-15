@@ -33,7 +33,8 @@ export async function GET() {
       "activities": *[_type == "activityItem"] | order(timestamp desc),
       "products": *[_type == "product"],
       "productAreas": *[_type == "productArea"],
-      "productCommandCenters": *[_type == "productCommandCenter"]
+      "productCommandCenters": *[_type == "productCommandCenter"],
+      "announcements": *[_type == "announcement"] | order(publishedAt desc)
     }`
 
     const data = await readClient.fetch(query)

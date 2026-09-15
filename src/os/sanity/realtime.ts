@@ -11,12 +11,13 @@ import { useFeedbackStore } from '../store/feedbackStore'
 import { useRoadmapStore } from '../store/roadmapStore'
 import { useActivityStore } from '../store/activityStore'
 import { useMetaStore } from '../store/metaStore'
+import { useAnnouncementStore } from '../store/announcementStore'
 
 export function initializeRealtimeListener() {
   if (!isSanityConfigured || typeof window === 'undefined') return () => {}
 
   try {
-    const query = '*[_type in ["workItem", "proposal", "decision", "feedbackItem", "roadmapItem", "project", "activityItem"]]'
+    const query = '*[_type in ["workItem", "proposal", "decision", "feedbackItem", "roadmapItem", "project", "activityItem", "announcement"]]'
     
     const subscription = sanityClient.listen(query, {}, { includeResult: true, visibility: 'query' }).subscribe((update) => {
       const { transition, result, documentId } = update as any
@@ -35,6 +36,8 @@ export function initializeRealtimeListener() {
           useRoadmapStore.getState().applyRemoteDelete('roadmapItem', documentId)
         } else if (documentId.startsWith('project-')) {
           useRoadmapStore.getState().applyRemoteDelete('project', documentId)
+        } else if (documentId.startsWith('announcement-')) {
+          useAnnouncementStore.getState().applyRemoteDelete(documentId)
         }
         return
       }
@@ -56,6 +59,8 @@ export function initializeRealtimeListener() {
           useRoadmapStore.getState().applyRemoteDoc('project', result)
         } else if (type === 'activityItem') {
           useActivityStore.getState().applyRemoteDoc(result)
+        } else if (type === 'announcement') {
+          useAnnouncementStore.getState().applyRemoteDoc(result)
         }
 
         useMetaStore.getState().setSanitySyncStatus('synced')

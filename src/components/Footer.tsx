@@ -20,6 +20,7 @@ const Footer = () => {
                     <h4>Company</h4>
                     <Link href="/about" className={styles.footerLink}>About Us</Link>
                     <Link href="/investors" className={styles.footerLink}>Investors</Link>
+                    <Link href="/publications" className={styles.footerLink}>Publications</Link>
                     <Link href="/contact" className={styles.footerLink}>Contact</Link>
                 </div>
 

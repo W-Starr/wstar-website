@@ -19,6 +19,7 @@ import {
   HardDrive,
   ChartGantt,
   FolderKanban,
+  Megaphone,
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -33,7 +34,7 @@ export function Sidebar({
   onCloseMobile,
 }: SidebarProps) {
   const pathname = usePathname()
-  const { workItems, feedbackItems, proposals, sources, projects, products } = useOS()
+  const { workItems, feedbackItems, proposals, sources, projects, products, announcements } = useOS()
 
   const openBugsCount = workItems.filter(
     (i) => i.type === 'bug' && i.status !== 'done'
@@ -43,6 +44,7 @@ export function Sidebar({
   const proposalsCount = proposals?.length || 3
   const sourcesCount = sources?.length || 5
   const activeProjectsCount = projects.filter((p) => p.status === 'active' || p.status === 'at_risk').length
+  const draftAnnouncementsCount = announcements.filter((a) => a.status === 'draft').length
 
   const productList = products.length > 0
     ? products
@@ -104,6 +106,13 @@ export function Sidebar({
       href: '/os/decisions',
       icon: FileText,
       badge: null,
+    },
+    {
+      name: 'Publications',
+      href: '/os/announcements',
+      icon: Megaphone,
+      badge: draftAnnouncementsCount > 0 ? `${draftAnnouncementsCount} draft` : null,
+      badgeColor: 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300',
     },
     {
       name: 'Roadmap',
