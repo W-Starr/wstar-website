@@ -1,0 +1,122 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 880px;
+    margin: 0 auto;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--dark-card);
+    border: 1px solid rgba(37, 166, 221, 0.1);
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    transition: border-color var(--transition-medium), transform var(--transition-medium);
+}
+
+.card:hover {
+    border-color: rgba(37, 166, 221, 0.35);
+    transform: translateY(-2px);
+}
+
+.cardTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.categoryBadge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--bright-blue);
+    background: rgba(37, 166, 221, 0.1);
+    border: 1px solid rgba(37, 166, 221, 0.25);
+    border-radius: var(--radius-full);
+    padding: 4px 12px;
+}
+
+.date {
+    font-size: 0.8rem;
+    color: var(--gray-400);
+}
+
+.cardTitle {
+    font-size: 1.25rem;
+    color: var(--white);
+    margin: 0;
+}
+
+.excerpt {
+    font-size: 0.95rem;
+    color: var(--gray-400);
+    line-height: 1.65;
+    margin: 0;
+}
+
+.cardFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 6px;
+}
+
+.meta {
+    font-size: 0.78rem;
+    color: var(--gray-500);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pdfLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--bright-blue);
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(37, 166, 221, 0.35);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.pdfLink:hover {
+    background: var(--gradient-blue);
+    color: var(--white);
+    border-color: transparent;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 64px 24px;
+    border: 1px dashed rgba(148, 163, 184, 0.25);
+    border-radius: var(--radius-lg);
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.emptyState h3 {
+    color: var(--white);
+    margin-bottom: 8px;
+}
+
+.emptyState p {
+    color: var(--gray-400);
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .card {
+        padding: 22px 20px;
+    }
+}

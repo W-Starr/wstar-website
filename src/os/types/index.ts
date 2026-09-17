@@ -137,6 +137,24 @@ export interface Decision {
   sourceRef?: SourceRef
 }
 
+export type AnnouncementCategory = 'announcement' | 'press-release' | 'publication' | 'report'
+export type AnnouncementStatus = 'draft' | 'published'
+
+export interface Announcement {
+  id: string
+  title: string
+  slug: string
+  category: AnnouncementCategory
+  status: AnnouncementStatus
+  excerpt: string
+  publishedAt: string
+  author?: string
+  pdfUrl?: string
+  pdfFilename?: string
+  pdfSize?: number
+  coverImageUrl?: string
+}
+
 export interface FeedbackItem {
   id: string
   subject: string

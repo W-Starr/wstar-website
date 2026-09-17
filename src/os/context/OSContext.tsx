@@ -17,6 +17,7 @@ import {
   SanitySyncState,
   WorkItemStatus,
   ClassificationSuggestion,
+  Announcement,
 } from '../types'
 import { useWorkStore } from '../store/workStore'
 import { useProposalStore } from '../store/proposalStore'
@@ -26,6 +27,7 @@ import { useRoadmapStore } from '../store/roadmapStore'
 import { useActivityStore } from '../store/activityStore'
 import { useMetaStore } from '../store/metaStore'
 import { useSourceStore } from '../store/sourceStore'
+import { useAnnouncementStore } from '../store/announcementStore'
 import { initializeRealtimeListener } from '../sanity/realtime'
 import { Source, ExtractedEntities, ProductId } from '../types'
 
@@ -43,6 +45,7 @@ export interface OSContextType {
   roadmapItems: RoadmapItem[]
   activities: ActivityItem[]
   sources: Source[]
+  announcements: Announcement[]
   productCommandConfigs: ProductCommandConfig[]
   sanitySyncStatus: SanitySyncState
   isLoaded: boolean
@@ -120,6 +123,11 @@ export interface OSContextType {
 
   // Product Command Centers
   saveProductCommandConfig: (config: ProductCommandConfig) => void
+
+  // Announcement Actions
+  addAnnouncement: (data: Omit<Announcement, 'id'>) => Announcement
+  updateAnnouncement: (id: string, updates: Partial<Announcement>) => void
+  deleteAnnouncement: (id: string) => void
 }
 
 const OSContext = createContext<OSContextType | null>(null)
@@ -180,6 +188,12 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
   const activities = useActivityStore((state) => state.activities)
   const setActivities = useActivityStore((state) => state.setActivities)
   const logActivityRaw = useActivityStore((state) => state.logActivity)
+
+  const announcements = useAnnouncementStore((state) => state.announcements)
+  const setAnnouncements = useAnnouncementStore((state) => state.setAnnouncements)
+  const addAnnouncement = useAnnouncementStore((state) => state.addAnnouncement)
+  const updateAnnouncement = useAnnouncementStore((state) => state.updateAnnouncement)
+  const deleteAnnouncement = useAnnouncementStore((state) => state.deleteAnnouncement)
 
   const role = useMetaStore((state) => state.role)
   const currentUser = useMetaStore((state) => state.currentUser)
@@ -430,6 +444,24 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
           setProductCommandConfigs(mappedConfigs)
         }
 
+        if (json.data.announcements && Array.isArray(json.data.announcements)) {
+          const mappedAnnouncements: Announcement[] = json.data.announcements.map((a: any) => ({
+            id: a._id,
+            title: a.title,
+            slug: a.slug || a._id,
+            category: a.category || 'announcement',
+            status: a.status || 'draft',
+            excerpt: a.excerpt || '',
+            publishedAt: a.publishedAt || a._createdAt || new Date().toISOString(),
+            author: a.author,
+            pdfUrl: a.pdfUrl,
+            pdfFilename: a.pdfFilename,
+            pdfSize: a.pdfSize,
+            coverImageUrl: a.coverImageUrl,
+          }))
+          setAnnouncements(mappedAnnouncements)
+        }
+
         setSanitySyncStatus('synced')
       } else {
         setSanitySyncStatus('local_fallback')
@@ -450,6 +482,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
     setProducts,
     setProductAreas,
     setProductCommandConfigs,
+    setAnnouncements,
     setSanitySyncStatus,
   ])
 
@@ -532,6 +565,7 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         roadmapItems,
         activities,
         sources,
+        announcements,
         productCommandConfigs,
         sanitySyncStatus,
         isLoaded,
@@ -572,6 +606,9 @@ export function OSProvider({ children }: { children: React.ReactNode }) {
         updateProductArea,
         deleteProductArea,
         saveProductCommandConfig,
+        addAnnouncement,
+        updateAnnouncement,
+        deleteAnnouncement,
       }}
     >
       {children}
