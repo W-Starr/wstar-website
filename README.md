@@ -37,8 +37,13 @@ This repository houses two integrated systems built with **Next.js 16 (Turbopack
 - **Package Manager**: npm (or pnpm / yarn)
 
 ### 2. Environment Configuration
-Create `.env.local` in the project root:
+Copy `.env.example` to `.env.local` and configure your environment variables:
 
+```bash
+cp .env.example .env.local
+```
+
+Required variables:
 ```env
 # Sanity CMS Structured Cloud Storage
 NEXT_PUBLIC_SANITY_PROJECT_ID=qx20j59l
@@ -49,14 +54,16 @@ SANITY_API_WRITE_TOKEN=your_sanity_write_token_here
 # Google Gemini Intelligence Engine
 GEMINI_API_KEY=your_gemini_api_key_here
 
-# Auth Session Secret (Optional in dev)
-AUTH_JWT_SECRET=your_jwt_signing_secret_here
+# WSTAR OS Authentication & Sessions
+AUTH_SECRET=your_strong_random_jwt_secret_here
+FOUNDER_PASSWORD_ABDULAZIZ=your_secure_password_for_abdulaziz
+FOUNDER_PASSWORD_IBRAHIM=your_secure_password_for_ibrahim
 ```
 
 ### 3. Installation & Running Locally
 ```bash
 # Clone the repository
-git clone https://github.com/KingAbdulAx/wstar-website.git
+git clone https://github.com/W-Starr/wstar-website.git
 cd wstar-website
 
 # Install dependencies
@@ -68,9 +75,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) for the marketing site, or [http://localhost:3000/os](http://localhost:3000/os) for the Company Operating System.
 
-### 4. Default Founder Login Accounts (Dev)
-- **Lead Technical Architect**: `abdulaziz@wstartech.ng` (Password: `WStarTech#2026!AA`)
-- **Founder & CEO**: `ibrahim@wstartech.ng` (Password: `WStarTech#2026!IB`)
+### 4. Founder Authentication
+Founder accounts (`abdulaziz@wstartech.ng` and `ibrahim@wstartech.ng`) access the Operating System via `/os/login`. Passwords must be defined via `FOUNDER_PASSWORD_ABDULAZIZ` and `FOUNDER_PASSWORD_IBRAHIM` in `.env.local` (local) or Vercel Environment Variables (production). Session tokens are signed using `AUTH_SECRET`.
 
 ---
 

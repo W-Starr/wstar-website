@@ -20,17 +20,23 @@ This guide provides instructions for deploying the **WSTAR Web Platform & Operat
    - Root Directory: `./` (default).
 
 3. **Configure Environment Variables in Vercel**:
-   In Vercel **Project Settings → Environment Variables**, add the following:
+   In Vercel **Project Settings → Environment Variables**, add the following required variables:
 
-   | Variable Name | Value | Description |
+   | Variable Name | Required | Description |
    |---|---|---|
-   | `NEXT_PUBLIC_SANITY_PROJECT_ID` | `qx20j59l` | Public Sanity Project ID |
-   | `NEXT_PUBLIC_SANITY_DATASET` | `production` | Public Sanity Dataset name |
-   | `NEXT_PUBLIC_SANITY_API_VERSION` | `2024-03-01` | Sanity API version |
-   | `SANITY_API_WRITE_TOKEN` | *(Your Secret Token)* | Secret Sanity write token (server-side only) |
+   | `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes | Public Sanity Project ID (`qx20j59l`) |
+   | `NEXT_PUBLIC_SANITY_DATASET` | Yes | Public Sanity Dataset name (`production`) |
+   | `NEXT_PUBLIC_SANITY_API_VERSION` | Yes | Sanity API version (`2024-03-01`) |
+   | `SANITY_API_WRITE_TOKEN` | Yes | Secret Sanity write token (server-side only) |
+   | `GEMINI_API_KEY` | Yes | Google Gemini API key for WSTAR OS AI decomposition |
+   | `AUTH_SECRET` | Yes | Strong random secret (32+ chars) for JWT session cookies |
+   | `FOUNDER_PASSWORD_ABDULAZIZ` | Yes | Secure password for `abdulaziz@wstartech.ng` |
+   | `FOUNDER_PASSWORD_IBRAHIM` | Yes | Secure password for `ibrahim@wstartech.ng` |
+   | `GOOGLE_SERVICE_ACCOUNT_KEY` | Optional | Minified JSON key for Google Drive source ingestion |
+   | `FIREBASE_SERVICE_ACCOUNT_KEY` | Optional | Minified JSON key for Ace Acad user feedback sync |
 
 4. **Deploy**:
-   Click **Deploy**. Vercel will build all 21 static routes with Turbopack and deploy to their global Edge network.
+   Click **Deploy**. Vercel will build all static & dynamic routes with Turbopack and deploy to their global Edge network.
 
 ---
 

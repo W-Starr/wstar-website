@@ -10,16 +10,20 @@ export interface FounderUser {
   role: 'engineer' | 'ceo'
 }
 
-export const FOUNDERS: Record<string, { name: string; role: 'engineer' | 'ceo'; defaultPassword: string }> = {
+export const FOUNDERS: Record<string, { name: string; role: 'engineer' | 'ceo'; defaultPassword?: string }> = {
   'abdulaziz@wstartech.ng': {
     name: 'Abdulaziz Abdulwahab',
     role: 'engineer',
-    defaultPassword: process.env.FOUNDER_PASSWORD_ABDULAZIZ || 'WStarTech#2026!AA',
+    defaultPassword:
+      process.env.FOUNDER_PASSWORD_ABDULAZIZ ||
+      (process.env.NODE_ENV === 'development' ? 'dev_wstar_abdulaziz' : undefined),
   },
   'ibrahim@wstartech.ng': {
     name: 'Ibrahim Abdulwahab',
     role: 'ceo',
-    defaultPassword: process.env.FOUNDER_PASSWORD_IBRAHIM || 'WStarTech#2026!IB',
+    defaultPassword:
+      process.env.FOUNDER_PASSWORD_IBRAHIM ||
+      (process.env.NODE_ENV === 'development' ? 'dev_wstar_ibrahim' : undefined),
   },
 }
 

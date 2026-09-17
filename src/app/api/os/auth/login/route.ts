@@ -36,8 +36,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify password
-    if (password !== founderConfig.defaultPassword) {
-      logger.warn(`Failed password for founder account: ${normalizedEmail}`, 'AUTH')
+    if (!founderConfig.defaultPassword || password !== founderConfig.defaultPassword) {
+      if (!founderConfig.defaultPassword) {
+        logger.error(`Founder login rejected: password environment variable not set for ${normalizedEmail}`, 'AUTH')
+      } else {
+        logger.warn(`Failed password for founder account: ${normalizedEmail}`, 'AUTH')
+      }
       return NextResponse.json(
         { error: 'Invalid founder credentials' },
         { status: 401 }

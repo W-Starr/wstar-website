@@ -46,10 +46,16 @@ export const env = {
 
   // Authentication & Session Secret
   get authSecret(): string {
-    return (
-      process.env.AUTH_SECRET ||
-      'wstar_os_production_jwt_session_secret_abdulaziz_ibrahim_2026_secure'
-    )
+    const secret = process.env.AUTH_SECRET
+    if (!secret) {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error(
+          '[WSTAR OS Security] Missing AUTH_SECRET in production. Configure AUTH_SECRET in Vercel environment variables.'
+        )
+      }
+      return 'wstar_os_dev_jwt_secret_local_only_insecure'
+    }
+    return secret
   },
 
   // Environment mode
