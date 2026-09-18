@@ -66,17 +66,16 @@ export default function Home() {
                 <div className={styles.metricLabel}>Foundational Courses Ingested for 100L ABU Cohort</div>
               </div>
               <div className={styles.metricCard}>
-                <div className={styles.metricValue}>12</div>
-                <div className={styles.metricLabel}>ABU Faculties Supported Across Natural Sciences</div>
-              </div>
-              <div className={styles.metricCard}>
                 <div className={styles.metricValue}>100%</div>
                 <div className={styles.metricLabel}>Offline-First Local Sandboxed Study & Quiz Engine</div>
               </div>
-              <div className={styles.metricCard}>
-                <div className={styles.metricValue}>2.0</div>
-                <div className={styles.metricLabel}>SRS Specification Milestone Achieved</div>
-              </div>
+              {/* TODO(Ibrahim): two stats removed pending accurate figures — see PR summary:
+                  1) "12 ABU Faculties Supported Across Natural Sciences" contradicted the product
+                     page (beta is scoped to Mechatronics/Faculty of Engineering) and conflated
+                     "faculties" with "departments". Needs the real, correct number + noun.
+                  2) "2.0 SRS Specification Milestone Achieved" is an internal engineering doc
+                     version, not a user-facing metric. Replace with a real one (e.g. waitlist
+                     signups, beta users) or leave removed. */}
             </div>
 
             {/* Right: Mission Statement */}
@@ -160,24 +159,24 @@ export default function Home() {
                 <div className={styles.productTag}>EdTech • Mobile Platform</div>
                 <h3>Ace-Acad: Smarter Studying, Simplified.</h3>
                 <p>
-                  A personal study assistant built for Nigerian undergraduates.
-                  Featuring an offline-first e-library, curated study paths, and
-                  assessments tailored to ABU Zaria 100-level syllabus.
+                  A personal study assistant for Nigerian undergraduates, built for the
+                  Nigerian university curriculum. Currently live in beta for ABU Zaria
+                  Engineering students, and expanding fast.
                 </p>
               </div>
 
               <div className={styles.productFeatures}>
                 <div className={styles.featureItem}>
                   <Smartphone className={styles.featureIcon} />
-                  <span>Flutter & Drift SQLite offline study engine</span>
+                  <span>Offline-first e-library — study anywhere, no data required</span>
                 </div>
                 <div className={styles.featureItem}>
                   <BookOpen className={styles.featureIcon} />
-                  <span>Bounded PDF reading sessions with pass-mark checks</span>
+                  <span>Curriculum-aligned study paths and flashcard quizzes</span>
                 </div>
                 <div className={styles.featureItem}>
                   <ShieldCheck className={styles.featureIcon} />
-                  <span>NDPA 2023 compliant data governance architecture</span>
+                  <span>Built and trusted for Nigerian students&apos; data privacy</span>
                 </div>
               </div>
 

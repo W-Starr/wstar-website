@@ -142,6 +142,11 @@ export default function SandboxShowcase() {
 
   return (
     <div className={styles.galleryContainer}>
+      {/* Honesty label: this is a live interactive simulation, not a recorded video */}
+      <div className={styles.illustrativeBadge}>
+        <Video size={14} /> Illustrative Sandbox Simulation — not a recording of a real client engagement
+      </div>
+
       {/* Video Gallery Tabs */}
       <div className={styles.galleryTabs} role="tablist">
         {VIDEOS.map((video) => (
@@ -176,7 +181,7 @@ export default function SandboxShowcase() {
           </div>
 
           <div className={styles.loomTag}>
-            <span style={{ fontWeight: 800 }}>Loom</span> • 90s Recorded Sandbox
+            <span style={{ fontWeight: 800 }}>Simulation</span> • 90s Interactive Sandbox Replay
           </div>
         </div>
 

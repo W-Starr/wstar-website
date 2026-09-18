@@ -73,6 +73,10 @@ export default function AiSolutionsPage() {
               </div>
             </div>
 
+            <p className={styles.heroMetricsCaption}>
+              Sandbox-modeled projections — not yet verified client outcomes.
+            </p>
+
             <div className={styles.heroArchitectureBadge}>
               <span>PROTOCOL: AIR-GAPPED ERP BRIDGE</span>
               <span>ZERO HALLUCINATION</span>
@@ -167,6 +171,38 @@ export default function AiSolutionsPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== 2b. Founder / Team Credibility ===== */}
+      {/* TODO(Ibrahim): replace with real founder/team credibility copy —
+          this section shell is placeholder-only. */}
+      <section className="section section--light" id="engineering-behind">
+        <div className="container">
+          <div className={styles.credibilityBox}>
+            <div
+              style={{
+                fontSize: "0.75rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.14em",
+                color: "var(--medium-blue)",
+                fontWeight: 700,
+                marginBottom: "12px",
+              }}
+            >
+              Why Mechatronics
+            </div>
+            <h2 style={{ color: "var(--deep-navy)", marginBottom: "16px" }}>
+              The Engineering Behind the Agents
+            </h2>
+            <p style={{ color: "var(--ink-secondary)" }}>
+              [PLACEHOLDER — Ibrahim to supply founder/team credibility copy:
+              who is behind the Mechatronics Engineering claim, relevant
+              credentials, and why that background translates into
+              physics-aware, deterministic AI systems rather than generic
+              LLM wrappers.]
+            </p>
           </div>
         </div>
       </section>
@@ -299,6 +335,12 @@ export default function AiSolutionsPage() {
               asynchronous evaluation.
             </p>
           </div>
+
+          <p className={styles.pricingQualifier}>
+            Engagements are structured as fixed-fee Value Validation Sprints
+            followed by full deployment, typically ranging from $15,000 to
+            $85,000+ depending on scope.
+          </p>
 
           <AiSolutionsIntakeForm />
         </div>

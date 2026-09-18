@@ -172,7 +172,7 @@ export default function PlantIQPage() {
                             Includes the PlantIQ device, solar panel, and mobile app access.
                         </p>
                         <CTAButton href="/contact" variant="primary" size="large">
-                            Reserve Your PlantIQ Device
+                            Join the Waitlist
                         </CTAButton>
                     </div>
                 </div>
