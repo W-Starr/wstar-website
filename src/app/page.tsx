@@ -2,7 +2,6 @@ import HeroSection from "@/components/HeroSection";
 import CTAButton from "@/components/CTAButton";
 import styles from "./page.module.css";
 import Link from "next/link";
-import Image from "next/image";
 import {
   BookOpen,
   Leaf,
@@ -10,8 +9,6 @@ import {
   Sprout,
   Users,
   ShieldCheck,
-  CheckCircle2,
-  ArrowRight,
   Database,
   Smartphone,
   Cpu,
@@ -20,139 +17,103 @@ import {
 export default function Home() {
   return (
     <>
-      {/* ===== Hero Section ===== */}
+      {/* ===== Hero Section (AI Solutions-led per Task 8) ===== */}
       <HeroSection
-        label="Innovation-Driven Engineering"
+        label="WSTAR AI Solutions"
         title={
           <>
-            Empowering Africa.{" "}
-            <span>Engineering the Future.</span>
+            Deterministic AI for{" "}
+            <span>Industrial &amp; B2B Workflows.</span>
           </>
         }
-        description="WSTAR Technologies engineers deterministic AI Solutions for enterprise B2B workflows, alongside offline-first EdTech and automated AgriTech — solving real-world problems to position Africa as a global leader in innovation."
+        description="WSTAR Technologies engineers bespoke, physics-aware autonomous agents that eliminate administrative bottlenecks for mid-market distributors, manufacturers, and technical service teams — alongside our EdTech and AgriTech ventures below."
         visual={
-          <div className={styles.heroMockupContainer}>
-            <Image
-              src="/images/ace-acad-mockup.png"
-              alt="Ace-Acad App Preview"
-              width={280}
-              height={500}
-              style={{
-                objectFit: 'contain',
-                borderRadius: 'var(--radius-md)',
-                margin: '0 auto',
-              }}
-              priority
-            />
+          <div className={styles.heroAiCard}>
+            <div className={styles.heroAiCardHeader}>
+              <span className={styles.heroAiCardTitle}>
+                <Cpu size={15} color="var(--bright-blue)" /> Mechatronics AI Core
+              </span>
+              <span className={styles.heroAiCardStatus}>
+                <span className={styles.livePulse} /> 100% Deterministic
+              </span>
+            </div>
+            <div className={styles.heroAiMetricsGrid}>
+              <div className={styles.heroAiMetricItem}>
+                <span className={styles.heroAiMetricValue}>0.00mm</span>
+                <span className={styles.heroAiMetricLabel}>Parametric Tolerance Delta</span>
+              </div>
+              <div className={styles.heroAiMetricItem}>
+                <span className={styles.heroAiMetricValue}>&lt; 1.8s</span>
+                <span className={styles.heroAiMetricLabel}>RFQ Normalization Latency</span>
+              </div>
+            </div>
+            <p className={styles.heroAiCaption}>Sandbox-modeled projections — not yet verified client outcomes.</p>
           </div>
         }
       >
-        <CTAButton href="/contact" variant="primary" size="large">
-          Partner With Us
+        <CTAButton href="/ai-solutions#intake-form" variant="primary" size="large">
+          Request a Custom Sandbox
         </CTAButton>
-        <CTAButton href="#products" variant="secondary" size="large">
-          Explore Our Products
+        <CTAButton href="/ai-solutions" variant="secondary" size="large">
+          Explore AI Solutions
         </CTAButton>
       </HeroSection>
 
-      {/* ===== Mission & Impact Proof Section ===== */}
-      <section className="section section--light">
+      {/* ===== WSTAR AI Solutions — Flagship Section ===== */}
+      <section className="section section--dark" id="ai-solutions-highlight">
         <div className="container">
-          <div className={styles.missionSection}>
-            {/* Left: Concrete Institutional Proof Points */}
-            <div className={styles.missionMetrics}>
-              <div className={styles.metricCard}>
-                <div className={styles.metricValue}>13</div>
-                <div className={styles.metricLabel}>Foundational Courses Ingested for 100L ABU Cohort</div>
+          <div className={styles.featuredInitiativeCard} style={{ gridColumn: "unset" }}>
+            <div className={styles.productHeader}>
+              <div className={styles.productTag}>
+                Enterprise AI Initiative • Industrial &amp; B2B Workflows
               </div>
-              <div className={styles.metricCard}>
-                <div className={styles.metricValue}>100%</div>
-                <div className={styles.metricLabel}>Offline-First Local Sandboxed Study & Quiz Engine</div>
-              </div>
-              {/* TODO(Ibrahim): two stats removed pending accurate figures — see PR summary:
-                  1) "12 ABU Faculties Supported Across Natural Sciences" contradicted the product
-                     page (beta is scoped to Mechatronics/Faculty of Engineering) and conflated
-                     "faculties" with "departments". Needs the real, correct number + noun.
-                  2) "2.0 SRS Specification Milestone Achieved" is an internal engineering doc
-                     version, not a user-facing metric. Replace with a real one (e.g. waitlist
-                     signups, beta users) or leave removed. */}
+              <h3>WSTAR AI Solutions: Autonomous Industrial Agents</h3>
+              <p>
+                Engineering bespoke, physics-aware operational agents driven by Mechatronics principles.
+                We replace manual quoting and administrative bottlenecks with deterministic AI for mid-market
+                distributors, manufacturers, and technical service teams.
+              </p>
             </div>
 
-            {/* Right: Mission Statement */}
-            <div className={styles.missionContent}>
-              <h2>Innovation Driven by Measurable Impact.</h2>
-              <p>
-                We harness interdisciplinary engineering and bold creativity to design, develop, and scale software products tailored for African universities and agricultural ecosystems.
-              </p>
-              <CTAButton href="/about" variant="primary" size="small">
-                Meet the Team
-              </CTAButton>
-
-              <div className={styles.valuesRow}>
-                <div className={styles.valueItem}>
-                  <div className={styles.valueTitle}>Pedagogical Depth</div>
-                  <div className={styles.valueDesc}>Page-bounded reading sessions and spaced quizzes.</div>
-                </div>
-                <div className={styles.valueItem}>
-                  <div className={styles.valueTitle}>Offline Resilience</div>
-                  <div className={styles.valueDesc}>Zero data required during active hostel study sessions.</div>
-                </div>
+            <div className={styles.productFeatures}>
+              <div className={styles.featureItem}>
+                <Cpu className={styles.featureIcon} />
+                <span>Autonomous Procurement Agents: Ingest messy RFQs, match parametric CAD tolerances, and draft 1-click replies</span>
               </div>
+              <div className={styles.featureItem}>
+                <Database className={styles.featureIcon} />
+                <span>B2B Knowledge RAG Agents: Air-gapped indexing of OEM manuals and SOPs for tier-one deflection</span>
+              </div>
+              <div className={styles.featureItem}>
+                <ShieldCheck className={styles.featureIcon} />
+                <span>Deterministic Execution: Zero public model training, strict engineering tolerances, and 1-click human approval</span>
+              </div>
+            </div>
+
+            <div className={styles.productFooter} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <CTAButton href="/ai-solutions#intake-form" variant="primary" size="small">
+                Request a Custom Sandbox
+              </CTAButton>
+              <CTAButton href="/ai-solutions" variant="secondary" size="small">
+                Explore Architecture
+              </CTAButton>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== Flagship Products Section ===== */}
+      {/* ===== Also Building: Ace-Acad & PlantIQ ===== */}
       <section className="section section--dark" id="products">
         <div className="container">
           <div className="section-header">
-            <h2>Flagship Products &amp; Solutions</h2>
+            <h2>Also Building</h2>
             <p>
-              Engineering bespoke technology to solve high-friction bottlenecks across industrial workflows, higher education, and smart agriculture.
+              Beyond AI Solutions, WSTAR engineers offline-first EdTech and automated AgriTech
+              for African markets.
             </p>
           </div>
 
           <div className={styles.productsGrid}>
-            {/* WSTAR AI Solutions Featured Card */}
-            <div className={styles.featuredInitiativeCard}>
-              <div className={styles.productHeader}>
-                <div className={styles.productTag}>
-                  Enterprise AI Initiative • Industrial &amp; B2B Workflows
-                </div>
-                <h3>WSTAR AI Solutions: Autonomous Industrial Agents</h3>
-                <p>
-                  Engineering bespoke, physics-aware operational agents driven by Mechatronics principles.
-                  We replace manual quoting and administrative bottlenecks with deterministic AI for mid-market
-                  distributors, manufacturers, and technical service teams.
-                </p>
-              </div>
-
-              <div className={styles.productFeatures}>
-                <div className={styles.featureItem}>
-                  <Cpu className={styles.featureIcon} />
-                  <span>Autonomous Procurement Agents: Ingest messy RFQs, match parametric CAD tolerances, and draft 1-click replies</span>
-                </div>
-                <div className={styles.featureItem}>
-                  <Database className={styles.featureIcon} />
-                  <span>B2B Knowledge RAG Agents: Air-gapped indexing of OEM manuals and SOPs for tier-one deflection</span>
-                </div>
-                <div className={styles.featureItem}>
-                  <ShieldCheck className={styles.featureIcon} />
-                  <span>Deterministic Execution: Zero public model training, strict engineering tolerances, and 1-click human approval</span>
-                </div>
-              </div>
-
-              <div className={styles.productFooter} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <CTAButton href="/ai-solutions#intake-form" variant="primary" size="small">
-                  Request a Custom Sandbox
-                </CTAButton>
-                <CTAButton href="/ai-solutions" variant="secondary" size="small">
-                  Explore Architecture
-                </CTAButton>
-              </div>
-            </div>
-
             {/* Ace-Acad Card */}
             <div className={styles.productCard}>
               <div className={styles.productHeader}>
@@ -181,6 +142,9 @@ export default function Home() {
               </div>
 
               <div className={styles.productFooter}>
+                <p className={styles.miniStat}>
+                  13 foundational courses live for the 100L ABU cohort · 100% offline-first
+                </p>
                 <CTAButton href="/products/ace-acad" variant="primary" size="small">
                   View Product Details
                 </CTAButton>
