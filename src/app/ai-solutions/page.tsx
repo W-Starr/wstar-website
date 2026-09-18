@@ -17,17 +17,6 @@ export const metadata: Metadata = {
   title: "WSTAR AI Solutions — Autonomous Agentic AI for Industrial & B2B Workflows",
   description:
     "WSTAR AI Solutions is a specialized technical initiative operated by WSTAR Technologies. We engineer bespoke, autonomous operational agents driven by Mechatronics Engineering principles for scaling mid-market B2B enterprises.",
-  keywords: [
-    "WSTAR AI Solutions",
-    "Agentic AI",
-    "Industrial AI",
-    "Autonomous Procurement Agent",
-    "B2B RAG",
-    "Parametric Substitution",
-    "Mechatronics Engineering",
-    "Manufacturing AI",
-    "ERP Automation",
-  ],
 };
 
 export default function AiSolutionsPage() {

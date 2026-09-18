@@ -18,19 +18,34 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "WSTAR — Empowering Africa. Engineering the Future.",
+  metadataBase: new URL("https://wstartech.ng"),
+  title: {
+    default: "WSTAR — Enterprise AI, EdTech & AgriTech Engineering",
+    template: "%s | WSTAR",
+  },
   description:
-    "WSTAR is a youth-led technology company building impactful EdTech and AgriTech solutions for Africa. Discover Ace-Acad and PlantIQ.",
-  keywords: [
-    "WSTAR",
-    "EdTech",
-    "AgriTech",
-    "Nigeria",
-    "Ace-Acad",
-    "PlantIQ",
-    "African Innovation",
-    "Smart Farming",
-    "Study App",
+    "WSTAR Technologies engineers deterministic AI Solutions for industrial B2B workflows, alongside Ace-Acad (EdTech) and PlantIQ (AgriTech) — built in Nigeria, engineered to global standards.",
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "WSTAR Technologies Ltd",
+  alternateName: "WSTAR",
+  url: "https://wstartech.ng",
+  logo: "https://wstartech.ng/images/wstar-logo-light.png",
+  description:
+    "WSTAR Technologies engineers deterministic AI Solutions for industrial B2B workflows, alongside Ace-Acad (EdTech) and PlantIQ (AgriTech).",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Zaria",
+    addressRegion: "Kaduna State",
+    addressCountry: "NG",
+  },
+  sameAs: [
+    "https://www.linkedin.com/company/wstartech",
+    "https://www.facebook.com/share/1bxic7RcTT/",
+    "https://www.instagram.com/wstar_1",
   ],
 };
 
@@ -42,6 +57,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${montserrat.variable} font-sans`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <MarketingShell>{children}</MarketingShell>
       </body>
     </html>
