@@ -13,10 +13,10 @@ export default function AccountDeletionPage() {
         e.preventDefault();
         if (email && fullName) {
             setIsSubmitted(true);
-            const subject = encodeURIComponent('Account Deletion Request - Ace Acad (NDPA Sec 34)');
+            const subject = encodeURIComponent('Account Deletion Request - Ace-Acad (NDPA Sec 34)');
             const body = encodeURIComponent(
                 `Hello WSTAR Data Protection Team,\n\n` +
-                `Pursuant to Section 34(1)(d) of the Nigeria Data Protection Act 2023, I request the permanent deletion of my Ace Acad user account and all associated personal data.\n\n` +
+                `Pursuant to Section 34(1)(d) of the Nigeria Data Protection Act 2023, I request the permanent deletion of my Ace-Acad user account and all associated personal data.\n\n` +
                 `Full Name: ${fullName}\n` +
                 `Registered Email: ${email}\n\n` +
                 `I understand this action is permanent and will remove my enrollments, study progress, and authentication profile.\n\n` +
@@ -33,7 +33,7 @@ export default function AccountDeletionPage() {
                     <div id="requestForm">
                         <div className={styles.header}>
                             <div className={styles.logoPlaceholder}>A</div>
-                            <h1 className={styles.title}>Delete Your Ace Acad Account</h1>
+                            <h1 className={styles.title}>Delete Your Ace-Acad Account</h1>
                             <p className={styles.description}>
                                 We are committed to honoring your right to erasure under the Nigeria Data Protection Act 2023 (NDPA).
                             </p>
@@ -44,7 +44,7 @@ export default function AccountDeletionPage() {
                                 <strong>Important:</strong> Account deletion is permanent. All course enrollments, study progress, quiz scores, and profile records will be permanently wiped within 14 calendar days.
                             </p>
                             <p style={{ marginTop: '0.5rem', fontSize: '0.85rem' }}>
-                                💡 <em>Tip: You can also instantly delete your account self-service inside the Ace Acad mobile app under <strong>More &gt; Privacy Rights &gt; Delete Account</strong>.</em>
+                                💡 <em>Tip: You can also instantly delete your account self-service inside the Ace-Acad mobile app under <strong>More &gt; Privacy Rights &gt; Delete Account</strong>.</em>
                             </p>
                         </div>
 
@@ -102,7 +102,7 @@ export default function AccountDeletionPage() {
                     </div>
                 )}
                 <div className={styles.footer}>
-                    &copy; 2026 WSTAR (Ace Acad). All rights reserved.
+                    &copy; 2026 WSTAR (Ace-Acad). All rights reserved.
                 </div>
             </div>
         </div>
