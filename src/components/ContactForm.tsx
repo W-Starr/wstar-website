@@ -1,29 +1,81 @@
 "use client";
 
 import { useState } from "react";
-import { Briefcase, Building2, GraduationCap } from "lucide-react";
-import CTAButton from "./CTAButton";
+import { Briefcase, Building2, GraduationCap, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import ctaStyles from "./CTAButton.module.css";
 import styles from "./ContactForm.module.css";
 
 interface ContactFormProps {
     showContext?: boolean;
     light?: boolean;
+    formType?: "contact" | "investor";
 }
 
-const ContactForm = ({ showContext = true, light = false }: ContactFormProps) => {
+type SubmitState = "idle" | "submitting" | "success" | "error";
+
+const ContactForm = ({ showContext = true, light = false, formType = "contact" }: ContactFormProps) => {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         category: "",
         message: "",
+        website: "", // honeypot — real visitors never see or fill this in
     });
+    const [state, setState] = useState<SubmitState>("idle");
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Form submission logic would go here
-        alert("Thank you for your message! We'll get back to you soon.");
-        setFormData({ name: "", email: "", category: "", message: "" });
+        setState("submitting");
+        setErrorMessage("");
+
+        try {
+            const res = await fetch("/api/leads", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    formType,
+                    name: formData.name,
+                    email: formData.email,
+                    website: formData.website,
+                    details: {
+                        category: formData.category,
+                        message: formData.message,
+                    },
+                }),
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                throw new Error(data.error || "Something went wrong. Please try again.");
+            }
+
+            setState("success");
+            setFormData({ name: "", email: "", category: "", message: "", website: "" });
+        } catch (err) {
+            setState("error");
+            setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+        }
     };
+
+    if (state === "success") {
+        return (
+            <div className={styles.formSection}>
+                <div className={styles.successState}>
+                    <CheckCircle2 size={40} />
+                    <h3>Message Sent</h3>
+                    <p>Thank you for reaching out — we&apos;ll get back to you soon.</p>
+                    <button
+                        type="button"
+                        className={styles.sendAnotherBtn}
+                        onClick={() => setState("idle")}
+                    >
+                        Send another message
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.formSection}>
@@ -31,6 +83,19 @@ const ContactForm = ({ showContext = true, light = false }: ContactFormProps) =>
                 className={`${styles.form} ${light ? styles.formLight : ""}`}
                 onSubmit={handleSubmit}
             >
+                {/* Honeypot field — hidden from real users, bots tend to fill every input */}
+                <div className={styles.honeypot} aria-hidden="true">
+                    <label htmlFor="website">Website</label>
+                    <input
+                        id="website"
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={formData.website}
+                        onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                    />
+                </div>
+
                 <div className={styles.formGroup}>
                     <label htmlFor="name">Full Name</label>
                     <input
@@ -89,10 +154,28 @@ const ContactForm = ({ showContext = true, light = false }: ContactFormProps) =>
                         required
                     />
                 </div>
+
+                {state === "error" && (
+                    <div className={styles.errorState}>
+                        <AlertCircle size={16} />
+                        <span>{errorMessage}</span>
+                    </div>
+                )}
+
                 <div className={styles.submitBtn}>
-                    <CTAButton href="#" variant="primary">
-                        Send Message
-                    </CTAButton>
+                    <button
+                        type="submit"
+                        className={`${ctaStyles.button} ${ctaStyles.primary}`}
+                        disabled={state === "submitting"}
+                    >
+                        {state === "submitting" ? (
+                            <>
+                                <Loader2 size={16} className={styles.spinner} /> Sending...
+                            </>
+                        ) : (
+                            "Send Message"
+                        )}
+                    </button>
                 </div>
             </form>
 
