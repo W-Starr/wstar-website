@@ -263,27 +263,10 @@
 .screenshotSlot {
     aspect-ratio: 9 / 16;
     max-height: 380px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: var(--gray-100);
-    border: 2px dashed var(--gray-300);
+    overflow: hidden;
     border-radius: var(--radius-lg);
-    padding: 20px;
-    text-align: center;
-}
-
-.screenshotSlotLabel {
-    font-weight: 700;
-    color: var(--gray-600);
-    font-size: 0.95rem;
-}
-
-.screenshotSlotHint {
-    font-size: 0.8rem;
-    color: var(--gray-400);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+    background: #000;
 }
 
 @media (max-width: 768px) {

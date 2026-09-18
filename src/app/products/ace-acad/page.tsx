@@ -29,8 +29,22 @@ export default function AceAcadPage() {
                 }
                 description="Ace-Acad is an intelligent learning app that personalizes your reading, quizzes, and study reminders — built for the Nigerian university curriculum. Currently live in beta across all departments at ABU Zaria, and expanding fast."
                 visual={
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <Image src="/images/ace-acad-mockup.png" alt="Ace-Acad App Preview" width={280} height={500} style={{ objectFit: 'contain', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', borderRadius: 'var(--radius-lg)' }} priority />
+                    <div style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <Image src="/images/ace-acad/study-session.png" alt="Ace-Acad study session screen showing MATH 101: Introduction to Limits" width={280} height={498} style={{ objectFit: 'cover', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', borderRadius: 'var(--radius-lg)' }} priority />
+                        <Image
+                            src="/images/ace-acad/ace-acad-badge.png"
+                            alt="Ace-Acad app icon"
+                            width={56}
+                            height={56}
+                            style={{
+                                position: "absolute",
+                                bottom: "-16px",
+                                right: "calc(50% - 140px - 16px)",
+                                borderRadius: "14px",
+                                boxShadow: "0 8px 20px rgba(0,0,0,0.5)",
+                                border: "2px solid var(--deep-navy)",
+                            }}
+                        />
                     </div>
                 }
             >
@@ -108,13 +122,21 @@ export default function AceAcadPage() {
                         />
                     </div>
 
-                    {/* App screenshot slots — placeholders until real product screenshots are supplied.
-                        TODO(Ibrahim): replace with real screenshots of the quiz interface, dashboard, and e-library. */}
+                    {/* Real Ace-Acad screenshots, sourced from the live Play Store listing */}
                     <div className={styles.screenshotGrid}>
-                        {["Quiz Interface", "Study Dashboard", "Offline E-Library"].map((label) => (
+                        {[
+                            { src: "/images/ace-acad/dashboard-home.png", label: "Home Dashboard" },
+                            { src: "/images/ace-acad/study-library.png", label: "Study Library" },
+                            { src: "/images/ace-acad/study-session.png", label: "Study Session" },
+                        ].map(({ src, label }) => (
                             <div key={label} className={styles.screenshotSlot}>
-                                <span className={styles.screenshotSlotLabel}>{label}</span>
-                                <span className={styles.screenshotSlotHint}>Screenshot coming soon</span>
+                                <Image
+                                    src={src}
+                                    alt={`Ace-Acad ${label} screen`}
+                                    width={270}
+                                    height={480}
+                                    style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "inherit" }}
+                                />
                             </div>
                         ))}
                     </div>
