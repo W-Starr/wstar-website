@@ -27,7 +27,7 @@ export default function AceAcadPage() {
                         <span>Simplified for Nigerian Students.</span>
                     </>
                 }
-                description="Ace-Acad is an intelligent learning app that personalizes your reading, quizzes, and study reminders — built for the Nigerian university curriculum. Currently live in beta for ABU Zaria Engineering students, and expanding fast."
+                description="Ace-Acad is an intelligent learning app that personalizes your reading, quizzes, and study reminders — built for the Nigerian university curriculum. Currently live in beta across all departments at ABU Zaria, and expanding fast."
                 visual={
                     <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <Image src="/images/ace-acad-mockup.png" alt="Ace-Acad App Preview" width={280} height={500} style={{ objectFit: 'contain', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', borderRadius: 'var(--radius-lg)' }} priority />
@@ -171,9 +171,8 @@ export default function AceAcadPage() {
                     <div className={styles.earlyAccess}>
                         <h2>Are you an ABU Zaria Student? You&#39;re First in Line.</h2>
                         <p>
-                            We are currently rolling out our Beta version for undergraduates,
-                            starting with the Mechatronics Department and the Faculty of
-                            Engineering at Ahmadu Bello University. Secure your early access
+                            We are currently live in beta for undergraduates across all
+                            departments at Ahmadu Bello University. Secure your early access
                             today.
                         </p>
                         <AceAcadWaitlistForm />

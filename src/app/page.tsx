@@ -121,8 +121,8 @@ export default function Home() {
                 <h3>Ace-Acad: Smarter Studying, Simplified.</h3>
                 <p>
                   A personal study assistant for Nigerian undergraduates, built for the
-                  Nigerian university curriculum. Currently live in beta for ABU Zaria
-                  Engineering students, and expanding fast.
+                  Nigerian university curriculum. Currently live in beta across all
+                  departments at ABU Zaria, and expanding fast.
                 </p>
               </div>
 
@@ -143,7 +143,7 @@ export default function Home() {
 
               <div className={styles.productFooter}>
                 <p className={styles.miniStat}>
-                  13 foundational courses live for the 100L ABU cohort · 100% offline-first
+                  Live in beta across all departments at ABU Zaria · 100% offline-first
                 </p>
                 <CTAButton href="/products/ace-acad" variant="primary" size="small">
                   View Product Details

@@ -55,7 +55,7 @@ export default function AiSolutionsPrivacyPage() {
                 <h2>5. Contact for Data Requests</h2>
                 <p>
                     For questions about this policy or to make a data request, contact{" "}
-                    <a href="mailto:ibrahim@wstartech.ng">ibrahim@wstartech.ng</a>.
+                    <a href="mailto:solutions@wstartech.ng">solutions@wstartech.ng</a>.
                 </p>
             </div>
         </main>

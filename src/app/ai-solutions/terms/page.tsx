@@ -50,7 +50,7 @@ export default function AiSolutionsTermsPage() {
 
                 <h2>5. Contact</h2>
                 <p>
-                    Questions about these terms: <a href="mailto:ibrahim@wstartech.ng">ibrahim@wstartech.ng</a>.
+                    Questions about these terms: <a href="mailto:solutions@wstartech.ng">solutions@wstartech.ng</a>.
                 </p>
             </div>
         </main>

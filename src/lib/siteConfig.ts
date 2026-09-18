@@ -27,10 +27,7 @@ export const socialLinks: Record<"wstar" | "aceAcad" | "plantiq", SocialLinks> =
     },
 };
 
-// AI Solutions leads with the corporate WSTAR contact address (solutions@wstartech.ng
-// has not been confirmed as a live, monitored inbox yet — using ibrahim@ meanwhile).
-// TODO(Ibrahim): confirm solutions@wstartech.ng is live and monitored, then swap this.
 export const contactEmails = {
     general: "wstar5552@gmail.com",
-    aiSolutions: "ibrahim@wstartech.ng",
+    aiSolutions: "solutions@wstartech.ng",
 };

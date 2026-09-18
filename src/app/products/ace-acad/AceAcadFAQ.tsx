@@ -25,7 +25,7 @@ const FAQ_ITEMS: FAQItem[] = [
     {
         question: "When is Ace-Acad coming to my department/university?",
         answer:
-            "We're currently live in beta for the Mechatronics Department and the Faculty of Engineering at Ahmadu Bello University, Zaria. We're expanding to more departments and universities as the beta matures — join the waitlist below and we'll notify you as soon as access opens up for you.",
+            "We're currently live in beta for undergraduates across all departments at Ahmadu Bello University, Zaria. We're expanding to more universities as the beta matures — join the waitlist below and we'll notify you as soon as access opens up for you.",
     },
     {
         question: "Is my data safe?",
