@@ -24,6 +24,8 @@ interface SandboxVideo {
   leftPanelTitle: string;
   rightPanelTitle: string;
   demoPoints: string[];
+  /** When set, a real recorded video plays instead of the simulated terminal replay. */
+  videoUrl?: string;
 }
 
 const VIDEOS: SandboxVideo[] = [
@@ -32,6 +34,7 @@ const VIDEOS: SandboxVideo[] = [
     title: "Autonomous Procurement Agent Sandbox (90s)",
     duration: "01:30",
     isHero: true,
+    videoUrl: "/videos/procurement-agent-demo.mp4",
     category: "Hero Demonstration",
     summary:
       "Watch our completed Autonomous Procurement Agent process an unstructured multi-line RFQ from an industrial customer, cross-reference live ERP inventory, find a parametric substitute, and draft an approval-ready reply in real time.",
@@ -142,6 +145,14 @@ export default function SandboxShowcase() {
 
   return (
     <div className={styles.galleryContainer}>
+      {/* Honesty label: clarifies whether the active tab is a real recording or a simulation */}
+      <div className={styles.illustrativeBadge}>
+        <Video size={14} />
+        {activeVideo.videoUrl
+          ? "Real Sandbox Recording"
+          : "Illustrative Sandbox Simulation — not a recording of a real client engagement"}
+      </div>
+
       {/* Video Gallery Tabs */}
       <div className={styles.galleryTabs} role="tablist">
         {VIDEOS.map((video) => (
@@ -176,10 +187,25 @@ export default function SandboxShowcase() {
           </div>
 
           <div className={styles.loomTag}>
-            <span style={{ fontWeight: 800 }}>Loom</span> • 90s Recorded Sandbox
+            {activeVideo.videoUrl ? (
+              <><span style={{ fontWeight: 800 }}>Recording</span> • 90s Real Sandbox Demo</>
+            ) : (
+              <><span style={{ fontWeight: 800 }}>Simulation</span> • 90s Interactive Sandbox Replay</>
+            )}
           </div>
         </div>
 
+        {activeVideo.videoUrl ? (
+          <video
+            key={activeVideo.id}
+            className={styles.realVideoPlayer}
+            src={activeVideo.videoUrl}
+            controls
+            playsInline
+            preload="metadata"
+          />
+        ) : (
+        <>
         {/* Video Canvas Stage */}
         <div className={styles.videoStage}>
           <div className={styles.watermark}>
@@ -409,6 +435,8 @@ export default function SandboxShowcase() {
             {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
           </button>
         </div>
+        </>
+        )}
       </div>
 
       {/* Video Description & Demonstration Points from CEO Spec */}

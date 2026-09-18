@@ -10,11 +10,15 @@ import {
   ArrowRight,
   Clock,
   Cpu,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
 import styles from "./AiSolutionsIntakeForm.module.css";
 
 export default function AiSolutionsIntakeForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [ticketId, setTicketId] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -24,9 +28,10 @@ export default function AiSolutionsIntakeForm() {
     weeklyHours: "",
     manufacturingType: "",
     bottleneckDescription: "",
+    website: "", // honeypot — real visitors never see or fill this in
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (
       !formData.name.trim() ||
@@ -39,13 +44,47 @@ export default function AiSolutionsIntakeForm() {
     ) {
       return;
     }
-    const generatedId = `SBX-${Math.floor(1000 + Math.random() * 9000)}`;
-    setTicketId(generatedId);
-    setSubmitted(true);
+
+    setSubmitting(true);
+    setErrorMessage("");
+
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "ai-solutions-intake",
+          name: formData.name,
+          email: formData.workEmail,
+          website: formData.website,
+          details: {
+            company: formData.company,
+            erpInfrastructure: formData.erpInfrastructure,
+            weeklyHours: formData.weeklyHours,
+            manufacturingType: formData.manufacturingType,
+            bottleneckDescription: formData.bottleneckDescription,
+          },
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Something went wrong. Please try again.");
+      }
+
+      const generatedId = `SBX-${Math.floor(1000 + Math.random() * 9000)}`;
+      setTicketId(generatedId);
+      setSubmitted(true);
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleReset = () => {
     setSubmitted(false);
+    setErrorMessage("");
     setFormData({
       name: "",
       workEmail: "",
@@ -54,6 +93,7 @@ export default function AiSolutionsIntakeForm() {
       weeklyHours: "",
       manufacturingType: "",
       bottleneckDescription: "",
+      website: "",
     });
   };
 
@@ -95,6 +135,19 @@ export default function AiSolutionsIntakeForm() {
       {/* Targeted Intake Form */}
       <div className={styles.formCard}>
         <form onSubmit={handleSubmit}>
+          {/* Honeypot field — hidden from real users, bots tend to fill every input */}
+          <div style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }} aria-hidden="true">
+            <label htmlFor="ai-solutions-website">Website</label>
+            <input
+              id="ai-solutions-website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={formData.website}
+              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+            />
+          </div>
+
           <div className={styles.formGrid}>
             {/* Full Name */}
             <div className={styles.formGroup}>
@@ -280,10 +333,24 @@ export default function AiSolutionsIntakeForm() {
             </p>
           </div>
 
+          {errorMessage && (
+            <div className={styles.formErrorBox}>
+              <AlertCircle size={16} /> <span>{errorMessage}</span>
+            </div>
+          )}
+
           {/* Action CTAs */}
           <div className={styles.submitActions}>
-            <button type="submit" className={styles.submitPrimaryBtn}>
-              <Send size={16} /> Request a Custom Sandbox
+            <button type="submit" className={styles.submitPrimaryBtn} disabled={submitting}>
+              {submitting ? (
+                <>
+                  <Loader2 size={16} className={styles.spinnerIcon} /> Submitting...
+                </>
+              ) : (
+                <>
+                  <Send size={16} /> Request a Custom Sandbox
+                </>
+              )}
             </button>
 
             <Link

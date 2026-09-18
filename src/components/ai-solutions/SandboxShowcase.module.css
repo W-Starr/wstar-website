@@ -4,6 +4,21 @@
   gap: 40px;
 }
 
+.illustrativeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+  padding: 8px 16px;
+  background: rgba(234, 179, 8, 0.08);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  border-radius: var(--radius-full);
+  color: #fde68a;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: center;
+}
+
 /* Video Showcase Top Selector */
 .galleryTabs {
   display: flex;
@@ -137,6 +152,14 @@
   justify-content: space-between;
   padding: 28px;
   overflow: hidden;
+}
+
+.realVideoPlayer {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 520px;
+  background: #000;
 }
 
 .watermark {

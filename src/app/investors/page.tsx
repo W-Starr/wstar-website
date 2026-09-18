@@ -166,7 +166,7 @@ export default function InvestorsPage() {
                             hear from you.
                         </p>
                     </div>
-                    <ContactForm />
+                    <ContactForm formType="investor" />
                 </div>
             </section>
         </>
