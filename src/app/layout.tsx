@@ -19,10 +19,7 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://wstartech.ng"),
-  title: {
-    default: "WSTAR — Enterprise AI, EdTech & AgriTech Engineering",
-    template: "%s | WSTAR",
-  },
+  title: "WSTAR — Enterprise AI, EdTech & AgriTech Engineering",
   description:
     "WSTAR Technologies engineers deterministic AI Solutions for industrial B2B workflows, alongside Ace-Acad (EdTech) and PlantIQ (AgriTech) — built in Nigeria, engineered to global standards.",
 };

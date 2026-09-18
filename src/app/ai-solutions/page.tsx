@@ -218,8 +218,8 @@ export default function AiSolutionsPage() {
           <div className="section-header">
             <h2>The &quot;Show, Don&apos;t Tell&quot; Prototype Gallery</h2>
             <p>
-              Visual proof over abstract claims. Watch 90-second Loom recordings
-              demonstrating our sandbox environments autonomously resolving complex
+              Visual proof over abstract claims. Explore 90-second interactive
+              simulations of our sandbox environments autonomously resolving complex
               industrial workflows.
             </p>
           </div>

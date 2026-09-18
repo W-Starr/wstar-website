@@ -22,14 +22,14 @@ export default function Home() {
     <>
       {/* ===== Hero Section ===== */}
       <HeroSection
-        label="Youth-Led Innovation"
+        label="Innovation-Driven Engineering"
         title={
           <>
             Empowering Africa.{" "}
             <span>Engineering the Future.</span>
           </>
         }
-        description="WSTAR is a youth-led technology company building impactful EdTech and AgriTech solutions. From offline-first study tools to automated smart farming, we solve real-world problems to position Africa as a global leader in innovation."
+        description="WSTAR Technologies engineers deterministic AI Solutions for enterprise B2B workflows, alongside offline-first EdTech and automated AgriTech — solving real-world problems to position Africa as a global leader in innovation."
         visual={
           <div className={styles.heroMockupContainer}>
             <Image
