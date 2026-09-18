@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@sanity/client'
 import { leadSubmissionSchema } from '@/lib/leads'
 import { checkRateLimit } from '@/os/lib/rateLimit'
+import { notifyLead } from '@/lib/notifyLead'
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
@@ -75,6 +76,10 @@ export async function POST(req: NextRequest) {
       submittedAt: new Date().toISOString(),
       sourceIp: ip,
     })
+
+    // Best-effort — the lead is already safely stored above, so an email
+    // failure here should never surface as a submission error to the user.
+    await notifyLead({ formType, name, email, details, website: '' })
 
     return NextResponse.json({ success: true })
   } catch (error: unknown) {
