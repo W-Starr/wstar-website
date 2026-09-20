@@ -1,0 +1,72 @@
+.legalPage {
+    padding-top: 120px;
+    padding-bottom: 80px;
+}
+
+.contentContainer {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contentContainer h1 {
+    font-size: 2.25rem;
+    margin-bottom: 8px;
+    color: var(--white);
+}
+
+.meta {
+    color: var(--gray-500);
+    font-size: 0.85rem;
+    margin: 4px 0;
+}
+
+.placeholderBanner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 28px 0 40px;
+    padding: 16px 18px;
+    background: rgba(234, 179, 8, 0.08);
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    border-radius: var(--radius-md);
+    color: #fde68a;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.contentContainer h2 {
+    font-size: 1.4rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--white);
+    border-bottom: 1px solid var(--navy-border);
+    padding-bottom: 0.5rem;
+}
+
+.contentContainer p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    color: var(--gray-300);
+}
+
+.contentContainer ul {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.contentContainer li {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+    color: var(--gray-300);
+}
+
+.contentContainer strong {
+    color: var(--white);
+    font-weight: 600;
+}
+
+.contentContainer a {
+    color: var(--bright-blue);
+}

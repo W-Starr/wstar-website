@@ -1,18 +1,45 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { Twitter, Linkedin, Instagram } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Linkedin, Facebook, Instagram } from "lucide-react";
 import styles from "./Footer.module.css";
+import { socialLinks, contactEmails, companyInfo } from "@/lib/siteConfig";
 
 const Footer = () => {
+    const pathname = usePathname();
+    const isAiSolutions = pathname?.startsWith("/ai-solutions") ?? false;
+
+    const contactEmail = isAiSolutions ? contactEmails.aiSolutions : contactEmails.general;
+
+    const legalLinks = isAiSolutions
+        ? [
+              { href: "/ai-solutions/privacy", label: "Data & Privacy Policy" },
+              { href: "/ai-solutions/terms", label: "Terms of Service" },
+          ]
+        : [
+              { href: "/products/ace-acad/terms", label: "Terms of Service" },
+              { href: "/products/ace-acad/privacy", label: "Privacy Policy (NDPA)" },
+              { href: "/products/ace-acad/acceptable-use", label: "Academic & AI Policy" },
+              { href: "/products/ace-acad/account-deletion", label: "Account Deletion" },
+          ];
+
+    const socials = pathname?.startsWith("/products/ace-acad")
+        ? socialLinks.aceAcad
+        : pathname?.startsWith("/products/plantiq")
+            ? socialLinks.plantiq
+            : socialLinks.wstar;
+
     return (
         <footer className={styles.footer}>
             <div className={styles.footerInner}>
                 <div className={styles.footerBrand}>
                     <Image src="/images/wstar-logo-light.png" alt="WSTAR Logo" width={110} height={32} style={{ objectFit: 'contain' }} className={styles.footerLogo} />
                     <p>
-                        A youth-led technology company building impactful EdTech and
-                        AgriTech solutions for Africa. Global innovation, deeply rooted in
-                        local realities.
+                        WSTAR Technologies engineers deterministic AI, EdTech, AgriTech, and
+                        CareerTech products — from autonomous industrial agents to AI-powered
+                        career tools, built in Nigeria for global standards.
                     </p>
                 </div>
 
@@ -29,20 +56,22 @@ const Footer = () => {
                     <Link href="/ai-solutions" className={styles.footerLink}>WSTAR AI Solutions</Link>
                     <Link href="/products/ace-acad" className={styles.footerLink}>Ace-Acad</Link>
                     <Link href="/products/plantiq" className={styles.footerLink}>PlantIQ</Link>
+                    <Link href="/products/ace-opportunity" className={styles.footerLink}>Ace-Opportunity</Link>
                 </div>
 
                 <div className={styles.footerCol}>
                     <h4>Legal</h4>
-                    <Link href="/products/ace-acad/terms" className={styles.footerLink}>Terms of Service</Link>
-                    <Link href="/products/ace-acad/privacy" className={styles.footerLink}>Privacy Policy (NDPA)</Link>
-                    <Link href="/products/ace-acad/acceptable-use" className={styles.footerLink}>Academic & AI Policy</Link>
-                    <Link href="/products/ace-acad/account-deletion" className={styles.footerLink}>Account Deletion</Link>
+                    {legalLinks.map((link) => (
+                        <Link key={link.href} href={link.href} className={styles.footerLink}>
+                            {link.label}
+                        </Link>
+                    ))}
                 </div>
 
                 <div className={styles.footerCol}>
                     <h4>Connect</h4>
-                    <a href="mailto:wstar5552@gmail.com" className={styles.footerLink}>
-                        wstar5552@gmail.com
+                    <a href={`mailto:${contactEmail}`} className={styles.footerLink}>
+                        {contactEmail}
                     </a>
                     <span className={styles.footerLink}>ABU Zaria, Nigeria</span>
                 </div>
@@ -50,12 +79,24 @@ const Footer = () => {
 
             <div className={styles.footerBottom}>
                 <span className={styles.footerCopyright}>
-                    © {new Date().getFullYear()} WSTAR. All rights reserved.
+                    © {new Date().getFullYear()} {companyInfo.legalName} · {companyInfo.registrationNumber}. All rights reserved.
                 </span>
                 <div className={styles.footerSocials}>
-                    <a href="#" className={styles.socialLink} aria-label="Twitter"><Twitter size={18} /></a>
-                    <a href="#" className={styles.socialLink} aria-label="LinkedIn"><Linkedin size={18} /></a>
-                    <a href="#" className={styles.socialLink} aria-label="Instagram"><Instagram size={18} /></a>
+                    {socials.linkedin && (
+                        <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="WSTAR on LinkedIn">
+                            <Linkedin size={18} />
+                        </a>
+                    )}
+                    {socials.facebook && (
+                        <a href={socials.facebook} target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="WSTAR on Facebook">
+                            <Facebook size={18} />
+                        </a>
+                    )}
+                    {socials.instagram && (
+                        <a href={socials.instagram} target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="WSTAR on Instagram">
+                            <Instagram size={18} />
+                        </a>
+                    )}
                 </div>
             </div>
         </footer>

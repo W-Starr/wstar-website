@@ -166,13 +166,13 @@ export default function PlantIQPage() {
                             pilot launch. Secure your PlantIQ device today.
                         </p>
                         <p className={styles.priceTag}>
-                            ₦80,000 <span>estimated</span>
+                            Pricing to be announced
                         </p>
                         <p className={styles.priceNote}>
-                            Includes the PlantIQ device, solar panel, and mobile app access.
+                            Will include the PlantIQ device, solar panel, and mobile app access.
                         </p>
                         <CTAButton href="/contact" variant="primary" size="large">
-                            Reserve Your PlantIQ Device
+                            Join the Waitlist
                         </CTAButton>
                     </div>
                 </div>

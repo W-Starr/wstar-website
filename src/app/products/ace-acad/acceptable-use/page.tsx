@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Academic & AI Policy - Ace-Acad | WSTAR',
-    description: 'Acceptable Use and Academic AI Policy for Ace Acad by WSTAR, detailing academic integrity, prohibited technical conduct, and AI content transparency.',
+    description: 'Acceptable Use and Academic AI Policy for Ace-Acad by WSTAR, detailing academic integrity, prohibited technical conduct, and AI content transparency.',
 };
 
 export default function AcceptableUsePage() {
@@ -17,15 +17,15 @@ export default function AcceptableUsePage() {
 
                 <h2>1. PURPOSE &amp; PHILOSOPHY</h2>
                 <p>
-                    <strong>Ace Acad</strong> was created by <strong>WSTAR</strong> to empower Nigerian university students to achieve academic excellence through structured, disciplined, and accessible study methods. This Policy outlines our standards for academic integrity and details how artificial intelligence technologies are responsibly applied.
+                    <strong>Ace-Acad</strong> was created by <strong>WSTAR</strong> to empower Nigerian university students to achieve academic excellence through structured, disciplined, and accessible study methods. This Policy outlines our standards for academic integrity and details how artificial intelligence technologies are responsibly applied.
                 </p>
 
                 <h2>2. ACADEMIC INTEGRITY STANDARDS</h2>
                 <p>
-                    Ace Acad is an active-recall study companion. It is designed to reinforce your understanding—never as a tool to bypass genuine learning.
+                    Ace-Acad is an active-recall study companion. It is designed to reinforce your understanding—never as a tool to bypass genuine learning.
                 </p>
                 <ul>
-                    <li><strong>No Examination Malpractice:</strong> Ace Acad must never be accessed or used during active, proctored university semester examinations, mid-term tests, or continuous assessment evaluations where mobile devices are prohibited.</li>
+                    <li><strong>No Examination Malpractice:</strong> Ace-Acad must never be accessed or used during active, proctored university semester examinations, mid-term tests, or continuous assessment evaluations where mobile devices are prohibited.</li>
                     <li><strong>Authentic Learning:</strong> AI-assisted summaries and study guides should supplement, not replace, your required reading of prescribed university textbooks and attendance at official lectures.</li>
                 </ul>
 

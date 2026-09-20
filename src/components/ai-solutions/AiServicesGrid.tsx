@@ -123,6 +123,9 @@ export default function AiServicesGrid() {
             </div>
 
             <div className={styles.codeSnippetBox}>
+              <div className={styles.codeComment}>
+                // Illustrative sandbox output — not a live client deployment
+              </div>
               <div className={styles.codeComment}>// Parametric substitution payload</div>
               <div>&#123;</div>
               <div>&nbsp;&nbsp;<span className={styles.codeKey}>&quot;requested_sku&quot;</span>: <span className={styles.codeVal}>&quot;HYD-VLV-400A&quot;</span>,</div>
@@ -239,11 +242,14 @@ export default function AiServicesGrid() {
                   <Cpu size={15} className={styles.stepIcon} />
                   <span>Tier-One Deflection</span>
                 </div>
-                <span className={styles.stepValue}>75% - 85% Auto-Resolved</span>
+                <span className={styles.stepValue}>75%–85% Auto-Resolved (sandbox benchmark)</span>
               </div>
             </div>
 
             <div className={styles.codeSnippetBox}>
+              <div className={styles.codeComment}>
+                // Illustrative sandbox output — not a live client deployment
+              </div>
               <div className={styles.codeComment}>// Verified citation grounding</div>
               <div>&#123;</div>
               <div>&nbsp;&nbsp;<span className={styles.codeKey}>&quot;grounding_source&quot;</span>: <span className={styles.codeVal}>&quot;SOP-MECH-712-REV4.pdf&quot;</span>,</div>
@@ -254,7 +260,7 @@ export default function AiServicesGrid() {
             </div>
 
             <div className={styles.panelFooter}>
-              <span>Engineering Time Saved</span>
+              <span>Engineering Time Saved (Modeled Estimate)</span>
               <span className={styles.panelFooterHighlight}>
                 <CheckCircle2 size={14} /> ~40+ Hrs / Engineer / Mo
               </span>

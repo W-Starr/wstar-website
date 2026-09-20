@@ -3,24 +3,24 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Privacy Policy - Ace-Acad | WSTAR',
-    description: 'NDPA 2023-compliant Privacy Policy for Ace Acad, outlining data collection, processing, security, and statutory data subject rights.',
+    description: 'NDPA 2023-compliant Privacy Policy for Ace-Acad, outlining data collection, processing, security, and statutory data subject rights.',
 };
 
 export default function PrivacyPolicyPage() {
     return (
         <main className={`section ${styles.privacyPage}`}>
             <div className={`container ${styles.contentContainer}`}>
-                <h1>Privacy Policy for Ace Acad</h1>
+                <h1>Privacy Policy for Ace-Acad</h1>
                 <p><strong>Effective Date:</strong> August 17, 2026</p>
                 <p><strong>Last Updated:</strong> August 17, 2026</p>
                 <p><strong>Version:</strong> 1.0.0</p>
 
                 <h2>1. INTRODUCTION</h2>
                 <p>
-                    Ace Acad (“Ace Acad”, “we”, “us”, or “our”) is an educational mobile application developed and operated by <strong>WSTAR</strong> (“World of Science, Technology, Advancement & Research”), located at Ahmadu Bello University, Zaria, Kaduna State, Nigeria.
+                    Ace-Acad (“Ace-Acad”, “we”, “us”, or “our”) is an educational mobile application developed and operated by <strong>WSTAR</strong> (“World of Science, Technology, Advancement & Research”), located at Ahmadu Bello University, Zaria, Kaduna State, Nigeria.
                 </p>
                 <p>
-                    Ace Acad helps university undergraduates manage coursework, access curated study paths, review course materials offline, and test their academic knowledge through structured session quizzes. We are firmly committed to respecting and protecting student data privacy in strict compliance with the <strong>Nigeria Data Protection Act 2023 (NDPA)</strong>.
+                    Ace-Acad helps university undergraduates manage coursework, access curated study paths, review course materials offline, and test their academic knowledge through structured session quizzes. We are firmly committed to respecting and protecting student data privacy in strict compliance with the <strong>Nigeria Data Protection Act 2023 (NDPA)</strong>.
                 </p>
 
                 <h2>2. DATA CONTROLLER & CONTACT DETAILS</h2>
@@ -53,11 +53,11 @@ export default function PrivacyPolicyPage() {
                 </ul>
 
                 <h3>3.3 What We DO NOT Collect</h3>
-                <p>To ensure transparency, Ace Acad does NOT collect:</p>
+                <p>To ensure transparency, Ace-Acad does NOT collect:</p>
                 <ul>
                     <li>❌ GPS or precise geolocation data (no location permissions are requested).</li>
                     <li>❌ Device photos, camera, microphone, or external storage access.</li>
-                    <li>❌ Payment card details, BVN, or financial data (Ace Acad MVP is 100% free).</li>
+                    <li>❌ Payment card details, BVN, or financial data (Ace-Acad MVP is 100% free).</li>
                     <li>❌ Sensitive biometric, health, or political data.</li>
                 </ul>
 
@@ -116,7 +116,7 @@ export default function PrivacyPolicyPage() {
 
                 <h2>10. CHILDREN &amp; MINORS (NDPA SECTION 31)</h2>
                 <p>
-                    Ace Acad is designed for university undergraduate students. Under Nigerian law, individuals under 18 are minors. Students aged 16–17 entering 100-Level affirm during registration that they have obtained parental or guardian permission to register and use the service. We do not knowingly collect data from children under 13.
+                    Ace-Acad is designed for university undergraduate students. Under Nigerian law, individuals under 18 are minors. Students aged 16–17 entering 100-Level affirm during registration that they have obtained parental or guardian permission to register and use the service. We do not knowingly collect data from children under 13.
                 </p>
 
                 <h2>11. REGULATORY AUTHORITY COMPLAINTS</h2>

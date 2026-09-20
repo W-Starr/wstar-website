@@ -72,6 +72,13 @@ const Navbar = () => {
                             >
                                 PlantIQ (AgriTech)
                             </Link>
+                            <Link
+                                href="/products/ace-opportunity"
+                                className={styles.dropdownItem}
+                                onClick={closeMenu}
+                            >
+                                Ace-Opportunity (CareerTech)
+                            </Link>
                         </div>
                     </div>
                     <Link

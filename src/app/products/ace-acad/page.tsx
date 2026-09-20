@@ -2,15 +2,17 @@ import HeroSection from "@/components/HeroSection";
 import CTAButton from "@/components/CTAButton";
 import FeatureCard from "@/components/FeatureCard";
 import PricingCard from "@/components/PricingCard";
+import AceAcadWaitlistForm from "./AceAcadWaitlistForm";
+import AceAcadFAQ from "./AceAcadFAQ";
 import Image from "next/image";
 import { BookOpen, Target, Layers, BarChart } from "lucide-react";
 import styles from "./aceacad.module.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Ace-Acad — Smarter Studying, Simplified | WSTAR",
+    title: "Ace-Acad — Offline-First Study App for Nigerian Students | WSTAR",
     description:
-        "Ace-Acad is an intelligent learning app designed for Nigerian undergraduates. Offline e-library, flashcard quizzes, study guides, and GPA calculator.",
+        "Ace-Acad is an offline-first study app for Nigerian undergraduates — curriculum-aligned quizzes, study guides, and a GPA calculator, built with NDPA-compliant data privacy.",
 };
 
 export default function AceAcadPage() {
@@ -25,10 +27,24 @@ export default function AceAcadPage() {
                         <span>Simplified for Nigerian Students.</span>
                     </>
                 }
-                description="Ace-Acad is an intelligent learning app that personalizes your reading, quizzes, and study reminders. Designed specifically for the Nigerian university curriculum, it empowers you to achieve higher retention with minimal effort."
+                description="Ace-Acad is an intelligent learning app that personalizes your reading, quizzes, and study reminders — built for the Nigerian university curriculum. Currently live in beta across all departments at ABU Zaria, and expanding fast."
                 visual={
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <Image src="/images/ace-acad-mockup.png" alt="Ace-Acad App Preview" width={280} height={500} style={{ objectFit: 'contain', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', borderRadius: 'var(--radius-lg)' }} priority />
+                    <div style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <Image src="/images/ace-acad/study-session.png" alt="Ace-Acad study session screen showing MATH 101: Introduction to Limits" width={280} height={498} style={{ objectFit: 'cover', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', borderRadius: 'var(--radius-lg)' }} priority />
+                        <Image
+                            src="/images/ace-acad/ace-acad-badge.png"
+                            alt="Ace-Acad app icon"
+                            width={56}
+                            height={56}
+                            style={{
+                                position: "absolute",
+                                bottom: "-16px",
+                                right: "calc(50% - 140px - 16px)",
+                                borderRadius: "14px",
+                                boxShadow: "0 8px 20px rgba(0,0,0,0.5)",
+                                border: "2px solid var(--deep-navy)",
+                            }}
+                        />
                     </div>
                 }
             >
@@ -105,6 +121,25 @@ export default function AceAcadPage() {
                             light
                         />
                     </div>
+
+                    {/* Real Ace-Acad screenshots, sourced from the live Play Store listing */}
+                    <div className={styles.screenshotGrid}>
+                        {[
+                            { src: "/images/ace-acad/dashboard-home.png", label: "Home Dashboard" },
+                            { src: "/images/ace-acad/study-library.png", label: "Study Library" },
+                            { src: "/images/ace-acad/study-session.png", label: "Study Session" },
+                        ].map(({ src, label }) => (
+                            <div key={label} className={styles.screenshotSlot}>
+                                <Image
+                                    src={src}
+                                    alt={`Ace-Acad ${label} screen`}
+                                    width={270}
+                                    height={480}
+                                    style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "inherit" }}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
@@ -112,9 +147,9 @@ export default function AceAcadPage() {
             <section className="section">
                 <div className="container">
                     <div className="section-header">
-                        <h2>Start Free. Upgrade for Ultimate Power.</h2>
+                        <h2>100% Free — With a Premium Tier on the Roadmap.</h2>
                         <p>
-                            Choose the plan that fits your study goals.
+                            The Ace-Acad MVP is completely free during beta. Here&apos;s what&apos;s coming next.
                         </p>
                     </div>
                     <div className={styles.pricingContainer}>
@@ -122,11 +157,10 @@ export default function AceAcadPage() {
                             <PricingCard
                                 plan="Free"
                                 price="₦0"
-                                description="Everything you need to get started."
+                                description="Everything in the current beta, at no cost."
                                 features={[
                                     "Basic e-library access",
                                     "Standard quizzes",
-                                    "Campus guide",
                                     "GPA calculator",
                                 ]}
                                 ctaText="Get Started Free"
@@ -134,9 +168,8 @@ export default function AceAcadPage() {
                             />
                             <PricingCard
                                 plan="Premium"
-                                price="₦1,500 – ₦3,000"
-                                period="month"
-                                description="Unlock your full academic potential."
+                                price="Pricing to be announced"
+                                description="Unlock your full academic potential — coming soon."
                                 features={[
                                     "AI-powered quiz generation",
                                     "Personalized study recommendations",
@@ -144,10 +177,10 @@ export default function AceAcadPage() {
                                     "Premium offline study packs",
                                     "Priority support",
                                 ]}
-                                ctaText="Choose Premium"
+                                ctaText="Get notified when Premium launches"
                                 ctaHref="#early-access"
                                 highlighted
-                                badge="Recommended"
+                                badge="Coming Soon"
                             />
                         </div>
                     </div>
@@ -160,27 +193,27 @@ export default function AceAcadPage() {
                     <div className={styles.earlyAccess}>
                         <h2>Are you an ABU Zaria Student? You&#39;re First in Line.</h2>
                         <p>
-                            We are currently rolling out our Beta version for undergraduates,
-                            starting with the Mechatronics Department and the Faculty of
-                            Engineering at Ahmadu Bello University. Secure your early access
+                            We are currently live in beta for undergraduates across all
+                            departments at Ahmadu Bello University. Secure your early access
                             today.
                         </p>
-                        <div className={styles.emailForm}>
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                className={styles.emailInput}
-                            />
-                            <CTAButton href="#" variant="primary">
-                                Claim Early Access
-                            </CTAButton>
-                        </div>
+                        <AceAcadWaitlistForm />
                         <div style={{ marginTop: "2rem", textAlign: "center" }}>
                             <a href="/products/ace-acad/privacy" style={{ color: "var(--color-primary-light)", textDecoration: "underline", fontSize: "0.9rem" }}>
                                 Read our Privacy Policy
                             </a>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            {/* ===== FAQ ===== */}
+            <section className="section section--light">
+                <div className="container">
+                    <div className="section-header">
+                        <h2>Frequently Asked Questions</h2>
+                    </div>
+                    <AceAcadFAQ />
                 </div>
             </section>
         </>

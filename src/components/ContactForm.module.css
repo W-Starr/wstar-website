@@ -67,6 +67,80 @@
     align-self: flex-start;
 }
 
+.submitBtn button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.spinner {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.errorState {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    color: #fca5a5;
+    font-size: 0.85rem;
+}
+
+.successState {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 40px 0;
+    color: var(--white);
+}
+
+.successState svg {
+    color: #34d399;
+    margin-bottom: 8px;
+}
+
+.successState h3 {
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.successState p {
+    color: var(--gray-400);
+    margin: 0 0 12px;
+}
+
+.sendAnotherBtn {
+    background: transparent;
+    border: 1px solid var(--navy-border);
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.sendAnotherBtn:hover {
+    border-color: var(--bright-blue);
+    background-color: rgba(37, 166, 221, 0.08);
+}
+
 /* Light variant */
 .formLight input,
 .formLight textarea,
