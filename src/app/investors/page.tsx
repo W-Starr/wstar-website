@@ -41,8 +41,7 @@ export default function InvestorsPage() {
                     <div className="section-header">
                         <h2>Massive Markets. Untapped Potential.</h2>
                         <p>
-                            Four high-growth sectors with enormous addressable markets across
-                            Africa.
+                            Four high-growth sectors spanning African and global markets.
                         </p>
                     </div>
                     <div className={styles.marketGrid}>
@@ -76,13 +75,13 @@ export default function InvestorsPage() {
                             <p className={styles.marketLabel}>Industrial AI — WSTAR AI Solutions</p>
                             <span className={styles.marketStat}>Underserved</span>
                             <span className={styles.marketStatLabel}>
-                                Mid-market manufacturers &amp; distributors across Africa
+                                Mid-market industrial &amp; B2B distributors globally
                             </span>
                             <h3>Directional opportunity — no third-party estimate cited yet</h3>
                             <p>
-                                African mid-market manufacturers, distributors, and technical
-                                service teams carry significant administrative overhead with
-                                little enterprise-grade AI tooling built for their workflows.
+                                Mid-market manufacturers, distributors, and technical service
+                                teams carry significant administrative overhead with little
+                                enterprise-grade AI tooling built for their workflows.
                             </p>
                         </div>
                         <div className={styles.marketCard}>
