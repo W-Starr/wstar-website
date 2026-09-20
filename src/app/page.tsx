@@ -12,6 +12,8 @@ import {
   Database,
   Smartphone,
   Cpu,
+  Target,
+  FileCheck,
 } from "lucide-react";
 
 export default function Home() {
@@ -26,7 +28,7 @@ export default function Home() {
             <span>Industrial &amp; B2B Workflows.</span>
           </>
         }
-        description="WSTAR Technologies engineers bespoke, physics-aware autonomous agents that eliminate administrative bottlenecks for mid-market distributors, manufacturers, and technical service teams — alongside our EdTech and AgriTech ventures below."
+        description="WSTAR Technologies engineers bespoke, physics-aware autonomous agents that eliminate administrative bottlenecks for mid-market distributors, manufacturers, and technical service teams — alongside our EdTech, AgriTech, and CareerTech ventures below."
         visual={
           <div className={styles.heroAiCard}>
             <div className={styles.heroAiCardHeader}>
@@ -108,8 +110,8 @@ export default function Home() {
           <div className="section-header">
             <h2>Also Building</h2>
             <p>
-              Beyond AI Solutions, WSTAR engineers offline-first EdTech and automated AgriTech
-              for African markets.
+              Beyond AI Solutions, WSTAR engineers offline-first EdTech, automated AgriTech,
+              and AI-driven CareerTech for African markets.
             </p>
           </div>
 
@@ -182,6 +184,48 @@ export default function Home() {
                 <CTAButton href="/products/plantiq" variant="secondary" size="small">
                   Explore PlantIQ
                 </CTAButton>
+              </div>
+            </div>
+
+            {/* Ace-Opportunity Card */}
+            <div className={styles.productCard}>
+              <div className={styles.productHeader}>
+                <div className={styles.productTag}>CareerTech • AI Career Platform</div>
+                <h3>Ace-Opportunity: Your AI-Powered Career Strategist.</h3>
+                <p>
+                  An AI agent that finds jobs, internships, scholarships, and fellowships
+                  that actually fit you — then helps you prepare to win them. Live now, in
+                  active beta with real students and job seekers.
+                </p>
+              </div>
+
+              <div className={styles.productFeatures}>
+                <div className={styles.featureItem}>
+                  <Target className={styles.featureIcon} />
+                  <span>Personalized matching by real skills, course of study, and level — not just recency</span>
+                </div>
+                <div className={styles.featureItem}>
+                  <FileCheck className={styles.featureIcon} />
+                  <span>AI mock interviews, cover letters, and CV review — grounded strictly in your own verified profile</span>
+                </div>
+                <div className={styles.featureItem}>
+                  <GraduationCap className={styles.featureIcon} />
+                  <span>Skill-gap coaching with a real, time-boxed roadmap to your target role</span>
+                </div>
+              </div>
+
+              <div className={styles.productFooter}>
+                <p className={styles.miniStat}>
+                  Now in active beta · Free during beta
+                </p>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  <CTAButton href="https://ace-opportunity.onrender.com" variant="primary" size="small" external>
+                    Join the Beta
+                  </CTAButton>
+                  <CTAButton href="/products/ace-opportunity" variant="secondary" size="small">
+                    View Product Details
+                  </CTAButton>
+                </div>
               </div>
             </div>
           </div>

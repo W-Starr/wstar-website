@@ -7,6 +7,7 @@ const staticRoutes = [
     { path: "/ai-solutions", priority: 0.9, changeFrequency: "weekly" as const },
     { path: "/products/ace-acad", priority: 0.8, changeFrequency: "weekly" as const },
     { path: "/products/plantiq", priority: 0.8, changeFrequency: "weekly" as const },
+    { path: "/products/ace-opportunity", priority: 0.8, changeFrequency: "weekly" as const },
     { path: "/about", priority: 0.6, changeFrequency: "monthly" as const },
     { path: "/investors", priority: 0.6, changeFrequency: "monthly" as const },
     { path: "/publications", priority: 0.6, changeFrequency: "weekly" as const },
