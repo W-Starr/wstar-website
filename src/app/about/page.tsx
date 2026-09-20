@@ -10,7 +10,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "About Us — WSTAR",
     description:
-        "WSTAR Technologies is a Nigerian innovation-driven technology company engineering enterprise AI, EdTech, and AgriTech solutions for African and global markets.",
+        "WSTAR Technologies is a Nigerian innovation-driven technology company engineering enterprise AI, EdTech, AgriTech, and CareerTech solutions for African and global markets.",
 };
 
 export default function AboutPage() {
@@ -25,7 +25,7 @@ export default function AboutPage() {
                         <span>Advancement & Research</span>
                     </>
                 }
-                description="An innovation-driven technology company engineering enterprise AI, EdTech, and AgriTech solutions that solve real-world challenges — built in Nigeria, engineered to global standards."
+                description="An innovation-driven technology company engineering enterprise AI, EdTech, AgriTech, and CareerTech solutions that solve real-world challenges — built in Nigeria, engineered to global standards."
                 compact
             >
                 <CTAButton href="/contact" variant="primary">

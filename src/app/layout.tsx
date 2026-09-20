@@ -19,20 +19,20 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://wstartech.ng"),
-  title: "WSTAR — Enterprise AI, EdTech & AgriTech Engineering",
+  title: "WSTAR — Enterprise AI, EdTech, AgriTech & CareerTech Engineering",
   description:
-    "WSTAR Technologies engineers deterministic AI Solutions for industrial B2B workflows, alongside Ace-Acad (EdTech) and PlantIQ (AgriTech) — built in Nigeria, engineered to global standards.",
+    "WSTAR Technologies engineers deterministic AI Solutions for industrial B2B workflows, alongside Ace-Acad (EdTech), PlantIQ (AgriTech), and Ace-Opportunity (CareerTech) — built in Nigeria, engineered to global standards.",
 };
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "WSTAR Technologies Ltd",
+  name: "WSTAR TECHNOLOGIES LTD",
   alternateName: "WSTAR",
   url: "https://wstartech.ng",
   logo: "https://wstartech.ng/images/wstar-logo-light.png",
   description:
-    "WSTAR Technologies engineers deterministic AI Solutions for industrial B2B workflows, alongside Ace-Acad (EdTech) and PlantIQ (AgriTech).",
+    "WSTAR Technologies engineers deterministic AI Solutions for industrial B2B workflows, alongside Ace-Acad (EdTech), PlantIQ (AgriTech), and Ace-Opportunity (CareerTech).",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Zaria",

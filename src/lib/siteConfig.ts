@@ -5,7 +5,7 @@ export interface SocialLinks {
 }
 
 export const companyInfo = {
-    legalName: "WSTAR Technologies Ltd",
+    legalName: "WSTAR TECHNOLOGIES LTD",
     registrationNumber: "RC 9068117",
 };
 

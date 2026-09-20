@@ -37,9 +37,9 @@ const Footer = () => {
                 <div className={styles.footerBrand}>
                     <Image src="/images/wstar-logo-light.png" alt="WSTAR Logo" width={110} height={32} style={{ objectFit: 'contain' }} className={styles.footerLogo} />
                     <p>
-                        WSTAR Technologies engineers deterministic AI, EdTech, and AgriTech
-                        products — from autonomous industrial agents to offline-first learning
-                        tools, built in Nigeria for global standards.
+                        WSTAR Technologies engineers deterministic AI, EdTech, AgriTech, and
+                        CareerTech products — from autonomous industrial agents to AI-powered
+                        career tools, built in Nigeria for global standards.
                     </p>
                 </div>
 
@@ -56,6 +56,7 @@ const Footer = () => {
                     <Link href="/ai-solutions" className={styles.footerLink}>WSTAR AI Solutions</Link>
                     <Link href="/products/ace-acad" className={styles.footerLink}>Ace-Acad</Link>
                     <Link href="/products/plantiq" className={styles.footerLink}>PlantIQ</Link>
+                    <Link href="/products/ace-opportunity" className={styles.footerLink}>Ace-Opportunity</Link>
                 </div>
 
                 <div className={styles.footerCol}>

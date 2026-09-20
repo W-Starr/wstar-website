@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Investors & Partners — WSTAR",
     description:
-        "Back the future of African innovation. Explore WSTAR's market opportunity, financial projections, and partnership opportunities in EdTech and AgriTech.",
+        "Back the future of African innovation. Explore WSTAR's market opportunity, financial projections, and partnership opportunities across Industrial AI, EdTech, AgriTech, and CareerTech.",
 };
 
 export default function InvestorsPage() {
@@ -41,7 +41,7 @@ export default function InvestorsPage() {
                     <div className="section-header">
                         <h2>Massive Markets. Untapped Potential.</h2>
                         <p>
-                            Two high-growth sectors with enormous addressable markets across
+                            Four high-growth sectors with enormous addressable markets across
                             Africa.
                         </p>
                     </div>
@@ -72,6 +72,32 @@ export default function InvestorsPage() {
                                 underserved segment.
                             </p>
                         </div>
+                        <div className={styles.marketCard}>
+                            <p className={styles.marketLabel}>Industrial AI — WSTAR AI Solutions</p>
+                            <span className={styles.marketStat}>Underserved</span>
+                            <span className={styles.marketStatLabel}>
+                                Mid-market manufacturers &amp; distributors across Africa
+                            </span>
+                            <h3>Directional opportunity — no third-party estimate cited yet</h3>
+                            <p>
+                                African mid-market manufacturers, distributors, and technical
+                                service teams carry significant administrative overhead with
+                                little enterprise-grade AI tooling built for their workflows.
+                            </p>
+                        </div>
+                        <div className={styles.marketCard}>
+                            <p className={styles.marketLabel}>CareerTech — Ace-Opportunity</p>
+                            <span className={styles.marketStat}>Growing Fast</span>
+                            <span className={styles.marketStatLabel}>
+                                Nigerian graduates &amp; job seekers entering the market yearly
+                            </span>
+                            <h3>Directional opportunity — no third-party estimate cited yet</h3>
+                            <p>
+                                A large and growing addressable market of Nigerian graduates and
+                                job seekers — the natural next stage after Ace-Acad, still
+                                underserved by generic global job boards.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -92,8 +118,11 @@ export default function InvestorsPage() {
                             </div>
                             <h3>Current Status</h3>
                             <p>
-                                Both flagships in MVP development, self-funded through team
-                                contributions and strategic resource allocation.
+                                Ace-Opportunity is live in open beta with real, unaffiliated
+                                users — our furthest-along venture. WSTAR AI Solutions is running
+                                active sandbox engagements, while Ace-Acad and PlantIQ remain in
+                                pilot/MVP development. All self-funded through team contributions
+                                and strategic resource allocation.
                             </p>
                             <span className={styles.financeHighlight}>
                                 ₦820K total MVP budget
