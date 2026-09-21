@@ -1,18 +1,21 @@
-/* ===== AI Solutions Hero Card ===== */
-.heroAiCard {
+/* ===== WSTAR Applied AI Corporate Stylesheet ===== */
+
+/* ===== Hero Systems Matrix ===== */
+.heroSystemsMatrix {
     background: var(--navy-card);
     border: 1px solid var(--navy-border);
     border-radius: var(--radius-xl);
     padding: 24px;
-    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
     display: flex;
     flex-direction: column;
     gap: 16px;
-    max-width: 380px;
+    width: 100%;
+    max-width: 440px;
     margin: 0 auto;
 }
 
-.heroAiCardHeader {
+.heroSystemsHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -20,19 +23,19 @@
     border-bottom: 1px solid var(--navy-border-subtle);
 }
 
-.heroAiCardTitle {
+.heroSystemsTitle {
     font-family: var(--font-heading);
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--gray-300);
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 
-.heroAiCardStatus {
+.heroSystemsStatus {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -49,274 +52,347 @@
     box-shadow: 0 0 8px #10B981;
 }
 
-.heroAiMetricsGrid {
+.heroSystemsNodes {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 10px;
 }
 
-.heroAiMetricItem {
-    background: rgba(10, 13, 23, 0.6);
+.systemNode {
+    background: rgba(10, 13, 23, 0.65);
     border: 1px solid var(--navy-border-subtle);
     border-radius: var(--radius-md);
-    padding: 12px 14px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
+    transition: border-color var(--transition-fast), transform var(--transition-fast);
 }
 
-.heroAiMetricValue {
+.systemNode:hover {
+    border-color: rgba(37, 166, 221, 0.4);
+    transform: translateY(-1px);
+}
+
+.systemNodeHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--bright-blue);
+}
+
+.systemNodeTitle {
     font-family: var(--font-heading);
-    font-size: 1.25rem;
-    font-weight: 800;
+    font-size: 0.82rem;
+    font-weight: 700;
     color: var(--white);
-    letter-spacing: -0.02em;
+    line-height: 1.2;
 }
 
-.heroAiMetricLabel {
-    font-size: 0.75rem;
+.systemNodeDomain {
+    font-size: 0.72rem;
     color: var(--gray-400);
     line-height: 1.35;
 }
 
-.heroAiCaption {
-    font-size: 0.72rem;
-    color: var(--gray-500);
-    text-align: center;
-    font-style: italic;
-    margin: 0;
+.heroSystemsFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: rgba(37, 166, 221, 0.06);
+    border: 1px solid rgba(37, 166, 221, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 0.74rem;
+    color: var(--bright-blue);
+    font-family: monospace;
 }
 
-.miniStat {
+/* ===== Section Shared Subheaders ===== */
+.sectionSubheader {
     font-size: 0.78rem;
-    color: var(--gray-400);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--bright-blue);
     margin-bottom: 12px;
 }
 
-/* ===== Mission & Identity ===== */
-.missionSection {
+/* ===== The Applied AI Thesis Section ===== */
+.thesisGrid {
     display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 64px;
-    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
 }
 
-.missionMetrics {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
-.metricCard {
-    background: #FFFFFF;
-    border: 1px solid var(--gray-200);
+.thesisCard {
+    background: var(--navy-surface);
+    border: 1px solid var(--navy-border);
     border-radius: var(--radius-lg);
-    padding: 24px 20px;
-    box-shadow: var(--shadow-subtle);
-    display: flex;
-    flex-col: column;
-    gap: 6px;
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.metricCard:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-}
-
-.metricValue {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--deep-navy);
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-}
-
-.metricLabel {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--ink-secondary);
-}
-
-.missionContent h2 {
-    margin-bottom: 20px;
-    color: var(--ink-primary);
-}
-
-.missionContent p {
-    margin-bottom: 24px;
-    font-size: 1.05rem;
-    color: var(--ink-secondary);
-}
-
-.valuesRow {
-    display: flex;
-    gap: 32px;
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid var(--gray-200);
-}
-
-.valueItem {
+    padding: 32px 28px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 16px;
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
 }
 
-.valueTitle {
-    font-family: var(--font-heading);
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--ink-primary);
+.thesisCard:hover {
+    transform: translateY(-3px);
+    border-color: var(--bright-blue);
 }
 
-.valueDesc {
-    font-size: 0.85rem;
-    color: var(--ink-secondary);
-    line-height: 1.4;
+.thesisIconWrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: rgba(37, 166, 221, 0.12);
+    color: var(--bright-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* ===== Products Section ===== */
-.productsGrid {
+.thesisCard h3 {
+    font-size: 1.2rem;
+    color: var(--white);
+    line-height: 1.3;
+}
+
+.thesisCard p {
+    font-size: 0.92rem;
+    color: var(--gray-300);
+    line-height: 1.6;
+}
+
+/* ===== Unbundled Ecosystem Cards ===== */
+.ecosystemGrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    gap: 28px;
+    margin-top: 48px;
 }
 
-.productCard {
-    background-color: var(--navy-surface);
+.pillarCard {
+    background: var(--navy-surface);
     border: 1px solid var(--navy-border);
     border-radius: var(--radius-xl);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform var(--transition-fast), border-color var(--transition-fast);
+    transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.productCard:hover {
-    transform: translateY(-3px);
+.pillarCard:hover {
+    transform: translateY(-4px);
     border-color: var(--bright-blue);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
 }
 
-.featuredInitiativeCard {
-    grid-column: span 2;
-    background: linear-gradient(135deg, rgba(21, 28, 51, 0.9) 0%, rgba(10, 13, 23, 0.95) 100%);
-    border: 1px solid rgba(37, 166, 221, 0.35);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-    transition: transform var(--transition-fast), border-color var(--transition-fast);
-}
-
-.featuredInitiativeCard:hover {
-    transform: translateY(-3px);
-    border-color: var(--bright-blue);
-}
-
-.productHeader {
-    padding: 36px 36px 24px;
+.pillarHeader {
+    padding: 32px 32px 20px;
     border-bottom: 1px solid var(--navy-border-subtle);
 }
 
-.productTag {
-    font-size: 0.75rem;
+.pillarTopMeta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.pillarTag {
+    font-size: 0.74rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--bright-blue);
-    margin-bottom: 12px;
 }
 
-.productHeader h3 {
-    font-size: 1.45rem;
+.statusPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: var(--radius-full);
+    background: rgba(16, 185, 129, 0.12);
+    color: #10B981;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.statusPillWarm {
+    background: rgba(37, 166, 221, 0.12);
+    color: var(--bright-blue);
+    border: 1px solid rgba(37, 166, 221, 0.25);
+}
+
+.statusPillMuted {
+    background: rgba(148, 163, 184, 0.12);
+    color: var(--gray-300);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.pillarHeader h3 {
+    font-size: 1.35rem;
     color: var(--white);
-    line-height: 1.25;
-    margin-bottom: 12px;
+    line-height: 1.28;
+    margin-bottom: 10px;
 }
 
-.productHeader p {
-    font-size: 0.95rem;
+.pillarHeader p {
+    font-size: 0.92rem;
     color: var(--gray-300);
     line-height: 1.6;
 }
 
-.productFeatures {
-    padding: 24px 36px;
+.pillarFeatures {
+    padding: 20px 32px;
     background-color: rgba(10, 13, 23, 0.4);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     flex: 1;
 }
 
-.featureItem {
+.pillarFeatureItem {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     color: var(--gray-300);
+    line-height: 1.45;
 }
 
-.featureIcon {
+.pillarFeatureIcon {
     width: 16px;
     height: 16px;
     color: var(--bright-blue);
+    margin-top: 2px;
     flex-shrink: 0;
 }
 
-.productFooter {
-    padding: 24px 36px 36px;
+.pillarFooter {
+    padding: 24px 32px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--navy-border-subtle);
 }
 
-/* ===== Impact Grid ===== */
-.impactGrid {
+/* ===== Engineering Principles Standards Grid ===== */
+.principlesGrid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
+    margin-top: 40px;
 }
 
-.impactCard {
+.principleCard {
     background-color: var(--navy-surface);
     border: 1px solid var(--navy-border);
     border-radius: var(--radius-lg);
-    padding: 28px 24px;
-    transition: transform var(--transition-fast), border-color var(--transition-fast);
+    padding: 26px 22px;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
 }
 
-.impactCard:hover {
+.principleCard:hover {
     transform: translateY(-2px);
     border-color: var(--bright-blue);
 }
 
-.impactIconWrapper {
-    width: 44px;
-    height: 44px;
+.principleIconWrapper {
+    width: 42px;
+    height: 42px;
     border-radius: var(--radius-md);
     background-color: rgba(37, 166, 221, 0.1);
     color: var(--bright-blue);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 4px;
 }
 
-.impactCard h3 {
+.principleCard h3 {
     font-size: 1.05rem;
     color: var(--white);
     font-weight: 700;
 }
 
-.impactCard p {
-    font-size: 0.9rem;
+.principleCard p {
+    font-size: 0.88rem;
     color: var(--gray-400);
     line-height: 1.55;
+}
+
+/* ===== Leadership Highlight Section ===== */
+.leadershipGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 40px;
+}
+
+.leaderCard {
+    background: var(--navy-surface);
+    border: 1px solid var(--navy-border);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: border-color var(--transition-fast);
+}
+
+.leaderCard:hover {
+    border-color: var(--bright-blue);
+}
+
+.leaderHeader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.leaderAvatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--navy-card);
+    border: 2px solid var(--bright-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--white);
+}
+
+.leaderMeta h3 {
+    font-size: 1.2rem;
+    color: var(--white);
+    margin-bottom: 2px;
+}
+
+.leaderRole {
+    font-size: 0.85rem;
+    color: var(--bright-blue);
+    font-weight: 600;
+}
+
+.leaderBio {
+    font-size: 0.92rem;
+    color: var(--gray-300);
+    line-height: 1.6;
 }
 
 /* ===== Bottom CTA Section ===== */
@@ -329,18 +405,20 @@
 }
 
 .ctaInner {
-    max-width: 720px;
+    max-width: 760px;
     margin: 0 auto;
 }
 
 .ctaInner h2 {
     color: var(--white);
+    font-size: 2rem;
     margin-bottom: 18px;
+    line-height: 1.25;
 }
 
 .ctaInner p {
     color: var(--gray-300);
-    font-size: 1.15rem;
+    font-size: 1.12rem;
     line-height: 1.7;
     margin-bottom: 36px;
 }
@@ -356,7 +434,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 32px;
+    padding: 14px 30px;
     background-color: var(--bright-blue);
     color: var(--white);
     font-family: var(--font-heading);
@@ -379,7 +457,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 32px;
+    padding: 14px 30px;
     background-color: transparent;
     color: var(--white);
     font-family: var(--font-heading);
@@ -399,39 +477,39 @@
     transform: scale(0.98);
 }
 
-@media (max-width: 900px) {
-    .missionSection {
+/* ===== Responsive Breakpoints ===== */
+@media (max-width: 960px) {
+    .thesisGrid {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 20px;
     }
 
-    .productsGrid {
+    .ecosystemGrid {
         grid-template-columns: 1fr;
     }
 
-    .impactGrid {
+    .principlesGrid {
         grid-template-columns: 1fr 1fr;
+    }
+
+    .leadershipGrid {
+        grid-template-columns: 1fr;
     }
 }
 
-@media (max-width: 540px) {
-    .missionMetrics {
+@media (max-width: 600px) {
+    .principlesGrid {
         grid-template-columns: 1fr;
     }
 
-    .valuesRow {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .impactGrid {
+    .heroSystemsNodes {
         grid-template-columns: 1fr;
     }
 
-    .productHeader,
-    .productFeatures,
-    .productFooter {
-        padding-left: 24px;
-        padding-right: 24px;
+    .pillarHeader,
+    .pillarFeatures,
+    .pillarFooter {
+        padding-left: 20px;
+        padding-right: 20px;
     }
 }
