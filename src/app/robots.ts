@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
             {
                 userAgent: "*",
                 allow: "/",
-                disallow: ["/os", "/os/", "/api/"],
+                disallow: ["/os", "/os/", "/api/", "/publications/admin"],
             },
         ],
         sitemap: "https://wstartech.ng/sitemap.xml",

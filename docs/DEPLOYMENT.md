@@ -27,11 +27,11 @@ This guide provides instructions for deploying the **WSTAR Web Platform & Operat
    | `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes | Public Sanity Project ID (`qx20j59l`) |
    | `NEXT_PUBLIC_SANITY_DATASET` | Yes | Public Sanity Dataset name (`production`) |
    | `NEXT_PUBLIC_SANITY_API_VERSION` | Yes | Sanity API version (`2024-03-01`) |
-   | `SANITY_API_WRITE_TOKEN` | Yes | Secret Sanity write token (server-side only) |
+   | `SANITY_API_WRITE_TOKEN` | Yes | Secret Sanity token, server-side only. **Must have the Editor role** — a read/viewer token lets pages load but silently fails every write (OS sync and the Newsroom Studio) |
    | `GEMINI_API_KEY` | Yes | Google Gemini API key for WSTAR OS AI decomposition |
    | `AUTH_SECRET` | Yes | Strong random secret (32+ chars) for JWT session cookies |
-   | `FOUNDER_PASSWORD_ABDULAZIZ` | Yes | Secure password for `abdulaziz@wstartech.ng` |
-   | `FOUNDER_PASSWORD_IBRAHIM` | Yes | Secure password for `ibrahim@wstartech.ng` |
+   | `FOUNDER_PASSWORD_ABDULAZIZ` | Yes | Secure password for `abdulaziz@wstartech.ng`. Also unlocks the Newsroom Studio at `/publications/admin` |
+   | `FOUNDER_PASSWORD_IBRAHIM` | Yes | Secure password for `ibrahim@wstartech.ng`. Also unlocks the Newsroom Studio at `/publications/admin` |
    | `GOOGLE_SERVICE_ACCOUNT_KEY` | Optional | Minified JSON key for Google Drive source ingestion |
    | `FIREBASE_SERVICE_ACCOUNT_KEY` | Optional | Minified JSON key for Ace Acad user feedback sync |
 

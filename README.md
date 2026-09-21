@@ -78,6 +78,9 @@ Open [http://localhost:3000](http://localhost:3000) for the marketing site, or [
 ### 4. Founder Authentication
 Founder accounts (`abdulaziz@wstartech.ng` and `ibrahim@wstartech.ng`) access the Operating System via `/os/login`. Passwords must be defined via `FOUNDER_PASSWORD_ABDULAZIZ` and `FOUNDER_PASSWORD_IBRAHIM` in `.env.local` (local) or Vercel Environment Variables (production). Session tokens are signed using `AUTH_SECRET`.
 
+### 5. Newsroom Studio (`/publications/admin`)
+Publications on the public `/publications` newsroom are posted from the password-gated **Newsroom Studio** at `/publications/admin`. It accepts **either** founder password — no email — and issues its own 12-hour session scoped to publishing only, separate from the WSTAR OS session. Writes run server-side through `SANITY_API_WRITE_TOKEN`, which must be an **Editor**-scoped Sanity token; a read-only token lets the studio open and list items but fails every save. See [**Newsroom Studio Guide**](docs/NEWSROOM_STUDIO.md).
+
 ---
 
 ## 📚 Documentation Index
@@ -87,6 +90,7 @@ For deep-dive technical and operational guides, see the `docs/` directory:
 - [**Technical Architecture & System Design**](docs/ARCHITECTURE.md): Dual-shell layout isolation, Zustand stores, Edge JWT middleware, Gemini AI routing, and Sanity sync.
 - [**API Reference Manual**](docs/API_REFERENCE.md): Full REST specification for all `/api/os/*` routes (Auth, Gemini AI, Sanity sync).
 - [**Founder User Manual (`/os`)**](docs/OPERATING_SYSTEM_MANUAL.md): Operating guide for dual-role perspectives, proposal promotion, and feedback triage.
+- [**Newsroom Studio Guide**](docs/NEWSROOM_STUDIO.md): Password-gated publishing surface at `/publications/admin` — access, architecture, guardrails, and the Sanity token requirement.
 - [**Audit Master Tracker**](AUDIT_MASTER_IMPLEMENTATION_TRACKER.md): Verification matrix tracking all 22 independent audit findings across 5 phases.
 - [**Deployment Guide**](docs/DEPLOYMENT.md): Step-by-step Vercel deployment, environment variable configuration, and Sanity Studio hosting.
 - [**Troubleshooting & Mistakes Log**](MISTAKES.md): Operational failure logs and bug fix history.

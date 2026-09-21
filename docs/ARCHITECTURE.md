@@ -71,6 +71,19 @@ graph TD
 3. **Zod Runtime Validation (`src/os/lib/validation.ts`)**: All mutations dispatched to `/api/os/sync` are validated against strict TypeScript schemas.
 4. **Sliding-Window Rate Limiting (`src/os/lib/rateLimit.ts`)**: API and AI endpoints are guarded by per-IP rate limits to prevent token exhaustion and brute-force attacks.
 
+### Second Gate: The Newsroom Studio
+
+The password-gated publishing studio at `/publications/admin` is a **second,
+independent auth surface**, and understanding why it is not simply part of the OS
+matters before touching it:
+
+- **Separate session by design.** The OS session grants roadmap, proposals, decisions, sources, and financial context. Posting a press release should not require that blast radius, so the studio issues its own cookie — `wstar_pub_session`, 12h, `SameSite=Strict`, signed with the same `AUTH_SECRET` but carrying `scope: "publications"`, which `verifyPublicationsToken()` rejects if absent. The two sessions do not grant each other anything.
+- **Password-only, both founders.** The gate takes no email. `identifyByPassword()` in `src/lib/publicationsAuth.ts` compares the submitted value in constant time against every configured founder password and resolves whichever matched, so `FOUNDER_PASSWORD_ABDULAZIZ` and `FOUNDER_PASSWORD_IBRAHIM` both work and the header still shows the right name.
+- **No middleware backstop.** `src/middleware.ts` matches `/os/:path*` and `/api/os/:path*` only. `/publications/admin` is deliberately outside it — it must render its own lock screen, not redirect to `/os/login`. The consequence: **every** `/api/publications/*` handler must call `requirePublicationsSession(req)` itself. A new route that forgets is public.
+- **Unlisted, not secret.** `noindex, nofollow` on the page, absent from `sitemap.ts`, disallowed in `robots.ts`. Obscurity is a convenience, never the control — the password is.
+
+See [Newsroom Studio Guide](NEWSROOM_STUDIO.md) for the full surface.
+
 ---
 
 ## 3. Modern Reactive State Layer (Zustand)

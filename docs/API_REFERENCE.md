@@ -166,3 +166,84 @@ Crawls the WSTAR Google Drive folder tree using the server-side Service Account 
 
 ### `POST /api/os/feedback/fetch-firebase`
 Directly connects to Google Cloud Firestore, queries recent Ace Acad user feedback submissions, and maps them to Sanity feedback documents.
+
+---
+
+## Newsroom Studio Endpoints (`/api/publications/*`)
+
+These power the password-gated Newsroom Studio at `/publications/admin`. They sit
+**outside** the `src/middleware.ts` matcher (which covers `/os` and `/api/os` only),
+so each handler calls `requirePublicationsSession(req)` from
+`src/lib/publicationsAuth.ts` itself. A new route under `/api/publications/*` that
+omits that call is public — there is no middleware backstop.
+
+Authentication is the `wstar_pub_session` cookie: `httpOnly`, `SameSite=Strict`,
+12-hour expiry, signed with `AUTH_SECRET` and scoped to `publications`. It is
+independent of the WSTAR OS session.
+
+### `POST /api/publications/auth`
+Exchanges a founder password for a studio session. Takes a password only — no
+email — and matches it in constant time against both `FOUNDER_PASSWORD_ABDULAZIZ`
+and `FOUNDER_PASSWORD_IBRAHIM`.
+
+- **Rate Limit:** 8 requests / minute / IP
+- **Request Body:** `{ "password": "..." }`
+- **Response:** `200 OK`
+  ```json
+  {
+    "success": true,
+    "session": { "key": "ibrahim", "name": "Ibrahim Abdulwahab", "initials": "IA" }
+  }
+  ```
+- **Errors:** `401` incorrect password · `429` rate limited · `503` no founder password configured on the deployment
+
+### `GET /api/publications/auth`
+Probes the current session so the studio can restore itself on reload. Always
+`200`; returns `{ "authenticated": false, "session": null }` when locked.
+
+### `DELETE /api/publications/auth`
+Clears the `wstar_pub_session` cookie.
+
+### `GET /api/publications/items`
+Returns every `announcement` document, drafts included, ordered by `publishedAt`
+descending. Studio-only — the public `/publications` page uses its own CDN-backed
+client and filters to `status == "published"`.
+
+### `POST /api/publications/items`
+Creates a publication. Zod-validated; `slug` is derived from the title when omitted.
+
+- **Request Body:**
+  ```json
+  {
+    "title": "WSTAR Closes Pre-Seed Round",
+    "category": "press-release",
+    "status": "published",
+    "excerpt": "...",
+    "publishedAt": "2026-09-21",
+    "author": "WSTAR Technologies",
+    "pdfUrl": "https://cdn.sanity.io/files/...",
+    "pdfFilename": "wstar-pre-seed.pdf",
+    "pdfSize": 482114
+  }
+  ```
+- **Response:** `201 Created` — `{ "success": true, "item": { ... } }`
+
+### `PATCH /api/publications/items`
+Partial update; also backs the inline publish/unpublish toggle. Body is the same
+shape with all fields optional plus a required `"id"`.
+
+### `DELETE /api/publications/items`
+Permanently removes a document. Body: `{ "id": "announcement-1758441599519" }`.
+
+### `POST /api/publications/upload`
+Uploads a PDF or cover image to the Sanity asset store and returns its CDN URL.
+
+- **Body:** `multipart/form-data` with `file` and `kind` (`"pdf"` | `"image"`)
+- **Limits:** PDF `application/pdf` up to 25MB · image PNG/JPEG/WebP up to 8MB
+- **Response:** `{ "success": true, "assetId": "...", "url": "...", "filename": "...", "size": 482114 }`
+
+### Shared behaviour
+
+- Every mutation calls `revalidatePath('/publications')` so the ISR-cached public listing updates immediately rather than waiting out its 60s window.
+- Documents are written in the shape `src/os/context/OSContext.tsx` already reads (keyed on `_id`), so items are shared with the OS announcements board at `/os/announcements`.
+- `503` means `SANITY_API_WRITE_TOKEN` is unset. `403` means Sanity rejected the token — most often a read/viewer token where an **Editor** token is required; the response says so explicitly.

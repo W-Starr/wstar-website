@@ -7,9 +7,12 @@ import Footer from '@/components/Footer'
 
 export default function MarketingShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const isOS = pathname?.startsWith('/os')
 
-  if (isOS) {
+  // The OS and the password-gated Newsroom Studio are full-bleed app surfaces:
+  // they bring their own chrome and must not inherit the marketing nav/footer.
+  const isAppSurface = pathname?.startsWith('/os') || pathname?.startsWith('/publications/admin')
+
+  if (isAppSurface) {
     return <>{children}</>
   }
 
