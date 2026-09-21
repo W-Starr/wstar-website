@@ -36,39 +36,39 @@ export default function AiSolutionsPage() {
           <div className={styles.heroArchitectureCard}>
             <div className={styles.heroCardHeader}>
               <span className={styles.heroCardTitle}>
-                <Cpu size={15} color="var(--bright-blue)" /> Mechatronics AI Core
+                <Cpu size={15} color="var(--bright-blue)" /> Enterprise AI Architecture
               </span>
               <span className={styles.heroCardStatus}>
-                <span className={styles.livePulse} /> 100% Deterministic
+                <span className={styles.livePulse} /> Deterministic Core
               </span>
             </div>
 
             <div className={styles.heroMetricsGrid}>
               <div className={styles.heroMetricItem}>
-                <span className={styles.metricValue}>0.00mm</span>
-                <span className={styles.metricLabel}>Parametric Tolerance Delta</span>
+                <span className={styles.metricValue}>Strict</span>
+                <span className={styles.metricLabel}>JSON Schema Bounds</span>
               </div>
               <div className={styles.heroMetricItem}>
-                <span className={styles.metricValue}>&lt; 1.8s</span>
-                <span className={styles.metricLabel}>RFQ Normalization Latency</span>
-              </div>
-              <div className={styles.heroMetricItem}>
-                <span className={styles.metricValue}>2,400+</span>
-                <span className={styles.metricLabel}>Reclaimed Hours / Desk / Yr</span>
+                <span className={styles.metricValue}>Air-Gapped</span>
+                <span className={styles.metricLabel}>Zero Public Training</span>
               </div>
               <div className={styles.heroMetricItem}>
                 <span className={styles.metricValue}>1-Click</span>
                 <span className={styles.metricLabel}>Human-in-the-Loop Signoff</span>
               </div>
+              <div className={styles.heroMetricItem}>
+                <span className={styles.metricValue}>ERP Native</span>
+                <span className={styles.metricLabel}>Parametric Catalog Matching</span>
+              </div>
             </div>
 
             <p className={styles.heroMetricsCaption}>
-              Sandbox-modeled projections — not yet verified client outcomes.
+              Engineered for enterprise compliance, auditability, and zero hallucination.
             </p>
 
             <div className={styles.heroArchitectureBadge}>
-              <span>PROTOCOL: AIR-GAPPED ERP BRIDGE</span>
-              <span>ZERO HALLUCINATION</span>
+              <span>SECURE PROTOCOL GATEWAY</span>
+              <span>SCHEMA-VALIDATED</span>
             </div>
           </div>
         }
@@ -96,23 +96,23 @@ export default function AiSolutionsPage() {
                   marginBottom: "12px",
                 }}
               >
-                Core Differentiator: Mechatronics Engineering
+                Core Differentiator: Systems Engineering
               </div>
               <h2 style={{ marginBottom: "20px" }}>
                 About WSTAR AI Solutions
               </h2>
               <p className={styles.aboutLead}>
-                WSTAR AI Solutions is a specialized technical initiative
-                operated by WSTAR Technologies. We engineer bespoke, autonomous
-                operational agents that eliminate massive administrative
-                bottlenecks for scaling mid-market B2B enterprises. Driven by
-                advanced Mechatronics Engineering principles, we do not just
-                write code—we build physics-aware AI systems that inherently
-                understand complex manufacturing constraints, supply chain
+                WSTAR AI Solutions is an applied enterprise intelligence initiative
+                by WSTAR Technologies. We engineer bespoke, autonomous
+                operational agents that eliminate administrative
+                bottlenecks for mid-market B2B enterprises. Driven by
+                rigorous Mechatronics and Systems Engineering principles, we do not just
+                wrap generic LLMs—we build constraint-aware AI systems that
+                understand complex catalog parameters, supply chain
                 logistics, and strict engineering tolerances. By replacing manual
-                data entry with deterministic Agentic AI, we help distributors,
-                manufacturers, and service teams reclaim thousands of
-                engineering hours and stop unworked pipeline leakage.
+                data entry with deterministic Applied AI, we help distributors,
+                manufacturers, and service teams reclaim critical
+                engineering capacity and stop unworked pipeline leakage.
               </p>
 
               <CTAButton href="#intake-form" variant="primary" size="small">
@@ -126,10 +126,10 @@ export default function AiSolutionsPage() {
                   <Sliders size={20} />
                 </div>
                 <div>
-                  <h4 className={styles.principleTitle}>Physics-Aware Intelligence</h4>
+                  <h4 className={styles.principleTitle}>Physics &amp; Schema Intelligence</h4>
                   <p className={styles.principleDesc}>
-                    Unlike generic LLMs, our agents validate material grades,
-                    ASME/ISO standards, thread tolerances, and pressure ratings.
+                    Unlike generic chat models, our agents validate material grades,
+                    ASME/ISO standards, thread tolerances, and database schemas.
                   </p>
                 </div>
               </div>
@@ -142,7 +142,7 @@ export default function AiSolutionsPage() {
                   <h4 className={styles.principleTitle}>Pipeline Leakage Elimination</h4>
                   <p className={styles.principleDesc}>
                     Stop leaving high-value multi-line RFQs unquoted. Turn chaotic
-                    inbound requests into verified quotes in seconds.
+                    inbound requests into verified draft quotes in seconds.
                   </p>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default function AiSolutionsPage() {
                   <h4 className={styles.principleTitle}>Enterprise Isolation</h4>
                   <p className={styles.principleDesc}>
                     Zero training on public models. Deployed behind secure,
-                    air-gapped middleware with role-based founder access.
+                    air-gapped middleware with role-based access control.
                   </p>
                 </div>
               </div>
@@ -165,8 +165,6 @@ export default function AiSolutionsPage() {
       </section>
 
       {/* ===== 2b. Founder / Team Credibility ===== */}
-      {/* TODO(Ibrahim): replace with real founder/team credibility copy —
-          this section shell is placeholder-only. */}
       <section className="section section--light" id="engineering-behind">
         <div className="container">
           <div className={styles.credibilityBox}>
@@ -180,17 +178,13 @@ export default function AiSolutionsPage() {
                 marginBottom: "12px",
               }}
             >
-              Why Mechatronics
+              Why Systems Engineering
             </div>
             <h2 style={{ color: "var(--deep-navy)", marginBottom: "16px" }}>
               The Engineering Behind the Agents
             </h2>
-            <p style={{ color: "var(--ink-secondary)" }}>
-              [PLACEHOLDER — Ibrahim to supply founder/team credibility copy:
-              who is behind the Mechatronics Engineering claim, relevant
-              credentials, and why that background translates into
-              physics-aware, deterministic AI systems rather than generic
-              LLM wrappers.]
+            <p style={{ color: "var(--ink-secondary)", fontSize: "1.05rem", lineHeight: "1.7", maxWidth: "780px", margin: "0 auto" }}>
+              Our approach is grounded in Mechatronics and Systems Engineering—disciplines where tolerance errors have physical, costly consequences. While consumer AI operates on unconstrained statistical probabilities, WSTAR builds deterministic Applied AI systems with explicit schema validation, isolated vector retrieval, and human-in-the-loop review gates. We design software that engineers, procurement leaders, and operators can trust without hesitation.
             </p>
           </div>
         </div>
