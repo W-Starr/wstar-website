@@ -8,9 +8,9 @@ import styles from "./about.module.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "About Us — WSTAR",
+    title: "About Us — WSTAR Technologies | Applied Artificial Intelligence",
     description:
-        "WSTAR Technologies is a Nigerian innovation-driven technology company engineering enterprise AI, EdTech, AgriTech, and CareerTech solutions for African and global markets.",
+        "WSTAR Technologies is an Applied AI company engineering domain-specific intelligence systems across enterprise workflows, higher education, workforce readiness, and connected hardware.",
 };
 
 export default function AboutPage() {
@@ -25,7 +25,7 @@ export default function AboutPage() {
                         <span>Advancement & Research</span>
                     </>
                 }
-                description="An innovation-driven technology company engineering enterprise AI, EdTech, AgriTech, and CareerTech solutions that solve real-world challenges — built in Nigeria, engineered to global standards."
+                description="An Applied AI company engineering domain-specific intelligence systems across enterprise workflows, higher education, and connected hardware — built in Nigeria, engineered to global standards."
                 compact
             >
                 <CTAButton href="/contact" variant="primary">
@@ -44,15 +44,15 @@ export default function AboutPage() {
                             <h3 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}><Telescope size={24} /> Vision</h3>
                             <p>
                                 To position Nigeria and Africa as global leaders in technology
-                                innovation by creating solutions that address critical
-                                challenges in education, agriculture, and sustainability.
+                                innovation by creating Applied AI solutions that address critical
+                                challenges in education, industry, and sustainability.
                             </p>
                         </div>
                         <div className={styles.vmCard}>
                             <h3 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}><Target size={24} /> Mission</h3>
                             <p>
-                                To deliver measurable impact through interdisciplinary expertise
-                                and bold creativity—designing, developing, and scaling technology
+                                To deliver measurable impact through interdisciplinary engineering
+                                and rigorous execution—designing, developing, and deploying Applied AI
                                 products that compete on the world stage.
                             </p>
                         </div>

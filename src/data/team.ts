@@ -12,11 +12,11 @@ export const team: TeamMember[] = [
     {
         name: "Ibrahim Abdulwahab",
         role: "Founder & CEO",
-        bio: "Leading WSTAR's product vision, institutional partnerships, and commercial strategy for African technology innovation.",
+        bio: "Directs WSTAR's Applied AI product vision, institutional partnerships, and enterprise deployment strategy. Grounded in Mechatronics Engineering principles, focusing on deterministic AI for industrial and mission-critical workflows.",
     },
     {
         name: "Abdulaziz Abdulwahab",
-        role: "Lead Technical Architect",
-        bio: "Architecting the Ace-Acad mobile engine, syllabus ingestion pipelines, offline SQLite synchronization, and Cloud Firestore infrastructure.",
+        role: "Co-Founder & Lead Technical Architect",
+        bio: "Architects WSTAR's core technical infrastructure, offline-first SQLite sync engines, edge AI pipelines, and the internal Company Operating System (WSTAR OS). Specializes in high-reliability software for constrained environments.",
     },
 ];

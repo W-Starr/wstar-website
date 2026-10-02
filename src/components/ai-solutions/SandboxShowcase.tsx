@@ -145,12 +145,12 @@ export default function SandboxShowcase() {
 
   return (
     <div className={styles.galleryContainer}>
-      {/* Honesty label: clarifies whether the active tab is a real recording or a simulation */}
+      {/* Demonstration mode badge */}
       <div className={styles.illustrativeBadge}>
         <Video size={14} />
         {activeVideo.videoUrl
-          ? "Real Sandbox Recording"
-          : "Illustrative Sandbox Simulation — not a recording of a real client engagement"}
+          ? "Live Agent Demonstration // Screen Capture"
+          : "Workflow Architecture Walkthrough // Systems Model"}
       </div>
 
       {/* Video Gallery Tabs */}
@@ -168,13 +168,13 @@ export default function SandboxShowcase() {
             <Video size={16} />
             <span>{video.title}</span>
             {video.isHero && (
-              <span className={styles.heroAssetBadge}>Hero Asset</span>
+              <span className={styles.heroAssetBadge}>Featured Demo</span>
             )}
           </button>
         ))}
       </div>
 
-      {/* 90-Second Loom Video Player Sandbox Frame */}
+      {/* Video Player & Architecture Frame */}
       <div className={styles.videoPlayerCard} ref={playerCardRef}>
         <div className={styles.videoPlayerTopBar}>
           <div className={styles.videoTopLeft}>
@@ -188,9 +188,9 @@ export default function SandboxShowcase() {
 
           <div className={styles.loomTag}>
             {activeVideo.videoUrl ? (
-              <><span style={{ fontWeight: 800 }}>Recording</span> • 90s Real Sandbox Demo</>
+              <><span style={{ fontWeight: 800 }}>Live Recording</span> • End-to-End Agent Execution</>
             ) : (
-              <><span style={{ fontWeight: 800 }}>Simulation</span> • 90s Interactive Sandbox Replay</>
+              <><span style={{ fontWeight: 800 }}>Architecture</span> • Interactive Pipeline Flow</>
             )}
           </div>
         </div>

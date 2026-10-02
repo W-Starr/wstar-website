@@ -44,40 +44,33 @@ const Navbar = () => {
                         About
                     </Link>
                     <Link href="/ai-solutions" className={styles.navLink} onClick={closeMenu}>
-                        AI Solutions
+                        Enterprise AI
                     </Link>
                     <div className={styles.navDropdown}>
                         <span className={`${styles.navLink} ${styles.dropdownTrigger}`}>
-                            Products <ChevronDown size={14} className={styles.dropdownArrow} />
+                            Applied AI Products <ChevronDown size={14} className={styles.dropdownArrow} />
                         </span>
                         <div className={styles.dropdownMenu}>
-                            <Link
-                                href="/ai-solutions"
-                                className={styles.dropdownItem}
-                                onClick={closeMenu}
-                            >
-                                WSTAR AI Solutions (Industrial AI)
-                            </Link>
                             <Link
                                 href="/products/ace-acad"
                                 className={styles.dropdownItem}
                                 onClick={closeMenu}
                             >
-                                Ace-Acad (EdTech)
-                            </Link>
-                            <Link
-                                href="/products/plantiq"
-                                className={styles.dropdownItem}
-                                onClick={closeMenu}
-                            >
-                                PlantIQ (AgriTech)
+                                Ace-Acad (Higher Education AI)
                             </Link>
                             <Link
                                 href="/products/ace-opportunity"
                                 className={styles.dropdownItem}
                                 onClick={closeMenu}
                             >
-                                Ace-Opportunity (CareerTech)
+                                Ace-Opportunity (Career Intelligence)
+                            </Link>
+                            <Link
+                                href="/products/plantiq"
+                                className={styles.dropdownItem}
+                                onClick={closeMenu}
+                            >
+                                PlantIQ (Edge Agronomy IoT)
                             </Link>
                         </div>
                     </div>
@@ -98,8 +91,8 @@ const Navbar = () => {
                     <Link href="/contact" className={styles.navLink} onClick={closeMenu}>
                         Contact
                     </Link>
-                    <Link href="/contact" className={styles.navCta} onClick={closeMenu}>
-                        Partner With Us
+                    <Link href="/ai-solutions#intake-form" className={styles.navCta} onClick={closeMenu}>
+                        Request Sandbox
                     </Link>
                 </div>
             </div>

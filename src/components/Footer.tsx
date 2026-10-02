@@ -37,9 +37,9 @@ const Footer = () => {
                 <div className={styles.footerBrand}>
                     <Image src="/images/wstar-logo-light.png" alt="WSTAR Logo" width={110} height={32} style={{ objectFit: 'contain' }} className={styles.footerLogo} />
                     <p>
-                        WSTAR Technologies engineers deterministic AI, EdTech, AgriTech, and
-                        CareerTech products — from autonomous industrial agents to AI-powered
-                        career tools, built in Nigeria for global standards.
+                        WSTAR Technologies is an Applied AI company engineering domain-specific
+                        intelligence systems, deterministic enterprise agents, and connected hardware
+                        across Africa and global frontiers.
                     </p>
                 </div>
 
@@ -52,11 +52,17 @@ const Footer = () => {
                 </div>
 
                 <div className={styles.footerCol}>
-                    <h4>Products & Solutions</h4>
+                    <h4>Enterprise AI</h4>
                     <Link href="/ai-solutions" className={styles.footerLink}>WSTAR AI Solutions</Link>
-                    <Link href="/products/ace-acad" className={styles.footerLink}>Ace-Acad</Link>
-                    <Link href="/products/plantiq" className={styles.footerLink}>PlantIQ</Link>
-                    <Link href="/products/ace-opportunity" className={styles.footerLink}>Ace-Opportunity</Link>
+                    <Link href="/ai-solutions#intake-form" className={styles.footerLink}>Request Sandbox</Link>
+                    <Link href="/ai-solutions#sprint" className={styles.footerLink}>Validation Sprint</Link>
+                </div>
+
+                <div className={styles.footerCol}>
+                    <h4>Applied AI Products</h4>
+                    <Link href="/products/ace-acad" className={styles.footerLink}>Ace-Acad (EdTech)</Link>
+                    <Link href="/products/ace-opportunity" className={styles.footerLink}>Ace-Opportunity (Careers)</Link>
+                    <Link href="/products/plantiq" className={styles.footerLink}>PlantIQ (AgriTech)</Link>
                 </div>
 
                 <div className={styles.footerCol}>
