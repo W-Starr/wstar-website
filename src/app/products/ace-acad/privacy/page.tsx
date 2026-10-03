@@ -20,16 +20,17 @@ export default function PrivacyPolicyPage() {
                     AI tutor, games leaderboards, content reporting and lecturer practice sets. New data:
                     optional registration number; test answers and exam-integrity records; assignment work;
                     on-phone location checks for location-locked tests; photos/files you choose to send;
-                    questions to the AI tutor (sent to our AI providers); first name and score on weekly
-                    leaderboards. See §4, §7 and §8.
+                    questions to the AI tutor (sent to our AI providers); mock exam answers marked by AI;
+                    feedback emailed to our team; first name and score on weekly leaderboards. See §4, §7
+                    and §8.
                 </div>
 
                 <h2>1. Introduction</h2>
                 <p>
                     Ace Acad (“Ace Acad”, “we”, “us”, or “our”) is an educational technology mobile platform
-                    developed and operated by <strong>WSTAR</strong> (“World of Science, Technology,
-                    Advancement &amp; Research”), located at Ahmadu Bello University, Zaria, Kaduna State,
-                    Nigeria.
+                    developed and operated by <strong>WSTAR TECHNOLOGIES LTD</strong> (“WSTAR”, World of
+                    Science, Technology, Advancement &amp; Research), a company registered in Nigeria,
+                    located at Ahmadu Bello University, Zaria, Kaduna State, Nigeria.
                 </p>
                 <p>
                     Ace Acad is designed to help university undergraduates manage coursework, access
@@ -59,7 +60,7 @@ export default function PrivacyPolicyPage() {
 
                 <h2>3. Data Controller &amp; Contact Information</h2>
                 <p>
-                    <strong>Data Controller:</strong> WSTAR (World of Science, Technology, Advancement &amp; Research)<br />
+                    <strong>Data Controller:</strong> WSTAR TECHNOLOGIES LTD (World of Science, Technology, Advancement &amp; Research)<br />
                     <strong>Address:</strong> Ahmadu Bello University, Zaria, Kaduna State, Nigeria<br />
                     <strong>Contact Email:</strong> <code>support@wstartech.ng</code> / <code>wstar5552@gmail.com</code><br />
                     <strong>Data Protection Support:</strong> <code>privacy@wstartech.ng</code>
@@ -92,10 +93,11 @@ export default function PrivacyPolicyPage() {
                     </li>
                     <li><strong>Registration Number (optional):</strong> To show you your project/lab group and to name your CBT results and assignment submissions for your lecturer. One account may claim a registration number.</li>
                     <li><strong>Assignment Work:</strong> Text you type and files you attach (e.g. PDFs, photos of handwritten work) when you hand in an assignment, kept for your lecturer with their grade and feedback.</li>
-                    <li><strong>Photos and Files You Choose to Send for Reading:</strong> Photos or PDFs of a timetable (students) or a test paper (lecturers/Ace-Reps) are sent to our server and AI provider to be read into classes or questions. Photos are not kept afterwards; a PDF a lecturer uploads for this is kept in their private upload folder.</li>
+                    <li><strong>Photos and Files You Choose to Send for Reading:</strong> Photos or PDFs of a timetable (students) or a test paper (lecturers/Ace-Reps), and photos of your working in a mock exam, are sent to our server and AI providers to be read. Pages are captured with the on-phone document scanner (Google ML Kit). Photos are not kept afterwards; a PDF a lecturer uploads for this is kept in their private upload folder. Scanned files Ace-Reps share with a class are read by AI first to check they hold no students&apos; personal data.</li>
+                    <li><strong>Mock Exam Answers and Simulated Results:</strong> Your mock answers (typed, photographed or drawn) are sent to our AI providers to be marked against the marking guide. Your marks, typed answers and the AI&apos;s comments are kept in your account for review; the photos stay on your phone. For the simulated result we keep the CA you expect, your course units and, if you give it, your CGPA so far.</li>
                     <li><strong>Questions to the AI Tutor:</strong> The questions you type, sent with extracts of your course&apos;s study guide to our AI provider to write an answer. The conversation is stored only on your phone; we keep a daily count of questions per account to enforce fair-use limits.</li>
                     <li><strong>Content Reports:</strong> What you report about a material, question, topic or flashcard, and why.</li>
-                    <li><strong>Feedback &amp; Inquiries:</strong> When you submit bug reports, feature requests, or support messages via our in-app &quot;Send Feedback&quot; feature or email, we collect your message content, feedback category, and associated user ID.</li>
+                    <li><strong>Feedback &amp; Inquiries:</strong> Feedback and complaints sent in the app are also emailed (via Gmail) to the Ace-Acad team at <code>wstar5552@gmail.com</code> with your name, email, class, app version and any screenshot you add, so we can reply. When you submit bug reports, feature requests, or support messages via our in-app &quot;Send Feedback&quot; feature or email, we collect your message content, feedback category, and associated user ID.</li>
                 </ul>
 
                 <h3>4.2 Information Collected Automatically Through App Use</h3>
@@ -164,8 +166,8 @@ export default function PrivacyPolicyPage() {
                                 <td><strong>Consent</strong> (Sec 25(1)(a)) — Android asks your permission; without it you cannot start that test.</td>
                             </tr>
                             <tr>
-                                <td>AI tutor, reading timetables &amp; papers</td>
-                                <td>Your questions, photos/files you choose to send</td>
+                                <td>AI tutor, mock marking, reading timetables &amp; papers</td>
+                                <td>Your questions, mock answers, photos/files you choose to send</td>
                                 <td><strong>Performance of a Contract</strong> (Sec 25(1)(b)) — features you choose to use.</td>
                             </tr>
                             <tr>
@@ -373,7 +375,7 @@ export default function PrivacyPolicyPage() {
                 <h2>16. Contact Us</h2>
                 <p>If you have questions, feedback, or privacy-related inquiries, please reach out to us:</p>
                 <p>
-                    <strong>WSTAR / Ace Acad Team</strong><br />
+                    <strong>WSTAR TECHNOLOGIES LTD — Ace Acad Team</strong><br />
                     Ahmadu Bello University, Zaria, Kaduna State, Nigeria<br />
                     General Inquiries: <code>wstar5552@gmail.com</code><br />
                     Customer &amp; Account Support: <code>support@wstartech.ng</code><br />
