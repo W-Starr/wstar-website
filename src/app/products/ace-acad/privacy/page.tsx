@@ -28,9 +28,9 @@ export default function PrivacyPolicyPage() {
                 <h2>1. Introduction</h2>
                 <p>
                     Ace Acad (“Ace Acad”, “we”, “us”, or “our”) is an educational technology mobile platform
-                    developed and operated by <strong>WSTAR</strong> (“World of Science, Technology,
-                    Advancement &amp; Research”), located at Ahmadu Bello University, Zaria, Kaduna State,
-                    Nigeria.
+                    developed and operated by <strong>WSTAR TECHNOLOGIES LTD</strong> (“WSTAR”, World of
+                    Science, Technology, Advancement &amp; Research), a company registered in Nigeria,
+                    located at Ahmadu Bello University, Zaria, Kaduna State, Nigeria.
                 </p>
                 <p>
                     Ace Acad is designed to help university undergraduates manage coursework, access
@@ -60,7 +60,7 @@ export default function PrivacyPolicyPage() {
 
                 <h2>3. Data Controller &amp; Contact Information</h2>
                 <p>
-                    <strong>Data Controller:</strong> WSTAR (World of Science, Technology, Advancement &amp; Research)<br />
+                    <strong>Data Controller:</strong> WSTAR TECHNOLOGIES LTD (World of Science, Technology, Advancement &amp; Research)<br />
                     <strong>Address:</strong> Ahmadu Bello University, Zaria, Kaduna State, Nigeria<br />
                     <strong>Contact Email:</strong> <code>support@wstartech.ng</code> / <code>wstar5552@gmail.com</code><br />
                     <strong>Data Protection Support:</strong> <code>privacy@wstartech.ng</code>
@@ -375,7 +375,7 @@ export default function PrivacyPolicyPage() {
                 <h2>16. Contact Us</h2>
                 <p>If you have questions, feedback, or privacy-related inquiries, please reach out to us:</p>
                 <p>
-                    <strong>WSTAR / Ace Acad Team</strong><br />
+                    <strong>WSTAR TECHNOLOGIES LTD — Ace Acad Team</strong><br />
                     Ahmadu Bello University, Zaria, Kaduna State, Nigeria<br />
                     General Inquiries: <code>wstar5552@gmail.com</code><br />
                     Customer &amp; Account Support: <code>support@wstartech.ng</code><br />
